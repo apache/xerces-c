@@ -26,7 +26,7 @@
 #include <xercesc/util/NetAccessors/Curl/CurlURLInputStream.hpp>
 #include <xercesc/util/NetAccessors/Curl/CurlNetAccessor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const XMLCh CurlNetAccessor::fgMyName[] =
 {
@@ -89,5 +89,5 @@ CurlNetAccessor::makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInf
 	return retStrm;            
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

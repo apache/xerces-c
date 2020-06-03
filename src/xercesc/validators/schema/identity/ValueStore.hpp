@@ -34,7 +34,7 @@
 #include <xercesc/validators/schema/identity/FieldValueMap.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -136,7 +136,7 @@ ValueStore::getIdentityConstraint() const {
     return fIdentityConstraint;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

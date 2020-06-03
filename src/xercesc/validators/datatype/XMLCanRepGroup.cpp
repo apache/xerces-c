@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/XMLCanRepGroup.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 XMLCanRepGroup::~XMLCanRepGroup()
 {
@@ -36,7 +36,7 @@ XMLCanRepGroup::XMLCanRepGroup(CanRepGroup val)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file DatatypeValidator.cpp

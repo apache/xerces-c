@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class represents a complexType definition
@@ -289,6 +289,6 @@ XSComplexTypeDefinition::setBaseType(XSTypeDefinition* const xsBaseType)
     fBaseType = xsBaseType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

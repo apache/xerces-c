@@ -37,7 +37,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef JanitorMemFunCall<IdentityConstraint>   CleanupType;
 
@@ -218,7 +218,7 @@ IdentityConstraint* IdentityConstraint::loadIC(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file IdentityConstraint.cpp

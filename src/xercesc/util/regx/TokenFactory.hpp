@@ -29,7 +29,7 @@
 #include <xercesc/util/regx/Token.hpp>
 #include <xercesc/util/Mutexes.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -124,7 +124,7 @@ inline MemoryManager* TokenFactory::getMemoryManager() const
     return fMemoryManager;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

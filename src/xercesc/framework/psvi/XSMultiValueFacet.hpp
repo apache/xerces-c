@@ -25,7 +25,7 @@
 #include <xercesc/framework/psvi/XSObject.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class represents all Schema Facets which may possess multiple
@@ -147,6 +147,6 @@ inline XSAnnotationList *XSMultiValueFacet::getAnnotations()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

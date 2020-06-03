@@ -28,7 +28,7 @@
 #include <xercesc/util/regx/RangeFactory.hpp>
 #include <xercesc/util/regx/XMLUniCharacter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT UnicodeRangeFactory: public RangeFactory {
 
@@ -79,7 +79,7 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

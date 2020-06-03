@@ -26,10 +26,10 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 MakeXMLException(SchemaDateTimeException, XMLUTIL_EXPORT)
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

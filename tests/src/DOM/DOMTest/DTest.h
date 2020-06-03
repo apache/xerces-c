@@ -32,11 +32,11 @@
 //  define null for compatibility with original Java source code.
 #define null 0
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 class XercesDOMParser;
-XERCES_CPP_NAMESPACE_END
+}
 
 
 class DOMTest {

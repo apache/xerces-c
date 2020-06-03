@@ -27,7 +27,7 @@
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DatatypeValidator;
 class DatatypeValidatorFactory;
@@ -266,6 +266,6 @@ inline DatatypeValidatorFactory* GrammarResolver::getBuiltinDatatypeValidatorFac
     return fDataTypeReg;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

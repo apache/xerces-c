@@ -39,7 +39,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLChar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -1764,4 +1764,4 @@ void DOMLSSerializerImpl::ensureValidString(const DOMNode* nodeToWrite, const XM
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

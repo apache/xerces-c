@@ -33,7 +33,7 @@
 #include <xercesc/util/XMLBigDecimal.hpp>
 #include <xercesc/util/XMLBigInteger.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static const int BUF_LEN = 64;
 
@@ -608,7 +608,7 @@ void DecimalDatatypeValidator::serialize(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file DecimalDatatypeValidator::cpp

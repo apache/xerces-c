@@ -26,7 +26,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/internal/VecAttributesImpl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -246,4 +246,4 @@ void VecAttributesImpl::setVector(const   RefVectorOf<XMLAttr>* const srcVec
     fScanner = scanner ;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

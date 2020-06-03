@@ -28,7 +28,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XercesGroupInfo: Constructors and Destructor
@@ -132,7 +132,7 @@ void XercesGroupInfo::serialize(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XercesGroupInfo.cpp

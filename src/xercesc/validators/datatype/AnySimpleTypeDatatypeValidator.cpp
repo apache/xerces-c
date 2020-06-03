@@ -26,7 +26,7 @@
 #include <xercesc/validators/datatype/AnySimpleTypeDatatypeValidator.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  AnySimpleTypeDatatypeValidator: Constructors and Destructor
@@ -90,7 +90,7 @@ void AnySimpleTypeDatatypeValidator::serialize(XSerializeEngine& serEng)
     DatatypeValidator::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file AnySimpleTypeDatatypeValidator.cpp

@@ -21,7 +21,7 @@
 
 #include <xercesc/parsers/SAX2XMLFilterImpl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 SAX2XMLFilterImpl::SAX2XMLFilterImpl(SAX2XMLReader* parent) :
     fParentReader(0)
@@ -413,4 +413,4 @@ void SAX2XMLFilterImpl::resetErrors()
         fErrorHandler->resetErrors();
 }
 
-XERCES_CPP_NAMESPACE_END
+}

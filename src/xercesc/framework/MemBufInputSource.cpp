@@ -26,7 +26,7 @@
 #include <xercesc/util/BinMemInputStream.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  MemBufInputSource: Constructors and Destructor
@@ -90,5 +90,5 @@ BinInputStream* MemBufInputSource::makeStream() const
     );
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

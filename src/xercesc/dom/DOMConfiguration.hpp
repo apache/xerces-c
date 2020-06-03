@@ -26,7 +26,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/dom/DOMStringList.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  *   The DOMConfiguration interface represents the configuration of
@@ -445,7 +445,7 @@ public:
     //@}
 };
 	
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif 
 

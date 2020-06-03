@@ -54,7 +54,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //	Typedefs
@@ -969,4 +969,4 @@ MacOSLCPTranscoder::transcode( 		const   XMLCh* const    toTranscode
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

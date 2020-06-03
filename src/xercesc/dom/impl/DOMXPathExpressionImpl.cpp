@@ -26,7 +26,7 @@
 #include <xercesc/dom/DOMXPathException.hpp>
 #include <xercesc/dom/DOM.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class WrapperForXPathNSResolver : public XercesNamespaceResolver
 {
@@ -213,4 +213,4 @@ void DOMXPathExpressionImpl::release()
     delete me;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -24,7 +24,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMNotationImpl::DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *nName)
     : fNode(this, ownerDoc), fName(0), fPublicId(0), fSystemId(0), fBaseURI(0)
@@ -179,4 +179,4 @@ const XMLCh* DOMNotationImpl::getBaseURI() const
 DOMNODEIMPL_IMPL(DOMNotationImpl);
 
 
-XERCES_CPP_NAMESPACE_END
+}

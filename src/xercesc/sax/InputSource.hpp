@@ -24,7 +24,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class BinInputStream;
 
@@ -332,6 +332,6 @@ inline void InputSource::setIssueFatalErrorIfNotFound(const bool flag)
     fFatalErrorIfNotFound = flag;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -36,7 +36,7 @@
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 RangeTokenMap* RangeTokenMap::fInstance = 0;
 
@@ -282,7 +282,7 @@ void RangeTokenMap::cleanUp()
     fTokenFactory = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file RangeTokenMap.cpp

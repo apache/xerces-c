@@ -29,7 +29,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static const int BUF_LEN = 64;
 
@@ -763,7 +763,7 @@ void AbstractStringValidator::serialize(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file AbstractStringValidator.cpp

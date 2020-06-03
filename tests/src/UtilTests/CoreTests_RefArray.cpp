@@ -53,8 +53,8 @@ static bool constructorTests()
     // Make sure that it has the right initial size
     if (testArray1.length() != 255)
     {
-        XERCES_STD_QUALIFIER wcout  << L"    The ctor created wrong length() value"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    The ctor created wrong length() value"
+                    << std::endl;
         return false;
     }
 
@@ -63,16 +63,16 @@ static bool constructorTests()
 
     if (testArray2.length() != 255)
     {
-        XERCES_STD_QUALIFIER wcout  << L"    The copy ctor created wrong length() value"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    The copy ctor created wrong length() value"
+                    << std::endl;
         return false;
     }
 
     // Test the equality of the two arrays
     if (testArray1 != testArray2)
     {
-        XERCES_STD_QUALIFIER wcout  << L"    The copy ctor created unequal arrays"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    The copy ctor created unequal arrays"
+                    << std::endl;
         return false;
     }
 
@@ -86,8 +86,8 @@ static bool constructorTests()
 
     if (testArray3.length() != 16)
     {
-        XERCES_STD_QUALIFIER wcout  << L"    The init values ctor created wrong length() value"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    The init values ctor created wrong length() value"
+                    << std::endl;
         return false;
     }
 
@@ -96,8 +96,8 @@ static bool constructorTests()
     {
         if (*testArray3[index] != (double)index)
         {
-            XERCES_STD_QUALIFIER wcout  << L"    The init values ctor did not init contents correctly"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"    The init values ctor did not init contents correctly"
+                        << std::endl;
             return false;
         }
     }
@@ -111,8 +111,8 @@ static bool constructorTests()
 
     if (testArray4 != testArray3)
     {
-        XERCES_STD_QUALIFIER wcout  << L"    Assignment did not create equal arrays"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    Assignment did not create equal arrays"
+                    << std::endl;
         return false;
     }
 
@@ -139,8 +139,8 @@ static bool accessTests()
     {
         if (testArray1[index] != &testVals[index])
         {
-            XERCES_STD_QUALIFIER wcout  << L"    Failed to read back values just set"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"    Failed to read back values just set"
+                        << std::endl;
             return false;
         }
     }
@@ -159,7 +159,7 @@ static bool accessTests()
 
     if (!caughtIt)
     {
-        XERCES_STD_QUALIFIER wcout << L"    Failed to catch index error" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"    Failed to catch index error" << std::endl;
         return false;
     }
 
@@ -172,48 +172,48 @@ static bool accessTests()
 // ---------------------------------------------------------------------------
 bool testRefArray()
 {
-    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
+    std::wcout  << L"----------------------------------\n"
                 << L"Testing RefArrayOf template class\n"
-                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
     try
     {
         // Call other local methods to do specific tests
-        XERCES_STD_QUALIFIER wcout << L"Testing RefArrayOf contructors" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"Testing RefArrayOf contructors" << std::endl;
         if (!constructorTests())
         {
-            XERCES_STD_QUALIFIER wcout  << L"RefArrayOf constructor tests failed"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"RefArrayOf constructor tests failed"
+                        << std::endl;
             retVal = false;
         }
          else
         {
-            XERCES_STD_QUALIFIER wcout  << L"RefArrayOf constructor tests passed"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"RefArrayOf constructor tests passed"
+                        << std::endl;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
-        XERCES_STD_QUALIFIER wcout << L"Testing RefArrayOf element access" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"Testing RefArrayOf element access" << std::endl;
         if (!accessTests())
         {
-            XERCES_STD_QUALIFIER wcout  << L"RefArrayOf element access tests failed"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"RefArrayOf element access tests failed"
+                        << std::endl;
             retVal = false;
         }
          else
         {
-            XERCES_STD_QUALIFIER wcout  << L"RefArrayOf element access tests passed"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"RefArrayOf element access tests passed"
+                        << std::endl;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

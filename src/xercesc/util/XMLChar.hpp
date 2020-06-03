@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  This file defines Char and utility that conforms to XML 1.0 and XML 1.1
@@ -456,6 +456,6 @@ inline bool XMLChar1_1::isControlChar(const XMLCh toCheck, const XMLCh toCheck2)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

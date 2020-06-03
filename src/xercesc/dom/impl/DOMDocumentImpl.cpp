@@ -50,7 +50,7 @@
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // The chunk size to allocate from the system allocator.
 static XMLSize_t kInitialHeapAllocSize =  0x4000;
@@ -1534,4 +1534,4 @@ void* DOMDocumentImpl::getFeature(const XMLCh* feature, const XMLCh* version) co
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

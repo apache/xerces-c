@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLRefInfo.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /***
  * Support for Serialization/De-serialization
@@ -57,4 +57,4 @@ XMLRefInfo::XMLRefInfo(MemoryManager* const manager)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

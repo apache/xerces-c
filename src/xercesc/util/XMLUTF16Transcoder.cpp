@@ -22,9 +22,9 @@
 #include <xercesc/util/BitOps.hpp>
 #include <xercesc/util/XMLUTF16Transcoder.hpp>
 #include <xercesc/util/TranscodingException.hpp>
-#include <string.h>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 
@@ -193,5 +193,5 @@ bool XMLUTF16Transcoder::canTranscodeTo(const unsigned int)
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

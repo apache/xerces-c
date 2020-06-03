@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  *  This class represents the core information about a notation declaration
@@ -226,6 +226,6 @@ inline const XMLCh* XMLNotationDecl::getKey() const
     return fName;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

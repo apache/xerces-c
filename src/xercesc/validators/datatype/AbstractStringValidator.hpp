@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT AbstractStringValidator : public DatatypeValidator
 {
@@ -241,7 +241,7 @@ inline void AbstractStringValidator::setEnumeration(RefArrayVectorOf<XMLCh>* enu
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

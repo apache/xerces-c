@@ -28,7 +28,7 @@
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLUri: static data
@@ -2615,4 +2615,4 @@ XMLUri::XMLUri(MemoryManager* const manager)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

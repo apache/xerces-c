@@ -6,7 +6,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMError.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // Ignore warning about private constructor
 #if defined __GNUC__ && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 5))
@@ -402,7 +402,7 @@ private:
 #  pragma GCC diagnostic pop
 #endif
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -23,9 +23,9 @@
   #include <config.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #if HAVE_ERRNO_H
   #include <errno.h>
 #endif
@@ -50,7 +50,7 @@
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
@@ -395,4 +395,4 @@ const XMLCh *CurlURLInputStream::getContentType() const
     return fContentType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -39,14 +39,10 @@
 #include <xercesc/dom/DOMException.hpp>
 #include "InitTermTest.hpp"
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
-#else
-#include <fstream.h>
-#endif
 #include <limits.h>
 
 
@@ -95,8 +91,8 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
                                                                   \
         catch (const XMLException& toCatch)                       \
         {                                                         \
-             XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"           \
-                  << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;          \
+             std::cerr << "Error during initialization! :\n"           \
+                  << StrX(toCatch.getMessage()) << std::endl;          \
              return 1;                                            \
         }                                                         \
     }                                                             \
@@ -109,8 +105,8 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
                                                                   \
         catch (const XMLException& toCatch)                       \
         {                                                         \
-             XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"           \
-                  << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;          \
+             std::cerr << "Error during initialization! :\n"           \
+                  << StrX(toCatch.getMessage()) << std::endl;          \
              return 1;                                            \
         }                                                         \
     }
@@ -129,33 +125,33 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
     }                                                             \
     catch (const OutOfMemoryException&)                           \
     {                                                             \
-        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl; \
+        std::cerr << "OutOfMemoryException" << std::endl; \
         errorOccurred = true;                                     \
     }                                                             \
     catch (const XMLException& toCatch)                           \
     {                                                             \
-        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"   \
+        std::cerr << "\nError during parsing: '" << xmlFile << "'\n"   \
              << "Exception message is:  \n"                       \
-             << StrX(toCatch.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;       \
+             << StrX(toCatch.getMessage()) << "\n" << std::endl;       \
         errorOccurred = true;                                     \
     }                                                             \
     catch (const DOMException& toCatch)                           \
     {                                                             \
-        XERCES_STD_QUALIFIER cerr << "\nDOM Error during parsing: '" << xmlFile        \
+        std::cerr << "\nDOM Error during parsing: '" << xmlFile        \
              << "\nDOMException code is:  \n"                     \
-             << toCatch.code << "\n" << XERCES_STD_QUALIFIER endl;                     \
+             << toCatch.code << "\n" << std::endl;                     \
         errorOccurred = true;                                     \
     }                                                             \
     catch (...)                                                   \
     {                                                             \
-        XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '"        \
+        std::cerr << "\nUnexpected exception during parsing: '"        \
         << xmlFile << "'\n";                                      \
         errorOccurred = true;                                     \
     }                                                             \
                                                                   \
     if (errorHandler.getSawErrors())                              \
     {                                                             \
-        XERCES_STD_QUALIFIER cout << "\nErrors occurred, no output available\n" << XERCES_STD_QUALIFIER endl;\
+        std::cout << "\nErrors occurred, no output available\n" << std::endl;\
         errorOccurred = true;                                     \
     }                                                             \
                                                                   \
@@ -237,7 +233,7 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
 // ---------------------------------------------------------------------------
 void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
             "    InitTermTest [options] <XML file>\n\n"
             "This program tests the XMLPlatformUtils::Initialize()/Terminate()\n"
             "pair by calling it a number of times.\n"
@@ -246,7 +242,7 @@ void usage()
             "    -s          Enable schema processing. Default is off.\n"
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
 		      "    -?          Show this help.\n"
-          <<  XERCES_STD_QUALIFIER endl;
+          <<  std::endl;
 }
 
 // ---------------------------------------------------------------------------
@@ -309,8 +305,8 @@ int main(int argC, char* argV[]) {
         }
          else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
-                 << "', ignoring it.\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it.\n" << std::endl;
         }
     }
 
@@ -333,7 +329,7 @@ int main(int argC, char* argV[]) {
     unsigned int i = 0;
     for (i=0; i < 100; i++) {
         if (error) {
-            XERCES_STD_QUALIFIER cout << "Test Failed" << XERCES_STD_QUALIFIER endl;
+            std::cout << "Test Failed" << std::endl;
             return 4;
         }
 
@@ -379,11 +375,11 @@ int main(int argC, char* argV[]) {
         error = true;
 
     if (error) {
-        XERCES_STD_QUALIFIER cout << "Test Failed" << XERCES_STD_QUALIFIER endl;
+        std::cout << "Test Failed" << std::endl;
         return 4;
     }
 
-    XERCES_STD_QUALIFIER cout << "Test Run Successfully" << XERCES_STD_QUALIFIER endl;
+    std::cout << "Test Run Successfully" << std::endl;
     return 0;
 }
 
@@ -403,27 +399,27 @@ InitTermTestErrorHandler::~InitTermTestErrorHandler()
 void InitTermTestErrorHandler::error(const SAXParseException& e)
 {
     fSawErrors = true;
-    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
+    std::cerr << "\nError at file " << StrX(e.getSystemId())
          << ", line " << e.getLineNumber()
          << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void InitTermTestErrorHandler::fatalError(const SAXParseException& e)
 {
     fSawErrors = true;
-    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+    std::cerr << "\nFatal Error at file " << StrX(e.getSystemId())
          << ", line " << e.getLineNumber()
          << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void InitTermTestErrorHandler::warning(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
+    std::cerr << "\nWarning at file " << StrX(e.getSystemId())
          << ", line " << e.getLineNumber()
          << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void InitTermTestErrorHandler::resetErrors()

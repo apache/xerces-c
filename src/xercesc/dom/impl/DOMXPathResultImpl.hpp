@@ -26,7 +26,7 @@
 #include <xercesc/dom/DOMXPathResult.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CDOM_EXPORT DOMXPathResultImpl :  public XMemory,
                                         public DOMXPathResult
@@ -61,6 +61,6 @@ protected:
     XMLSize_t               fIndex;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

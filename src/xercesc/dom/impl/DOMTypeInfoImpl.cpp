@@ -20,7 +20,7 @@
 #include <xercesc/framework/psvi/PSVIItem.hpp>
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /*static*/ DOMTypeInfoImpl DOMTypeInfoImpl::g_DtdValidatedElement;
 /*static*/ DOMTypeInfoImpl DOMTypeInfoImpl::g_DtdNotValidatedAttribute;
@@ -180,7 +180,7 @@ void DOMTypeInfoImpl::setNumericProperty(PSVIProperty prop, int value) {
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 /**
  * End of file DOMTypeInfo.cpp
  */

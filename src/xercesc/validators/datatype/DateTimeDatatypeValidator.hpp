@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/datatype/DateTimeValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT DateTimeDatatypeValidator : public DateTimeValidator
 {
@@ -92,7 +92,7 @@ private:
     DateTimeDatatypeValidator& operator=(const DateTimeDatatypeValidator&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

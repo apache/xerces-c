@@ -34,10 +34,10 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
 
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 static const XMLCh fgSpace[] = { chSpace, chNull };
 static const XMLCh fgChar[] = { chSpace, chLatin_C, chLatin_h, chLatin_a, chLatin_r, chNull }; // char
@@ -876,7 +876,7 @@ void PSVIWriterHandlers::processAnnotation(XSAnnotation* annotation) {
         annot = annotation;
 
         while (annot) {
-		    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document = DOMImplementationRegistry::getDOMImplementation(XMLUni::fgZeroLenString)->
+		    xercesc::DOMDocument* document = DOMImplementationRegistry::getDOMImplementation(XMLUni::fgZeroLenString)->
                 createDocument();
 		    annot->writeAnnotation((DOMNode*)document, XSAnnotation::W3C_DOM_DOCUMENT);
 		    DOMElement* elem = document->getDocumentElement();

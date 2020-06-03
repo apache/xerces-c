@@ -43,9 +43,9 @@
 #	include <towlower.h>
 #endif
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 
 #include "IconvTransService.hpp"
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -53,7 +53,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local, const data
@@ -568,4 +568,4 @@ IconvLCPTranscoder::~IconvLCPTranscoder()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -22,7 +22,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include "PSVIUni.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 
 const XMLCh PSVIUni::fgPsvColon[] = {

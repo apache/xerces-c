@@ -28,7 +28,7 @@
 #include <xercesc/dom/DOMDocumentTraversal.hpp>
 #include <xercesc/dom/DOMXPathEvaluator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMConfiguration;
 class DOMDocumentType;
@@ -814,6 +814,6 @@ public:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

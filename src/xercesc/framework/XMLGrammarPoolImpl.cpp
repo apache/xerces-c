@@ -33,7 +33,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/SynchronizedStringPool.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // private function used to update fXSModel
 void XMLGrammarPoolImpl::createXSModel()
@@ -361,4 +361,4 @@ XMLGrammarPoolImpl::cleanUp()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

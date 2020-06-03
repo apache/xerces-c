@@ -25,7 +25,7 @@
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  SimpleContentModel is a derivative of the abstract content model base
@@ -207,6 +207,6 @@ SimpleContentModel::handleRepetitions( const QName* const /*curElem*/,
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

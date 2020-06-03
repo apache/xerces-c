@@ -41,8 +41,8 @@ static bool basicTests()
 
     if (setTest.size() != 32)
     {
-        XERCES_STD_QUALIFIER wcout  << L"    Ctor did not create set of correct size"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    Ctor did not create set of correct size"
+                    << std::endl;
         return false;
     }
 
@@ -56,8 +56,8 @@ static bool basicTests()
     {
         if (setTest.get(index))
         {
-            XERCES_STD_QUALIFIER wcout << L"    A bit's initial value was not zero"
-                       << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"    A bit's initial value was not zero"
+                       << std::endl;
             return false;
         }
     }
@@ -65,8 +65,8 @@ static bool basicTests()
     // Make sure that allAreCleared() agrees
     if (!setTest.allAreCleared())
     {
-        XERCES_STD_QUALIFIER wcout  << L"    allAreCleared() disagrees with individual bit gets"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    allAreCleared() disagrees with individual bit gets"
+                    << std::endl;
         return false;
     }
 
@@ -76,16 +76,16 @@ static bool basicTests()
         setTest.set(index);
         if (!setTest.get(index))
         {
-            XERCES_STD_QUALIFIER wcout << L"    Bit was set but get returned false"
-                       << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"    Bit was set but get returned false"
+                       << std::endl;
             return false;
         }
 
         setTest.clear(index);
         if (setTest.get(index))
         {
-            XERCES_STD_QUALIFIER wcout  << L"    Bit was cleared but get returned true"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"    Bit was cleared but get returned true"
+                        << std::endl;
             return false;
         }
     }
@@ -95,8 +95,8 @@ static bool basicTests()
     {
         if (setTest.get(index))
         {
-            XERCES_STD_QUALIFIER wcout << L"    A bit remained set after clearing"
-                       << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"    A bit remained set after clearing"
+                       << std::endl;
             return false;
         }
     }
@@ -113,8 +113,8 @@ static bool basicTests()
     BitSet setTest2(setTest);
     if (!setTest.equals(setTest2))
     {
-        XERCES_STD_QUALIFIER wcout  << L"    Copy ctor did not create equal sets"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    Copy ctor did not create equal sets"
+                    << std::endl;
         return false;
     }
 
@@ -124,8 +124,8 @@ static bool basicTests()
     {
         if (setTest2.get(index))
         {
-            XERCES_STD_QUALIFIER wcout  << L"    clearAll() did not clear all bits"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"    clearAll() did not clear all bits"
+                        << std::endl;
             return false;
         }
     }
@@ -136,8 +136,8 @@ static bool basicTests()
     // Make sure it expanded
     if (setTest2.size() != 64)
     {
-        XERCES_STD_QUALIFIER wcout  << L"    Set of bit beyond size did not expand"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    Set of bit beyond size did not expand"
+                    << std::endl;
         return false;
     }
 
@@ -148,8 +148,8 @@ static bool basicTests()
     // Make sure that allAreSet() sees them all set
     if (!setTest.allAreSet())
     {
-        XERCES_STD_QUALIFIER wcout  << L"    After setting all bits, allAreSet() returned false"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    After setting all bits, allAreSet() returned false"
+                    << std::endl;
         return false;
     }
 
@@ -178,8 +178,8 @@ static bool bitopsTests()
     // They should be equal now
     if (!setTest.equals(setTest2))
     {
-        XERCES_STD_QUALIFIER wcout  << L"    OR of set with empty set did not create equal sets"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    OR of set with empty set did not create equal sets"
+                    << std::endl;
         return false;
     }
 
@@ -187,8 +187,8 @@ static bool bitopsTests()
     setTest2.xorWith(setTest);
     if (!setTest2.allAreCleared())
     {
-        XERCES_STD_QUALIFIER wcout  << L"    XOR against original set did not get back original"
-                    << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"    XOR against original set did not get back original"
+                    << std::endl;
         return false;
     }
 
@@ -196,7 +196,7 @@ static bool bitopsTests()
     setTest2.andWith(setTest);
     if (!setTest2.allAreCleared())
     {
-        XERCES_STD_QUALIFIER wcout << L"    AND against empty set changed bits" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"    AND against empty set changed bits" << std::endl;
         return false;
     }
 
@@ -209,43 +209,43 @@ static bool bitopsTests()
 // ---------------------------------------------------------------------------
 bool testBitSet()
 {
-    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
+    std::wcout  << L"----------------------------------\n"
                 << L"Testing BitSet class\n"
-                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
     try
     {
-        XERCES_STD_QUALIFIER wcout << L"Testing basic BitSet methods" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"Testing basic BitSet methods" << std::endl;
         if (!basicTests())
         {
-            XERCES_STD_QUALIFIER wcout << L"Bitset basic test methods failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"Bitset basic test methods failed" << std::endl;
             retVal = false;
         }
          else
         {
-            XERCES_STD_QUALIFIER wcout << L"Bitset basic tests passed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"Bitset basic tests passed" << std::endl;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
-        XERCES_STD_QUALIFIER wcout << L"Testing BitSet logical bit ops methods" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"Testing BitSet logical bit ops methods" << std::endl;
         if (!bitopsTests())
         {
-            XERCES_STD_QUALIFIER wcout << L"Bitset logical bit ops failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"Bitset logical bit ops failed" << std::endl;
             retVal = false;
         }
          else
         {
-            XERCES_STD_QUALIFIER wcout << L"Bitset logical bit ops passed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"Bitset logical bit ops passed" << std::endl;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER wcout << L"  ERROR: Unexpected exception!\n   Msg: "
-                << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"  ERROR: Unexpected exception!\n   Msg: "
+                << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

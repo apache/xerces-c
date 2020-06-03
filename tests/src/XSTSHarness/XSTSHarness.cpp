@@ -31,11 +31,7 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
-#else
-#include <fstream.h>
-#endif
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
@@ -49,7 +45,7 @@ const XMLCh* g_scanner = XMLUni::fgIGXMLScanner;
 // ---------------------------------------------------------------------------
 void usage()
 {
-    XERCES_STD_QUALIFIER cout <<
+    std::cout <<
             "\n"
             "Usage:\n"
             "    XSTSHarness <testSet>\n"
@@ -62,7 +58,7 @@ void usage()
             "http://www.w3.org/XML/Test/xmlts20080827.zip\n"
             "Run this executable against the xmlconf.xml file found in the top directory\n"
             "\n"
-         << XERCES_STD_QUALIFIER endl;
+         << std::endl;
 }
 
 BaseHarnessHandlers::BaseHarnessHandlers(const XMLCh* baseURL) :
@@ -76,27 +72,27 @@ BaseHarnessHandlers::BaseHarnessHandlers(const XMLCh* baseURL) :
 void BaseHarnessHandlers::error(const SAXParseException& e)
 {
     fSawErrors = true;
-    XERCES_STD_QUALIFIER cout << "\nError at file " << StrX(e.getSystemId())
+    std::cout << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void BaseHarnessHandlers::fatalError(const SAXParseException& e)
 {
     fSawErrors = true;
-    XERCES_STD_QUALIFIER cout << "\nFatal Error at file " << StrX(e.getSystemId())
+    std::cout << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void BaseHarnessHandlers::warning(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cout << "\nWarning at file " << StrX(e.getSystemId())
+    std::cout << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void BaseHarnessHandlers::printFile(XMLURL& url)
@@ -106,10 +102,10 @@ void BaseHarnessHandlers::printFile(XMLURL& url)
     BinInputStream* stream=url.makeNewStream();
     if(stream==NULL)
     {
-        XERCES_STD_QUALIFIER cout << "File " << StrX(url.getURLText()) << " is missing" << XERCES_STD_QUALIFIER endl;
+        std::cout << "File " << StrX(url.getURLText()) << " is missing" << std::endl;
         return;
     }
-    XERCES_STD_QUALIFIER cout << "Content of file " << StrX(url.getURLText()) << XERCES_STD_QUALIFIER endl;
+    std::cout << "Content of file " << StrX(url.getURLText()) << std::endl;
     XMLByte buffer[256];
     XMLSize_t nRead;
     while((nRead=stream->readBytes(buffer, 255)) >0)
@@ -127,9 +123,9 @@ void BaseHarnessHandlers::printFile(XMLURL& url)
             if(buffer[idx]==0)
                 break;
         }
-        XERCES_STD_QUALIFIER cout << (const char*)buffer;
+        std::cout << (const char*)buffer;
     }
-    XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
+    std::cout << std::endl;
     delete stream;
 }
 
@@ -254,8 +250,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cout << "Error during initialization! Message:\n"
-            << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+        std::cout << "Error during initialization! Message:\n"
+            << StrX(toCatch.getMessage()) << std::endl;
         return 1;
     }
 
@@ -279,8 +275,8 @@ int main(int argC, char* argV[])
         }
         else
         {
-            XERCES_STD_QUALIFIER cout << "Unknown option '" << argV[argInd]
-                << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
+            std::cout << "Unknown option '" << argV[argInd]
+                << "', ignoring it\n" << std::endl;
         }
     }
 
@@ -345,19 +341,19 @@ int main(int argC, char* argV[])
     }
     catch (const OutOfMemoryException&)
     {
-        XERCES_STD_QUALIFIER cout << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        std::cout << "OutOfMemoryException" << std::endl;
         errorOccurred = true;
     }
     catch (const XMLException& e)
     {
-        XERCES_STD_QUALIFIER cout << "\nError during parsing: '" << xmlFile << "'\n"
+        std::cout << "\nError during parsing: '" << xmlFile << "'\n"
             << "Exception message is:  \n"
-            << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+            << StrX(e.getMessage()) << "\n" << std::endl;
         errorOccurred = true;
     }
     catch (...)
     {
-        XERCES_STD_QUALIFIER cout << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+        std::cout << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
         errorOccurred = true;
     }
 
@@ -367,19 +363,19 @@ int main(int argC, char* argV[])
     if (handler->getSawErrors())
         errorOccurred = true;
 
-    XERCES_STD_QUALIFIER cout << "Scanner: " << StrX(g_scanner) << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "  Total tests: " << handler->getTotalTests() << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "  Failed tests: " << handler->getFailedTests() << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "  Success rate: " << ((double)(handler->getTotalTests()-handler->getFailedTests()))/(double)handler->getTotalTests()*100 << "%" << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "  Duration: ";
+    std::cout << "Scanner: " << StrX(g_scanner) << std::endl;
+    std::cout << "  Total tests: " << handler->getTotalTests() << std::endl;
+    std::cout << "  Failed tests: " << handler->getFailedTests() << std::endl;
+    std::cout << "  Success rate: " << ((double)(handler->getTotalTests()-handler->getFailedTests()))/(double)handler->getTotalTests()*100 << "%" << std::endl;
+    std::cout << "  Duration: ";
     if(duration > 60000)
     {
-        XERCES_STD_QUALIFIER cout << duration/60000 << ":";
+        std::cout << duration/60000 << ":";
         duration=duration % 60000;
     }
     if(duration/1000 < 10)
-        XERCES_STD_QUALIFIER cout << "0";
-    XERCES_STD_QUALIFIER cout << duration/1000 << "." << duration % 1000 << XERCES_STD_QUALIFIER endl;
+        std::cout << "0";
+    std::cout << duration/1000 << "." << duration % 1000 << std::endl;
 
     //
     //  Delete the parser itself.  Must be done prior to calling Terminate, below.

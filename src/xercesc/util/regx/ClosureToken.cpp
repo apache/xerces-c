@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/ClosureToken.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ClosureToken: Constructors and Destructors
@@ -43,7 +43,7 @@ ClosureToken::~ClosureToken() {
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End of file ClosureToken.cpp

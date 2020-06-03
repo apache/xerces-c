@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/BinOutputStream.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  BinOutputStream: Virtual destructor!
@@ -42,4 +42,4 @@ BinOutputStream::BinOutputStream()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

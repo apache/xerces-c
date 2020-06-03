@@ -31,7 +31,7 @@
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSComplexTypeDefinition: Constructors and Destructor
@@ -204,4 +204,4 @@ bool XSComplexTypeDefinition::derivedFromType(const XSTypeDefinition * const anc
     return (type == ancestorType);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

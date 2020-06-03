@@ -24,11 +24,11 @@
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /***
  * internal class meant to be comsumed by XTemplateSerializer only
@@ -2319,4 +2319,4 @@ void XTemplateSerializer::loadObject(NameIdPool<XMLNotationDecl>** objToLoad
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -28,7 +28,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
       : mBytesProcessed(0),
@@ -177,4 +177,4 @@ const XMLCh* URLAccessCFBinInputStream::getContentType() const
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

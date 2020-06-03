@@ -38,9 +38,9 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
-#include <stdio.h>
+#include <cstdio>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 static int gTestsFailed = 0;
 static int gTestsRun    = 0;

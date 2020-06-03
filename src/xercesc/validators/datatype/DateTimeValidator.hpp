@@ -25,7 +25,7 @@
 #include <xercesc/validators/datatype/AbstractNumericFacetValidator.hpp>
 #include <xercesc/util/XMLDateTime.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT DateTimeValidator : public AbstractNumericFacetValidator
 {
@@ -115,7 +115,7 @@ private:
     DateTimeValidator& operator=(const DateTimeValidator&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

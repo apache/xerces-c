@@ -26,7 +26,7 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSWildcard: Constructors and Destructor
@@ -178,4 +178,4 @@ void XSWildcard::buildNamespaceList(const ContentSpecNode* const rootNode)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

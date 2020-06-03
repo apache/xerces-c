@@ -65,7 +65,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/xinclude/XIncludeUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -736,8 +736,8 @@ void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            loca
     if(fCreateSchemaInfo)
     {
         for (XMLSize_t index=0; index < psviAttributes->getLength(); index++) {
-            XERCES_CPP_NAMESPACE_QUALIFIER PSVIAttribute *attrInfo=psviAttributes->getAttributePSVIAtIndex(index);
-            XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* pAttrNode=fCurrentNode->getAttributes()->getNamedItemNS(psviAttributes->getAttributeNamespaceAtIndex(index),
+            xercesc::PSVIAttribute *attrInfo=psviAttributes->getAttributePSVIAtIndex(index);
+            xercesc::DOMNode* pAttrNode=fCurrentNode->getAttributes()->getNamedItemNS(psviAttributes->getAttributeNamespaceAtIndex(index),
                                                                                                             psviAttributes->getAttributeNameAtIndex(index));
             if(pAttrNode!=NULL)
             {
@@ -1781,4 +1781,4 @@ createAttrNS (const XMLCh* namespaceURI,
                    qName);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

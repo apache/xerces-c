@@ -22,11 +22,11 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <string.h>
+#include <cstring>
 #include <xercesc/util/EmptyStackException.hpp>
 #include <xercesc/validators/schema/NamespaceScope.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  NamespaceScope: Constructors and Destructor
@@ -309,7 +309,7 @@ void NamespaceScope::expandStack()
     fStackCapacity = newCapacity;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file NamespaceScope.cpp

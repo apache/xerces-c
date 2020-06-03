@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  URLInputSource: Constructors and Destructor
@@ -96,5 +96,5 @@ BinInputStream* URLInputSource::makeStream() const
     return fURL.makeNewStream();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

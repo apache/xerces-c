@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOM.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 /**
@@ -83,7 +83,7 @@ private:
     const XMLCh *fHref;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif /* XINCLUDELOCATION_HPP */
 

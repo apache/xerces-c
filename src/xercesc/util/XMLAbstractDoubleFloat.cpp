@@ -33,7 +33,7 @@
 #include <float.h>
 #include <errno.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  local data member
@@ -691,4 +691,4 @@ void XMLAbstractDoubleFloat::serialize(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}

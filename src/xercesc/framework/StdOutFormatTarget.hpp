@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/XMLFormatter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLPARSER_EXPORT StdOutFormatTarget : public XMLFormatTarget {
 public:
@@ -52,6 +52,6 @@ private:
     StdOutFormatTarget& operator=(const StdOutFormatTarget&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

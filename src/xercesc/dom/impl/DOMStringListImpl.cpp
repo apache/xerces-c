@@ -22,7 +22,7 @@
 #include "DOMStringListImpl.hpp"
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMStringListImpl::DOMStringListImpl(int nInitialSize, MemoryManager* manager)
 {
@@ -61,4 +61,4 @@ void DOMStringListImpl::release() {
     delete this;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

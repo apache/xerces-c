@@ -42,7 +42,7 @@
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 #define CONTENTSPEC_DEPTH_LIMIT 1000
 
@@ -3899,4 +3899,4 @@ void DTDScanner::scanTextDecl()
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

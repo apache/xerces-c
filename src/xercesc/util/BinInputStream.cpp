@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/BinInputStream.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  BinInputStream: Virtual destructor!
@@ -50,4 +50,4 @@ const XMLCh* BinInputStream::getEncoding() const
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -27,7 +27,7 @@
 #include <xercesc/util/Janitor.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Janitor: Constructors and Destructor
@@ -245,4 +245,4 @@ void JanitorMemFunCall<T>::reset(T* p)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

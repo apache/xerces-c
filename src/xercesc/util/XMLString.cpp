@@ -34,9 +34,9 @@
 #	include <strnicmp.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <errno.h>
 #include <assert.h>
 
@@ -58,7 +58,7 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/internal/XMLReader.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -2045,4 +2045,4 @@ void XMLString::termString()
     fgMemoryManager = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

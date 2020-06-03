@@ -43,7 +43,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -2411,4 +2411,4 @@ XMLScanner::resolveQNameWithColon(  const XMLCh* const          qName
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

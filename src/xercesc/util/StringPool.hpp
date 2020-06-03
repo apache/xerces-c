@@ -25,7 +25,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This class implements a string pool, in which strings can be added and
@@ -170,6 +170,6 @@ inline unsigned int XMLStringPool::getStringCount() const
     return fCurId-1;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

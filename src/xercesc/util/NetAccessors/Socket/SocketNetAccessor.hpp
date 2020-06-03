@@ -28,7 +28,7 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class is the wrapper for the socket based code which
@@ -59,6 +59,6 @@ inline const XMLCh* SocketNetAccessor::getId() const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // SOCKETNETACCESSOR_HPP

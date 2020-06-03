@@ -22,7 +22,7 @@
 
 #include    <xercesc/sax/HandlerBase.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 class PParseHandlers : public HandlerBase
 {

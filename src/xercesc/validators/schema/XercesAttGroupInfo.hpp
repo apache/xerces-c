@@ -37,7 +37,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT XercesAttGroupInfo : public XSerializable, public XMemory
 {
@@ -247,7 +247,7 @@ XercesAttGroupInfo::setCompleteWildCard(SchemaAttDef* const toSet) {
     fCompleteWildCard = toSet;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

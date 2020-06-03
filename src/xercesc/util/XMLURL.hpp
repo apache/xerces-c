@@ -24,7 +24,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class BinInputStream;
 
@@ -286,7 +286,7 @@ inline MemoryManager* XMLURL::getMemoryManager() const
 
 MakeXMLException(MalformedURLException, XMLUTIL_EXPORT)
 
-XERCES_CPP_NAMESPACE_END
+}
 
 
 #endif

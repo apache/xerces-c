@@ -27,7 +27,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLAttr: Constructors and Destructor
@@ -169,4 +169,4 @@ void XMLAttr::cleanUp()
     fMemoryManager->deallocate(fValue); //delete [] fValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -21,7 +21,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLIBM1140Transcoder.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -203,4 +203,4 @@ XMLIBM1140Transcoder::~XMLIBM1140Transcoder()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -39,7 +39,7 @@
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class    DocumentImpl;
@@ -92,7 +92,7 @@ private:
     DOMProcessingInstructionImpl & operator = (const DOMProcessingInstructionImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -33,7 +33,7 @@
 
 #include <xercesc/dom/DOMTreeWalker.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMTreeWalkerImpl : public DOMTreeWalker {
@@ -163,6 +163,6 @@ protected:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

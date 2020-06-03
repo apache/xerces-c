@@ -31,7 +31,7 @@
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructor and Destructor
@@ -214,4 +214,4 @@ const XMLCh* ValidationContextImpl::getURIForPrefix(XMLCh* prefix) {
     return XMLUni::fgZeroLenString;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

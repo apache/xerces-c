@@ -33,11 +33,11 @@
 #include "XMLMsgCat_Ids.hpp"
 
 #include <locale.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
@@ -208,4 +208,4 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     return bRet;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/ConcatToken.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
@@ -42,7 +42,7 @@ ConcatToken::~ConcatToken() {
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End of file ConcatToken.cpp

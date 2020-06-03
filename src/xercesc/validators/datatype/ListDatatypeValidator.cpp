@@ -27,7 +27,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static const int BUF_LEN = 64;
 
@@ -452,7 +452,7 @@ void ListDatatypeValidator::serialize(XSerializeEngine& serEng)
     //will be reset each time validate()/checkContent() invoked.
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file ListDatatypeValidator.cpp

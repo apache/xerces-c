@@ -29,8 +29,8 @@
  * $Id$
  */
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
@@ -38,7 +38,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 bool errorOccurred = false;
 

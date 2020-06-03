@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/TransService.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This class provides an implementation of the XMLTranscoder interface
@@ -85,6 +85,6 @@ private :
     XMLChTranscoder& operator=(const XMLChTranscoder&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

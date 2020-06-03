@@ -28,7 +28,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -147,7 +147,7 @@ void NOTATIONDatatypeValidator::serialize(XSerializeEngine& serEng)
     AbstractStringValidator::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file NOTATIONDatatypeValidator.cpp

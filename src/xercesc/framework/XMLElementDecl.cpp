@@ -30,7 +30,7 @@
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLElementDecl: Public, static data
@@ -167,4 +167,4 @@ XMLElementDecl::loadElementDecl(XSerializeEngine& serEng)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

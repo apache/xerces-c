@@ -122,7 +122,7 @@
 #	include <xercesc/util/Transcoders/Win32/Win32TransService.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local data members
@@ -1092,4 +1092,4 @@ int XMLPlatformUtils::searchSlashDotDotSlash(XMLCh* const srcPath)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -27,7 +27,7 @@
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/util/NullPointerException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Constructor and Destructor
@@ -117,5 +117,5 @@ void Wrapper4InputSource::release()
     delete src;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

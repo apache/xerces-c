@@ -26,7 +26,7 @@
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/validators/DTD/DTDAttDef.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  DTDAttDef: Constructors and Destructor
@@ -103,4 +103,4 @@ void DTDAttDef::serialize(XSerializeEngine& serEng)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

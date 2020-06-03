@@ -33,14 +33,10 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 // ---------------------------------------------------------------------------
 //  This is a simple class that lets us do easy (though not terribly efficient)
@@ -100,7 +96,7 @@ int main(int argC, char*[])
     catch(const XMLException& toCatch)
     {
         char *pMsg = XMLString::transcode(toCatch.getMessage());
-        XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+        std::cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
              << pMsg;
         XMLString::release(&pMsg);
@@ -111,11 +107,11 @@ int main(int argC, char*[])
     int errorCode = 0;
     if (argC > 1)
     {
-        XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+        std::cout << "\nUsage:\n"
                 "    CreateDOMDocument\n\n"
                 "This program creates a new DOM document from scratch in memory.\n"
                 "It then prints the count of elements in the tree.\n"
-             << XERCES_STD_QUALIFIER endl;
+             << std::endl;
         errorCode = 1;
     }
     if(errorCode) {
@@ -172,30 +168,30 @@ int main(int argC, char*[])
                //
 
                const XMLSize_t elementCount = doc->getElementsByTagName(X("*"))->getLength();
-               XERCES_STD_QUALIFIER cout << "The tree just created contains: " << elementCount
-                    << " elements." << XERCES_STD_QUALIFIER endl;
+               std::cout << "The tree just created contains: " << elementCount
+                    << " elements." << std::endl;
 
                doc->release();
            }
            catch (const OutOfMemoryException&)
            {
-               XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+               std::cerr << "OutOfMemoryException" << std::endl;
                errorCode = 5;
            }
            catch (const DOMException& e)
            {
-               XERCES_STD_QUALIFIER cerr << "DOMException code is:  " << e.code << XERCES_STD_QUALIFIER endl;
+               std::cerr << "DOMException code is:  " << e.code << std::endl;
                errorCode = 2;
            }
            catch (...)
            {
-               XERCES_STD_QUALIFIER cerr << "An error occurred creating the document" << XERCES_STD_QUALIFIER endl;
+               std::cerr << "An error occurred creating the document" << std::endl;
                errorCode = 3;
            }
        }  // (inpl != NULL)
        else
        {
-           XERCES_STD_QUALIFIER cerr << "Requested implementation is not supported" << XERCES_STD_QUALIFIER endl;
+           std::cerr << "Requested implementation is not supported" << std::endl;
            errorCode = 4;
        }
    }

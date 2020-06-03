@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 template <class TElem> class XMLEnumerator
 {
@@ -51,6 +51,6 @@ private:
     XMLEnumerator<TElem>& operator=(const XMLEnumerator<TElem>&);    
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -44,9 +44,9 @@
 // ---------------------------------------------------------------------------
 bool testTranscoders()
 {
-    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
+    std::wcout  << L"----------------------------------\n"
                 << L"Testing transcoder classes\n"
-                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
+                << L"----------------------------------" << std::endl;
 
     return true;
 }

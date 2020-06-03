@@ -24,7 +24,7 @@
 
 #include <xercesc/dom/DOMException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * @since DOM Level 3
@@ -100,6 +100,6 @@ private:
     DOMXPathException& operator = (const DOMXPathException&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

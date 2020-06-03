@@ -56,10 +56,10 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 
 class AttrInfo {

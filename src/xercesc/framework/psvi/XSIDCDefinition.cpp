@@ -27,7 +27,7 @@
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/util/StringPool.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSIDCDefinition: Constructors and Destructor
@@ -117,6 +117,6 @@ XSAnnotationList *XSIDCDefinition::getAnnotations()
     return fXSAnnotationList;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

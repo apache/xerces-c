@@ -268,7 +268,7 @@
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMLSOutput;
 
@@ -542,6 +542,6 @@ public:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

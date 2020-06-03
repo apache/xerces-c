@@ -60,7 +60,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static const int DV_BUILTIN = -1;
 static const int DV_NORMAL  = -2;
@@ -538,7 +538,7 @@ const XMLCh* DatatypeValidator::getCanonicalRepresentation(const XMLCh*         
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file DatatypeValidator.cpp

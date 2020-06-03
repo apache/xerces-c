@@ -25,7 +25,7 @@
 #include "DOMStringPool.hpp"
 #include "DOMDocumentImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMBuffer::
 DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity) :
@@ -64,4 +64,4 @@ void DOMBuffer::expandCapacity(const XMLSize_t extraNeeded, bool releasePrevious
     fCapacity = newCap;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

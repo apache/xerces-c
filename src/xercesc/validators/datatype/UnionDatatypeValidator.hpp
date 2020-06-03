@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT UnionDatatypeValidator : public DatatypeValidator
 {
@@ -310,7 +310,7 @@ inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* c
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

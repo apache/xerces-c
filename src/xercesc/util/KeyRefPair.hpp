@@ -25,7 +25,7 @@
 
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 template <class TKey, class TValue> class KeyRefPair : public XMemory
 {
@@ -72,7 +72,7 @@ template <class TKey, class TValue> class KeyRefPair : public XMemory
         TValue*  fValue;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/KeyRefPair.c>

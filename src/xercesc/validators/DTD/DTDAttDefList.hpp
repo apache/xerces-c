@@ -25,7 +25,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This is a derivative of the framework abstract class which defines the
@@ -156,6 +156,6 @@ inline void DTDAttDefList::addAttDef(DTDAttDef *toAdd)
     fArray[fCount++] = toAdd;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

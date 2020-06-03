@@ -21,7 +21,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMXPathNSResolverImpl::DOMXPathNSResolverImpl(const DOMNode *nodeResolver, MemoryManager* const manager) :
     fNamespaceBindings(0),
@@ -106,4 +106,4 @@ void DOMXPathNSResolverImpl::release()
     delete me;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

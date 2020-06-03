@@ -26,7 +26,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/XMLChar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -118,7 +118,7 @@ void IDREFDatatypeValidator::serialize(XSerializeEngine& serEng)
     StringDatatypeValidator::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file IDREFDatatypeValidator.cpp

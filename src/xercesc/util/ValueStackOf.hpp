@@ -25,7 +25,7 @@
 #include <xercesc/util/EmptyStackException.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  Forward declare the enumerator so he can be our friend. Can you say
@@ -146,7 +146,7 @@ private :
     ValueStackOf<TElem>*    fToEnum;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/ValueStackOf.c>

@@ -30,7 +30,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/StringPool.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSNamedMap: Constructors and Destructor
@@ -121,4 +121,4 @@ void XSNamedMap<TVal>::addElement(TVal* const toAdd, const XMLCh* key1, const XM
     fHash->put((void*)key1, fURIStringPool->getId(key2), toAdd);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

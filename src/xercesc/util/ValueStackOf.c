@@ -27,7 +27,7 @@
 #include <xercesc/util/ValueStackOf.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -143,4 +143,4 @@ template <class TElem> void ValueStackEnumerator<TElem>::Reset()
     fCurIndex = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

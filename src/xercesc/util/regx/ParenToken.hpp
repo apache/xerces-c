@@ -27,7 +27,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Token.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT ParenToken : public Token {
 public:
@@ -78,7 +78,7 @@ inline Token* ParenToken::getChild(const XMLSize_t) const {
     return fChild;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

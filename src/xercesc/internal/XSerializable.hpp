@@ -25,7 +25,7 @@
 #include <xercesc/internal/XSerializeEngine.hpp>
 #include <xercesc/internal/XProtoType.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT XSerializable
 {
@@ -111,7 +111,7 @@ XProtoType* class_name::getProtoType()   const \
     if (( lptr && !rptr) || (!lptr &&  rptr))  \
         return false;
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -38,7 +38,7 @@
 #include "DOMChildNode.hpp"
 #include "DOMNodeImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMEntityReferenceImpl: public DOMEntityReference,
@@ -79,7 +79,7 @@ private:
     DOMEntityReferenceImpl & operator = (const DOMEntityReferenceImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

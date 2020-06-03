@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLAttDefList.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /***
  * Support for Serialization/De-serialization
@@ -38,5 +38,5 @@ void XMLAttDefList::serialize(XSerializeEngine&)
     //no data
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

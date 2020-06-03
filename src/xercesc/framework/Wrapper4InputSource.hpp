@@ -25,7 +25,7 @@
 #include <xercesc/dom/DOMLSInput.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class InputSource;
 
@@ -285,6 +285,6 @@ inline void Wrapper4InputSource::setByteStream(InputSource*)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

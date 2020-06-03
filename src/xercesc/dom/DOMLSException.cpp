@@ -22,7 +22,7 @@
 #include "DOMLSException.hpp"
 #include <xercesc/util/XMLDOMMsg.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMLSException::DOMLSException()
 : DOMException()
@@ -46,4 +46,4 @@ DOMLSException::~DOMLSException()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

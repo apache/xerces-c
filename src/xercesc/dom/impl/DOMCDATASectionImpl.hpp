@@ -40,7 +40,7 @@
 #include "DOMParentNode.hpp"
 #include "DOMCharacterDataImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMCDATASectionImpl: public DOMCDATASection, public HasDOMNodeImpl, public HasDOMChildImpl {
@@ -98,6 +98,6 @@ private:
     DOMCDATASectionImpl & operator = (const DOMCDATASectionImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

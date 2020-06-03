@@ -35,9 +35,9 @@ enum MsgTypes
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <stdio.h>
+#include <cstdio>
 #include <wchar.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -53,7 +53,7 @@ enum MsgTypes
 #include "Xlat_MsgCatalog.hpp"
 #include "Xlat_ICUResourceBundle.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 
 // ---------------------------------------------------------------------------

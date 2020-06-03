@@ -25,7 +25,7 @@
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSNamespaceItem: Constructors and Destructors
@@ -215,4 +215,4 @@ const StringList *XSNamespaceItem::getDocumentLocations()
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

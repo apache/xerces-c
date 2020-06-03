@@ -31,7 +31,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/ValidationContext.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef JanitorMemFunCall<XPathMatcher>     CleanupType;
 
@@ -405,7 +405,7 @@ int XPathMatcher::getInitialDepth() const
     return 0; // to make some compilers happy
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XPathMatcher.cpp

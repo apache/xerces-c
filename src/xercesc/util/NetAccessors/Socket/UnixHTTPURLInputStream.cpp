@@ -23,7 +23,7 @@
 #  include <config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 #if HAVE_UNISTD_H
 #  include <unistd.h>
@@ -50,7 +50,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class SocketJanitor
 {
@@ -271,4 +271,4 @@ int UnixHTTPURLInputStream::receive(char *buf, XMLSize_t len)
     return ::recv(fSocket, buf, len, 0);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

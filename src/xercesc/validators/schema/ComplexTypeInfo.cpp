@@ -34,7 +34,7 @@
 #include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Static member data
@@ -904,7 +904,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file ComplexTypeInfo.cpp

@@ -42,7 +42,7 @@
 #include <xercesc/util/XMLInteger.hpp>
 #include <math.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 struct CMStateSetHasher
 {
@@ -1682,4 +1682,4 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     fMemoryManager->deallocate(conflictTable);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

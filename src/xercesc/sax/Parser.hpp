@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DTDHandler;
 class EntityResolver;
@@ -240,6 +240,6 @@ private :
     Parser& operator=(const Parser&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -39,7 +39,7 @@
 
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMDocument;
 
@@ -333,4 +333,4 @@ DOMCHILDIMPL_IMPL(DOMTextImpl);
           void              DOMTextImpl::appendData(const XMLCh *arg, XMLSize_t n) {fCharacterData.appendData(this, arg, n);}
           void              DOMTextImpl::appendDataFast(const XMLCh *arg, XMLSize_t n) {fCharacterData.appendDataFast(this, arg, n);}
 
-XERCES_CPP_NAMESPACE_END
+}

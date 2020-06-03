@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLFileMgr.hpp>
 #include <xercesc/util/XMLMutexMgr.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLMsgLoader;
 class XMLNetAccessor;
@@ -834,6 +834,6 @@ inline XMLDeleter::XMLDeleter()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

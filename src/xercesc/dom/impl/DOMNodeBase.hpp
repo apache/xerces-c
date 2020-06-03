@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMNodeImpl;
@@ -239,6 +239,6 @@ public:
     const DOMChildNode* classname::getChildNodeImpl() const {return &fChild;}
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

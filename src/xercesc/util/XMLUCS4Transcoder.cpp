@@ -22,9 +22,9 @@
 #include <xercesc/util/BitOps.hpp>
 #include <xercesc/util/XMLUCS4Transcoder.hpp>
 #include <xercesc/util/TranscodingException.hpp>
-#include <string.h>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLUCS4Transcoder: Constructors and Destructor
@@ -237,4 +237,4 @@ bool XMLUCS4Transcoder::canTranscodeTo(const unsigned int)
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

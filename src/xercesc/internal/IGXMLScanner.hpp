@@ -32,7 +32,7 @@
 #include <xercesc/validators/schema/SchemaInfo.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DTDElementDecl;
 class DTDGrammar;
@@ -303,6 +303,6 @@ inline Grammar::GrammarType IGXMLScanner::getCurrentGrammarType() const
     return fGrammarType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

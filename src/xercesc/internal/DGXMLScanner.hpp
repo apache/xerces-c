@@ -28,7 +28,7 @@
 #include <xercesc/util/Hash2KeysSetOf.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DTDElementDecl;
 class DTDGrammar;
@@ -187,6 +187,6 @@ inline Grammar::GrammarType DGXMLScanner::getCurrentGrammarType() const
     return Grammar::DTDGrammarType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

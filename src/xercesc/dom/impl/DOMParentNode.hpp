@@ -45,7 +45,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMNodeListImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMChildNode;
@@ -120,6 +120,6 @@ private:
 
 #define GetDOMParentNodeMemoryManager GET_DIRECT_MM(fOwnerDocument)
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

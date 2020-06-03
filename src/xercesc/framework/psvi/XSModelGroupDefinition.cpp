@@ -25,7 +25,7 @@
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSModelGroupDefinition: Constructors and Destructors
@@ -78,6 +78,6 @@ XSModelGroup* XSModelGroupDefinition::getModelGroup()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

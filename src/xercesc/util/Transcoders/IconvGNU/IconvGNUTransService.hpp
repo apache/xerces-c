@@ -27,7 +27,7 @@
 
 #include <iconv.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Libiconv wrapper (low-level conversion utilities collection)
@@ -352,7 +352,7 @@ private :
     IconvGNULCPTranscoder& operator=(const IconvGNULCPTranscoder&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif /* ICONVGNUTRANSSERVICE */
 

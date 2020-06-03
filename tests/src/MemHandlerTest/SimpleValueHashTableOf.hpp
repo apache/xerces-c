@@ -34,7 +34,7 @@
 #include <xercesc/util/XMLEnumerator.hpp>
 #include <xercesc/util/Hashers.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 //  Forward declare the enumerator so it can be our friend.
 //

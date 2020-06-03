@@ -27,7 +27,7 @@
 #include <xercesc/framework/XMLAttDef.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  *  This class defines the information about an attribute that will come out
@@ -496,6 +496,6 @@ inline void XMLAttr::setSpecified(const bool newValue)
     fSpecified = newValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

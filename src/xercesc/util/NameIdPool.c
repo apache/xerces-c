@@ -33,7 +33,7 @@
 #include <new>
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  NameIdPool: Constructors and Destructor
@@ -281,4 +281,4 @@ template <class TElem> XMLSize_t NameIdPoolEnumerator<TElem>::size() const
     return fToEnum->fIdCounter;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

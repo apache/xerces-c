@@ -33,8 +33,8 @@
 #include <xercesc/util/regx/StringToken.hpp>
 #include <xercesc/util/regx/UnionToken.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
-XERCES_CPP_NAMESPACE_END
+namespace XERCES_CPP_NAMESPACE {
+}
 
 #endif
 

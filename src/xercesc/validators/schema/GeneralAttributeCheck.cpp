@@ -32,7 +32,7 @@
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -400,7 +400,7 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
 
 #if defined(NEED_TO_GEN_ELEM_ATT_MAP_TABLE)
 
-#include <stdio.h>
+#include <cstdio>
 
 void GeneralAttributeCheck::initCharFlagTable()
 {
@@ -789,7 +789,7 @@ const XMLCh* GeneralAttributeCheck::fAttNames[GeneralAttributeCheck::A_Count] =
     SchemaSymbols::fgATT_XPATH,
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file GeneralAttributeCheck.cpp

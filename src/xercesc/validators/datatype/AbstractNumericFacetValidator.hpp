@@ -26,7 +26,7 @@
 #include <xercesc/util/RefArrayVectorOf.hpp>
 #include <xercesc/util/XMLNumber.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT AbstractNumericFacetValidator : public DatatypeValidator
 {
@@ -192,7 +192,7 @@ inline RefVectorOf<XMLNumber>* AbstractNumericFacetValidator::getEnumeration() c
     return fEnumeration;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

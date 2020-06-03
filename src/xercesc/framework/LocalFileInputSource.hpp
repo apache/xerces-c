@@ -25,7 +25,7 @@
 
 #include <xercesc/sax/InputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class BinInputStream;
 
@@ -147,6 +147,6 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

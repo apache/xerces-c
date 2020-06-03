@@ -27,7 +27,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLPARSER_EXPORT XMLGrammarDescription : public XSerializable, public XMemory
 {
@@ -100,6 +100,6 @@ inline MemoryManager* XMLGrammarDescription::getMemoryManager() const
     return fMemMgr;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

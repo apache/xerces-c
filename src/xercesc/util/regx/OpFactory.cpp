@@ -26,7 +26,7 @@
 #include <xercesc/util/regx/OpFactory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  OpFactory: Constructors and Destructor
@@ -136,7 +136,7 @@ StringOp* OpFactory::createStringOp(const XMLCh* const literal) {
     return tmpOp;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file OpFactory.cpp

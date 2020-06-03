@@ -31,7 +31,7 @@
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // ---------------------------------------------------------------------------
@@ -344,7 +344,7 @@ void ValueStore::duplicateValue() {
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file ValueStore.cpp

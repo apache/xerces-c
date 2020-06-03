@@ -27,7 +27,7 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 //  This is a a non-validating scanner. No DOCTYPE or XML Schema processing
@@ -148,6 +148,6 @@ inline const XMLCh* WFXMLScanner::getName() const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

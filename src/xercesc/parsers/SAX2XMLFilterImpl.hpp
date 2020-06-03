@@ -28,7 +28,7 @@
 #include <xercesc/sax2/ContentHandler.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * This class implements the SAX2 'XMLFilterImpl' interface and should be
@@ -1440,6 +1440,6 @@ inline bool SAX2XMLFilterImpl::removeAdvDocHandler(XMLDocumentHandler* const /*t
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

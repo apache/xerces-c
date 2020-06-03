@@ -26,7 +26,7 @@
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLInitializer: Initialization methods
@@ -127,4 +127,4 @@ void XMLInitializer::terminateStaticData()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

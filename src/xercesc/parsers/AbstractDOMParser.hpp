@@ -34,7 +34,7 @@
 #include <xercesc/framework/XMLBufferMgr.hpp>
 #include <xercesc/framework/psvi/PSVIHandler.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLPScanToken;
 class XMLScanner;
@@ -1895,6 +1895,6 @@ inline void AbstractDOMParser::setParseInProgress(const bool toSet)
     fParseInProgress = toSet;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

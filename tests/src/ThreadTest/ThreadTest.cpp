@@ -25,9 +25,9 @@
 #	include <config.h>
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <ctype.h>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
@@ -204,7 +204,7 @@ struct ThreadInfo
 };
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 //------------------------------------------------------------------------------
 //
 //  struct runInfo     Holds the info extracted from the command line.
@@ -406,7 +406,7 @@ private:
     SAXParser*                                      fSAXParser;
     SAX2XMLReader*                                  fSAX2Parser;
     XercesDOMParser*                                fXercesDOMParser;
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *    fDoc;
+    xercesc::DOMDocument *    fDoc;
 
 
     ThreadParser(const ThreadParser &); // No copy constructor

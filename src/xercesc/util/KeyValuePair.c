@@ -27,7 +27,7 @@
 #include <xercesc/util/KeyValuePair.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  KeyValuePair: Constructors and Destructor
@@ -101,4 +101,4 @@ KeyValuePair<TKey,TValue>::setValue(const TValue& newValue)
     return fValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

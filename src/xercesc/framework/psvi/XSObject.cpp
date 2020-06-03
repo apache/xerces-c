@@ -22,7 +22,7 @@
 #include <xercesc/framework/psvi/XSObject.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSObject: Constructors and Destructor
@@ -73,4 +73,4 @@ void XSObject::setId(XMLSize_t id)
     fId = id;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -23,7 +23,7 @@
 #include <xercesc/util/TransENameMap.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ENameMapFor: Constructors and Destructor
@@ -78,4 +78,4 @@ EEndianNameMapFor<TType>::makeNew(const XMLSize_t      blockSize,
     return new (manager) TType(getKey(), blockSize, fSwapped, manager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

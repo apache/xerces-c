@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/PanicHandler.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const char* PanicHandler::getPanicReasonString(const PanicReasons reason)
 {
@@ -66,5 +66,5 @@ const char* PanicHandler::getPanicReasonString(const PanicReasons reason)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

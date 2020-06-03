@@ -22,13 +22,9 @@
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
-#include <string.h>
-#if defined(XERCES_NEW_IOSTREAMS)
+#include <cstring>
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
-#include <stdlib.h>
+#include <cstdlib>
 #include "SAXPrintHandlers.hpp"
 
 
@@ -71,7 +67,7 @@ private :
     char*   fLocalForm;
 };
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

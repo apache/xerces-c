@@ -22,7 +22,7 @@
 #include "DOMImplementationListImpl.hpp"
 #include <xercesc/dom/DOMImplementation.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMImplementationListImpl::DOMImplementationListImpl()
 {
@@ -56,4 +56,4 @@ void DOMImplementationListImpl::release() {
     delete this;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

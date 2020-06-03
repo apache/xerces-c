@@ -28,7 +28,7 @@
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -149,7 +149,7 @@ XMLSize_t IdentityConstraintHandler::getMatcherCount() const
     return fMatcherStack->getMatcherCount();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

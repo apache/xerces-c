@@ -30,7 +30,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -142,7 +142,7 @@ private:
     FieldActivator* fFieldActivator;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

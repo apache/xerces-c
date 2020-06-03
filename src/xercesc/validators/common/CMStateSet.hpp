@@ -35,13 +35,13 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
-#include <string.h>
+#include <cstring>
 
 #if XERCES_HAVE_EMMINTRIN_H
 #   include <emmintrin.h>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CMStateSetEnumerator;
 
@@ -622,6 +622,6 @@ private:
     XMLInt32            fLastValue;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

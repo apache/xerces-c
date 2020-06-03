@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/IC_Unique.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  IC_Unique: Constructors and Destructor
@@ -59,7 +59,7 @@ IC_Unique::IC_Unique(MemoryManager* const manager)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file IC_Unique.cpp

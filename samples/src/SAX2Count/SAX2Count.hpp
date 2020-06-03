@@ -25,13 +25,9 @@
 // ---------------------------------------------------------------------------
 
 #include <xercesc/util/PlatformUtils.hpp>
-#include <stdlib.h>
-#include <string.h>
-#if defined(XERCES_NEW_IOSTREAMS)
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include "SAX2CountHandlers.hpp"
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
@@ -76,7 +72,7 @@ private :
     char*   fLocalForm;
 };
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

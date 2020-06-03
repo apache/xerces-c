@@ -27,7 +27,7 @@
 #include <xercesc/validators/common/CMStateSet.hpp>
 #include <xercesc/validators/common/CMUnaryOp.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  CMUnaryOp: Constructors and Destructor
@@ -96,4 +96,4 @@ void CMUnaryOp::calcLastPos(CMStateSet& toSet) const
     toSet = fChild->getLastPos();
 }
 
-XERCES_CPP_NAMESPACE_END
+}

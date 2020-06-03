@@ -31,7 +31,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PanicHandler.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 //	Wrap up the mutex with XMemory
@@ -109,5 +109,5 @@ PosixMutexMgr::unlock(XMLMutexHandle mtx)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

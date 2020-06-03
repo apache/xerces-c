@@ -32,7 +32,7 @@
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/util/XMLBigDecimal.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 XMLNumber::XMLNumber()
 {}
@@ -90,4 +90,4 @@ XMLNumber* XMLNumber::loadNumber(XMLNumber::NumberType  numType
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

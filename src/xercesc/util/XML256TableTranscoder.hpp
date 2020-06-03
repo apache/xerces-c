@@ -24,7 +24,7 @@
 
 #include <xercesc/util/TransService.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This class implements the functionality of a common type of transcoder
@@ -141,6 +141,6 @@ private :
     const XMLTransService::TransRec*    fToTable;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

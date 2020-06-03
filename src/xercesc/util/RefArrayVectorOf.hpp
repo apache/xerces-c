@@ -24,7 +24,7 @@
 
 #include <xercesc/util/BaseRefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /** 
  * Class with implementation for vectors of pointers to arrays  - implements from 
@@ -61,7 +61,7 @@ private:
     RefArrayVectorOf<TElem>& operator=(const RefArrayVectorOf<TElem>&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/RefArrayVectorOf.c>

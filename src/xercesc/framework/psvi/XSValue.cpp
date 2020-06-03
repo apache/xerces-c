@@ -21,7 +21,7 @@
 
 #include <limits.h>
 #include <errno.h>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 #include <math.h>
 #include <float.h>
@@ -48,7 +48,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /*** issues
  *
@@ -1686,4 +1686,4 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

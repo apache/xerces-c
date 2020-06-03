@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/ValidationContext.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 class ElemStack;
 class NamespaceScope;
 
@@ -167,7 +167,7 @@ inline void ValidationContextImpl::setNamespaceScope(NamespaceScope* nsStack) {
     fNamespaceScope = nsStack;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

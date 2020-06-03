@@ -32,5 +32,5 @@
 #include <xercesc/sax/SAXException.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
-XERCES_CPP_NAMESPACE_END
+namespace XERCES_CPP_NAMESPACE {
+}

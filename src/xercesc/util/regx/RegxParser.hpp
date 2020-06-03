@@ -32,7 +32,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/regx/Token.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -274,7 +274,7 @@ inline int RegxParser::hexChar(const XMLInt32 ch) {
     return ch - chLatin_a + 10;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

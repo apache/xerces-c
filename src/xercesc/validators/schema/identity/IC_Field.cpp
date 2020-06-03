@@ -28,7 +28,7 @@
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  FieldMatcher: Constructors and Destructor
@@ -133,7 +133,7 @@ IC_Field::IC_Field(MemoryManager* const )
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file IC_Field.cpp

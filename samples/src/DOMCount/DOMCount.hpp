@@ -24,13 +24,9 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/util/XMLString.hpp>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 // ---------------------------------------------------------------------------
 //  Simple error handler deriviative to install on parser
@@ -118,7 +114,7 @@ private :
     char*   fLocalForm;
 };
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

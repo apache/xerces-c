@@ -26,7 +26,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLElementDecl;
 class XMLEntityDecl;
@@ -278,6 +278,6 @@ private:
     XMLDocumentHandler& operator=(const XMLDocumentHandler&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -29,7 +29,7 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -362,7 +362,7 @@ void BlockRangeFactory::initializeKeywordMap(RangeTokenMap *rangeTokMap) {
     fKeywordsInitialized = true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file BlockRangeFactory.cpp

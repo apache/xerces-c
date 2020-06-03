@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  BinFileOutputStream: Constructors and Destructor
@@ -101,4 +101,4 @@ void BinFileOutputStream::writeBytes( const XMLByte* const  toGo
     XMLPlatformUtils::writeBufferToFile(fSource, maxToWrite, toGo, fMemoryManager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

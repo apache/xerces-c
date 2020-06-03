@@ -22,7 +22,7 @@
 //  Includes
 //------------------------------------------------------------------------------------
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * The <code>DOMMemoryManager</code> interface exposes the memory allocation-related
@@ -151,7 +151,7 @@ public:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This represents all Schema Facet components with the exception 
@@ -146,6 +146,6 @@ inline XSAnnotation* XSFacet::getAnnotation() const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

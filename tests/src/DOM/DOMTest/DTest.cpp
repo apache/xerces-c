@@ -27,7 +27,7 @@
  *
  */
 
-#include <stdio.h>
+#include <cstdio>
 #include "DTest.h"
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>

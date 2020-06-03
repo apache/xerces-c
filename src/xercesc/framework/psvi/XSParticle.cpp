@@ -24,7 +24,7 @@
 #include <xercesc/framework/psvi/XSModelGroup.hpp>
 #include <xercesc/framework/psvi/XSWildcard.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSParticle: Constructors and Destructor
@@ -78,4 +78,4 @@ XSWildcard *XSParticle::getWildcardTerm()
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

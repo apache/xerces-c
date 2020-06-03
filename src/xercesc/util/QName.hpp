@@ -29,7 +29,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT QName : public XSerializable, public XMemory
 {
@@ -212,6 +212,6 @@ inline void QName::setLocalPart(const XMLCh* localPart)
     setNLocalPart(localPart, XMLString::stringLen(localPart));
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

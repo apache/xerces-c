@@ -25,7 +25,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 template <class T> class Janitor : public XMemory
 {
@@ -159,7 +159,7 @@ XERCES_TEMPLATE_EXTERN template class XMLUTIL_EXPORT ArrayJanitor<XMLByte>;
 XERCES_TEMPLATE_EXTERN template class XMLUTIL_EXPORT ArrayJanitor<XMLCh>;
 #endif
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/Janitor.c>

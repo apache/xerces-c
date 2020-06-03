@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/RefStackOf.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 class XMLHarnessHandlers : public BaseHarnessHandlers 
 {

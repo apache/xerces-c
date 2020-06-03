@@ -38,9 +38,9 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
-#include <string.h>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -1348,4 +1348,4 @@ void SAXParser::resetCachedGrammarPool()
     fScanner->resetCachedGrammar();
 }
 
-XERCES_CPP_NAMESPACE_END
+}

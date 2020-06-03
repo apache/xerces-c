@@ -21,7 +21,7 @@
 
 #include <xercesc/util/MutexManagers/NoThreadMutexMgr.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /*
 	The NoThread mutex manager is for use where no threading is used
@@ -65,5 +65,5 @@ NoThreadMutexMgr::unlock(XMLMutexHandle mtx)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

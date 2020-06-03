@@ -28,7 +28,7 @@
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
                                          const XMLCh *entityName)
@@ -224,4 +224,4 @@ DOMNODEIMPL_IMPL(DOMEntityReferenceImpl);
 DOMPARENTIMPL_IMPL(DOMEntityReferenceImpl);
 DOMCHILDIMPL_IMPL(DOMEntityReferenceImpl);
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT StringDatatypeValidator : public AbstractStringValidator
 {
@@ -105,7 +105,7 @@ private:
     StringDatatypeValidator& operator=(const StringDatatypeValidator&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

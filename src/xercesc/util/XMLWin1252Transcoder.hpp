@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XML256TableTranscoder.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 //
@@ -58,6 +58,6 @@ private :
     XMLWin1252Transcoder& operator=(const XMLWin1252Transcoder&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

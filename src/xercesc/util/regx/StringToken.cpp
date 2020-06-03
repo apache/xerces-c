@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/StringToken.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
@@ -47,7 +47,7 @@ StringToken::~StringToken() {
     fMemoryManager->deallocate(fString);//delete [] fString;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End of file StringToken.cpp

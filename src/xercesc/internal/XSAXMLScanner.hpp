@@ -25,7 +25,7 @@
 #include <xercesc/internal/SGXMLScanner.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This is a scanner class, which processes/validates contents of XML Schema
@@ -93,6 +93,6 @@ inline const XMLCh* XSAXMLScanner::getName() const
     return XMLUni::fgXSAXMLScanner;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

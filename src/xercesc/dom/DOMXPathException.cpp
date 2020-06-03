@@ -22,7 +22,7 @@
 #include <xercesc/util/XMLDOMMsg.hpp>
 #include "impl/DOMImplementationImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 DOMXPathException::DOMXPathException()
@@ -49,4 +49,4 @@ DOMXPathException::~DOMXPathException()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

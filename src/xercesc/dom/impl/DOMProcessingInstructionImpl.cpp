@@ -28,7 +28,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(DOMDocument *ownerDoc,
                                                      const XMLCh *targt,
@@ -216,4 +216,4 @@ DOMCHILDIMPL_IMPL(DOMProcessingInstructionImpl);
            void             DOMProcessingInstructionImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); }
 
 
-XERCES_CPP_NAMESPACE_END
+}

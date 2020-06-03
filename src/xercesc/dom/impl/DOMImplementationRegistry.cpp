@@ -29,7 +29,7 @@
 #include "DOMImplementationImpl.hpp"
 #include "DOMImplementationListImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // Points to the singleton instance of a registry of DOMImplementationSource.
 //
@@ -113,5 +113,5 @@ void DOMImplementationRegistry::addSource (DOMImplementationSource* source)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

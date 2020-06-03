@@ -31,7 +31,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  DTDGrammar: Static member data
@@ -260,4 +260,4 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}

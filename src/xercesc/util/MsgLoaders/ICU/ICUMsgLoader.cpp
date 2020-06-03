@@ -34,11 +34,11 @@
 #include "unicode/uloc.h"
 #include "unicode/udata.h"
 
-#include "string.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static methods
@@ -309,4 +309,4 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
     return bRet;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

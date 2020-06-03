@@ -31,7 +31,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ParserForXMLSchema: Constructors and Destructors
@@ -164,7 +164,7 @@ XMLInt32 ParserForXMLSchema::decodeEscaped() {
     return ch;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file ParserForXMLSchema.cpp

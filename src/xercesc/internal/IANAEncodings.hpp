@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ----------------------------------------------------------------
 //  This file was generated from the IANA charset source.
@@ -828,7 +828,7 @@ const XMLCh gEncodingArray[][46] =
 };
 const unsigned int gEncodingArraySize = 791;
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

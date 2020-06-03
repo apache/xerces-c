@@ -35,7 +35,7 @@
 #include <xercesc/dom/DOMRange.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 
@@ -171,6 +171,6 @@ private:
     DOMRangeImpl & operator = (const DOMRangeImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

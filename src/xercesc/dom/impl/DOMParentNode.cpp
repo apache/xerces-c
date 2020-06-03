@@ -29,7 +29,7 @@
 #include "DOMParentNode.hpp"
 #include "DOMCasts.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMParentNode::DOMParentNode(DOMNode* containingNode, DOMDocument *ownerDoc)
     : fContainingNode(containingNode), fOwnerDocument(ownerDoc), fFirstChild(0), fChildNodeList(this)
@@ -488,4 +488,4 @@ void DOMParentNode::release()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

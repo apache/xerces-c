@@ -80,8 +80,8 @@
 #include "DOMPrintErrorHandler.hpp"
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -153,7 +153,7 @@ void usage();
 // ---------------------------------------------------------------------------
 void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
             "    DOMPrint [options] <XML file>\n\n"
             "This program invokes the DOM parser, and builds the DOM tree.\n"
             "It then asks the DOMLSSerializer to serialize the DOM tree.\n"
@@ -179,7 +179,7 @@ void usage()
             "The parser has intrinsic support for the following encodings:\n"
             "    UTF-8, US-ASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
             "    WINDOWS-1252, IBM1140, IBM037, IBM1047.\n"
-          <<  XERCES_STD_QUALIFIER endl;
+          <<  std::endl;
 }
 
 // ---------------------------------------------------------------------------
@@ -199,9 +199,9 @@ int main(int argC, char* argV[])
 
     catch(const XMLException &toCatch)
     {
-        XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+        std::cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
-             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+             << StrX(toCatch.getMessage()) << std::endl;
         return 1;
     }
 
@@ -241,7 +241,7 @@ int main(int argC, char* argV[])
                 gValScheme = XercesDOMParser::Val_Always;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -v= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -285,7 +285,7 @@ int main(int argC, char* argV[])
 				gDiscardDefaultContent = false;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -wddc= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -wddc= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -301,7 +301,7 @@ int main(int argC, char* argV[])
 				gSplitCdataSections = false;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -wscs= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -wscs= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -316,7 +316,7 @@ int main(int argC, char* argV[])
 				gUseFilter = false;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -wflt= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -wflt= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -331,7 +331,7 @@ int main(int argC, char* argV[])
 				gFormatPrettyPrint = false;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -wfpp= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -wfpp= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -346,7 +346,7 @@ int main(int argC, char* argV[])
                  gXMLDeclaration = false;
              else
              {
-                 XERCES_STD_QUALIFIER cerr << "Unknown -wfdecl= value: " << parm << XERCES_STD_QUALIFIER endl;
+                 std::cerr << "Unknown -wfdecl= value: " << parm << std::endl;
                  XMLPlatformUtils::Terminate();
                  return 2;
              }
@@ -361,7 +361,7 @@ int main(int argC, char* argV[])
                 gWriteBOM = false;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -wbom= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -wbom= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -372,8 +372,8 @@ int main(int argC, char* argV[])
         }
          else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
-                 << "', ignoring it.\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it.\n" << std::endl;
         }
     }
 
@@ -416,13 +416,13 @@ int main(int argC, char* argV[])
     }
     catch (const OutOfMemoryException&)
     {
-        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        std::cerr << "OutOfMemoryException" << std::endl;
         errorsOccured = true;
     }
     catch (const XMLException& e)
     {
-        XERCES_STD_QUALIFIER cerr << "An error occurred during parsing\n   Message: "
-             << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+        std::cerr << "An error occurred during parsing\n   Message: "
+             << StrX(e.getMessage()) << std::endl;
         errorsOccured = true;
     }
 
@@ -431,18 +431,18 @@ int main(int argC, char* argV[])
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        XERCES_STD_QUALIFIER cerr << "\nDOM Error during parsing: '" << gXmlFile << "'\n"
-             << "DOMException code is:  " << e.code << XERCES_STD_QUALIFIER endl;
+        std::cerr << "\nDOM Error during parsing: '" << gXmlFile << "'\n"
+             << "DOMException code is:  " << e.code << std::endl;
 
         if (DOMImplementation::loadDOMExceptionMsg(e.code, errText, maxChars))
-             XERCES_STD_QUALIFIER cerr << "Message is: " << StrX(errText) << XERCES_STD_QUALIFIER endl;
+             std::cerr << "Message is: " << StrX(errText) << std::endl;
 
         errorsOccured = true;
     }
 
     catch (...)
     {
-        XERCES_STD_QUALIFIER cerr << "An error occurred during parsing\n " << XERCES_STD_QUALIFIER endl;
+        std::cerr << "An error occurred during parsing\n " << std::endl;
         errorsOccured = true;
     }
 
@@ -546,16 +546,16 @@ int main(int argC, char* argV[])
                 }
                 catch(const DOMXPathException& e)
                 {
-                    XERCES_STD_QUALIFIER cerr << "An error occurred during processing of the XPath expression. Msg is:"
-                        << XERCES_STD_QUALIFIER endl
-                        << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+                    std::cerr << "An error occurred during processing of the XPath expression. Msg is:"
+                        << std::endl
+                        << StrX(e.getMessage()) << std::endl;
                     retval = 4;
                 }
                 catch(const DOMException& e)
                 {
-                    XERCES_STD_QUALIFIER cerr << "An error occurred during processing of the XPath expression. Msg is:"
-                        << XERCES_STD_QUALIFIER endl
-                        << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+                    std::cerr << "An error occurred during processing of the XPath expression. Msg is:"
+                        << std::endl
+                        << StrX(e.getMessage()) << std::endl;
                     retval = 4;
                 }
                 XMLString::release(&xpathStr);
@@ -579,21 +579,21 @@ int main(int argC, char* argV[])
         }
         catch (const OutOfMemoryException&)
         {
-            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "OutOfMemoryException" << std::endl;
             retval = 5;
         }
         catch (const DOMLSException& e)
         {
-            XERCES_STD_QUALIFIER cerr << "An error occurred during serialization of the DOM tree. Msg is:"
-                << XERCES_STD_QUALIFIER endl
-                << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+            std::cerr << "An error occurred during serialization of the DOM tree. Msg is:"
+                << std::endl
+                << StrX(e.getMessage()) << std::endl;
             retval = 4;
         }
         catch (const XMLException& e)
         {
-            XERCES_STD_QUALIFIER cerr << "An error occurred during creation of output transcoder. Msg is:"
-                << XERCES_STD_QUALIFIER endl
-                << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+            std::cerr << "An error occurred during creation of output transcoder. Msg is:"
+                << std::endl
+                << StrX(e.getMessage()) << std::endl;
             retval = 4;
         }
 

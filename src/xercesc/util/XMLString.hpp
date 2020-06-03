@@ -25,10 +25,10 @@
 #include <xercesc/util/BaseRefVectorOf.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
-#include <string.h>
+#include <cstring>
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLLCPTranscoder;
 /**
@@ -1626,6 +1626,6 @@ inline XMLSize_t XMLString::hashN(const   XMLCh* const   tohash
   return hashVal % hashModulus;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

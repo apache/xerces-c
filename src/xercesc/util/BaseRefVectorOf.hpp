@@ -27,7 +27,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /** 
  * Abstract base class for the xerces internal representation of Vector. 
@@ -149,7 +149,7 @@ private :
     BaseRefVectorOf<TElem>*    fToEnum;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/BaseRefVectorOf.c>

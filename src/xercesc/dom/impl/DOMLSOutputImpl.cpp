@@ -23,7 +23,7 @@
 
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMLSOutputImpl::DOMLSOutputImpl(MemoryManager* const manager /*= XMLPlatformUtils::fgMemoryManager*/)
 :fByteStream(0)
@@ -62,5 +62,5 @@ void DOMLSOutputImpl::release()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

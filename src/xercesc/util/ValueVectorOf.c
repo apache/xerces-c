@@ -26,9 +26,9 @@
 #if defined(XERCES_TMPLSINC)
 #include <xercesc/util/ValueVectorOf.hpp>
 #endif
-#include <string.h>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ValueVectorOf: Constructors and Destructor
@@ -296,4 +296,4 @@ template <class TElem> void ValueVectorEnumerator<TElem>::Reset()
     fCurIndex = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

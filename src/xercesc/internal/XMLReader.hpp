@@ -27,7 +27,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class InputSource;
 class BinInputStream;
@@ -785,6 +785,6 @@ inline bool XMLReader::peekNextChar(XMLCh& chGotten)
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

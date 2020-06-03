@@ -26,7 +26,7 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ContentSpecNode;
 
@@ -172,6 +172,6 @@ AllContentModel::handleRepetitions( const QName* const /*curElem*/,
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

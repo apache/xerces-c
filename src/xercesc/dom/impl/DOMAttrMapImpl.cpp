@@ -30,7 +30,7 @@
 #include <xercesc/dom/DOMAttr.hpp>
 #include <xercesc/dom/DOMException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMAttrMapImpl::DOMAttrMapImpl(DOMNode *ownerNod)
 {
@@ -491,4 +491,4 @@ void DOMAttrMapImpl::reserve (XMLSize_t n)
   }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

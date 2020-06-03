@@ -32,7 +32,7 @@
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // Finds and returns the first child element node.
 DOMElement* XUtil::getFirstChildElement(const DOMNode* const parent)
@@ -122,4 +122,4 @@ DOMElement* XUtil::getNextSiblingElementNS(const DOMNode* const node
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <new>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ValueHashTableOf: Constructors and Destructor
@@ -486,4 +486,4 @@ void ValueHashTableOfEnumerator<TVal, THasher>::findNext()
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

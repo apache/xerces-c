@@ -27,7 +27,7 @@
 #include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  DTDAttDefList: Constructors and Destructor
@@ -185,4 +185,4 @@ DTDAttDefList::DTDAttDefList(MemoryManager* const manager)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

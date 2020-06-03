@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT BinInputStream : public XMemory
 {
@@ -99,6 +99,6 @@ private :
     BinInputStream& operator=(const BinInputStream&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

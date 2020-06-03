@@ -28,7 +28,7 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLPARSER_EXPORT VecAttributesImpl : public Attributes
 {
@@ -112,6 +112,6 @@ private :
     const XMLScanner *		fScanner ;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // ! VECATTRIBUTESIMPL_HPP

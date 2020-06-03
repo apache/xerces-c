@@ -22,7 +22,7 @@
 #include <xercesc/framework/psvi/XSMultiValueFacet.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSMultiValueFacet: Constructors and Destructors
@@ -59,6 +59,6 @@ XSMultiValueFacet::~XSMultiValueFacet()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

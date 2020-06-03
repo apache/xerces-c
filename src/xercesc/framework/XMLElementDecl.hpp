@@ -28,7 +28,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ContentSpecNode;
 class XMLContentModel;
@@ -547,6 +547,6 @@ inline void XMLElementDecl::setExternalElemDeclaration(const bool aValue)
     fExternalElement = aValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

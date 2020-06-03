@@ -27,7 +27,7 @@
 
 struct UConverter;
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT ICUTransService : public XMLTransService
 {
@@ -237,6 +237,6 @@ private :
     XMLMutex        fMutex;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

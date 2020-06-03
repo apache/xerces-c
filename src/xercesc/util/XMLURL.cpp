@@ -37,7 +37,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLChar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 
@@ -1498,4 +1498,4 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

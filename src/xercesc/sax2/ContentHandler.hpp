@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class Attributes;
 class Locator;
@@ -335,6 +335,6 @@ private :
     ContentHandler& operator=(const ContentHandler&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

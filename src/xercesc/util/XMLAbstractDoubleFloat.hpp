@@ -26,7 +26,7 @@
 #include <xercesc/util/XMLNumber.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /***
  * 3.2.5.1 Lexical representation
@@ -216,6 +216,6 @@ inline  XMLAbstractDoubleFloat::LiteralType   XMLAbstractDoubleFloat::getType() 
     return fType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // Common hashers. Only widely-used hashers should be placed here.
@@ -90,6 +90,6 @@ struct PtrHasher
   }
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

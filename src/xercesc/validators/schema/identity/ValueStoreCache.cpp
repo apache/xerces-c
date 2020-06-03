@@ -27,7 +27,7 @@
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef JanitorMemFunCall<ValueStoreCache>    CleanupType;
 
@@ -177,7 +177,7 @@ void ValueStoreCache::transplant(IdentityConstraint* const ic, const int initial
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file ValueStoreCache.cpp

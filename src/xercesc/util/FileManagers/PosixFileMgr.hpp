@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMLFileMgr.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //	Concrete implementation of XMLFileMgr, implementing
 //	file access on posix compatible systems.
@@ -54,7 +54,7 @@ class PosixFileMgr : public XMLFileMgr
         virtual bool		isRelative(const XMLCh* const toCheck, MemoryManager* const manager);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

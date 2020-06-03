@@ -75,9 +75,9 @@ template class CountedPointerTo<TestClass>;
 // ---------------------------------------------------------------------------
 bool testCountedPointer()
 {
-    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
+    std::wcout  << L"----------------------------------\n"
                 << L"Testing CountedPointerTo class\n"
-                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
@@ -87,8 +87,8 @@ bool testCountedPointer()
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER wcout << L"  ERROR: Unexpected exception!\n   Msg: "
-                   << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"  ERROR: Unexpected exception!\n   Msg: "
+                   << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

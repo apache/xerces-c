@@ -25,7 +25,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/psvi/XSConstants.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * The XSObject forms the base of the Schema Component Model.  It contains
@@ -147,6 +147,6 @@ inline XSConstants::COMPONENT_TYPE XSObject::getType() const
     return fComponentType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

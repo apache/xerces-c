@@ -24,9 +24,9 @@
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <assert.h>
-#include <string.h>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const XMLSize_t MAX_BUFFER_SIZE = 65536;
 
@@ -151,4 +151,4 @@ void LocalFileFormatTarget::ensureCapacity(const XMLSize_t extraNeeded)
     fCapacity = newCap;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -26,7 +26,7 @@
 #include <xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.hpp>
 #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const XMLCh SocketNetAccessor::fgMyName[] =
 {
@@ -72,5 +72,5 @@ BinInputStream* SocketNetAccessor::makeNew(const XMLURL&  urlSource, const XMLNe
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

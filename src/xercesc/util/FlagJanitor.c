@@ -27,7 +27,7 @@
 #include <xercesc/util/FlagJanitor.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -59,4 +59,4 @@ template <class T> void FlagJanitor<T>::release()
     fValPtr = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

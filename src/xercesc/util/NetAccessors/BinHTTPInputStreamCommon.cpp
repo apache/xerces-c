@@ -28,8 +28,8 @@
 #  include <config.h>
 #endif
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 #include <xercesc/util/NetAccessors/BinHTTPInputStreamCommon.hpp>
 
@@ -40,7 +40,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/Base64.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 BinHTTPInputStreamCommon::BinHTTPInputStreamCommon(MemoryManager *manager)
       : fBytesProcessed(0)
@@ -361,4 +361,4 @@ XMLSize_t BinHTTPInputStreamCommon::readBytes(XMLByte* const    toFill,
     return len;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

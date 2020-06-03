@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <new>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RefHash2KeysTableOf: Constructors and Destructor
@@ -689,4 +689,4 @@ void RefHash2KeysTableOfEnumerator<TVal, THasher>::findNext()
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -25,7 +25,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This contains constants needed in the schema component model.
@@ -53,9 +53,8 @@ typedef RefVectorOf <XSParticle> XSParticleList;
 typedef RefVectorOf <XSSimpleTypeDefinition> XSSimpleTypeDefinitionList;
 typedef RefArrayVectorOf <XMLCh> StringList;
 
-class XMLPARSER_EXPORT XSConstants 
+namespace XSConstants
 {
-public:
 
     // XML Schema Components
     enum COMPONENT_TYPE {
@@ -184,13 +183,8 @@ public:
 	     VALUE_CONSTRAINT_FIXED         = 2
     };
 
-private:
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    XSConstants();
-};
+}
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -26,7 +26,7 @@
 #include <xercesc/framework/psvi/PSVIAttribute.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * A container for the PSVI contributions to attributes that occur
@@ -210,6 +210,6 @@ inline void PSVIAttributeList::reset()
     fAttrPos = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

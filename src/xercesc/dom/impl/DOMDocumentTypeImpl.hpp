@@ -40,7 +40,7 @@
 #include "DOMChildNode.hpp"
 #include "DOMParentNode.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMNamedNodeMapImpl;
@@ -109,6 +109,6 @@ private:
     DOMDocumentTypeImpl & operator = (const DOMDocumentTypeImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

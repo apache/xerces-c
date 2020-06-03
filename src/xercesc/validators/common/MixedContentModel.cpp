@@ -23,7 +23,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <string.h>
+#include <cstring>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
@@ -32,7 +32,7 @@
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  MixedContentModel: Constructors and Destructor
@@ -426,4 +426,4 @@ MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -27,7 +27,7 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CMNode : public XMemory
 {
@@ -188,6 +188,6 @@ inline bool CMNode::isNullable() const
     return fIsNullable;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

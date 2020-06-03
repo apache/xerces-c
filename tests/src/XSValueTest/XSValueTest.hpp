@@ -27,15 +27,11 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XercesDefs.hpp>
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 // ---------------------------------------------------------------------------
 //  This is a simple class that lets us do easy (though not terribly efficient)
@@ -103,7 +99,7 @@ private :
 #define UniForm(str) StrX(str).unicodeForm()
 #define LocForm(str) StrX(str).localForm()
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

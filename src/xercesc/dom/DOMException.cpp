@@ -28,7 +28,7 @@
 
 #include "DOMException.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Destructor and Constructor
@@ -81,4 +81,4 @@ DOMException::DOMException(const DOMException &other)
       msg = other.fMsgOwned? XMLString::replicate(other.msg, other.fMemoryManager) : other.msg;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

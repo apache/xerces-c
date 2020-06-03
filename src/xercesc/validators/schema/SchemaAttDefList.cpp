@@ -28,7 +28,7 @@
 #include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SchemaAttDefList: Constructors and Destructor
@@ -198,4 +198,4 @@ SchemaAttDefList::SchemaAttDefList(MemoryManager* const manager)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

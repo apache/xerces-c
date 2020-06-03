@@ -29,7 +29,7 @@
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XercesElementWildcard.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SimpleContentModel: Implementation of the ContentModel virtual interface
@@ -530,5 +530,5 @@ void SimpleContentModel::checkUniqueParticleAttribution
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

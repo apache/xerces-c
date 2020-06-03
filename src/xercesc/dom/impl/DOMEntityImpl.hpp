@@ -37,7 +37,7 @@
 #include "DOMParentNode.hpp"
 #include <xercesc/dom/DOMEntity.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class    DOMEntityReference;
@@ -106,7 +106,7 @@ private:
     DOMEntityImpl & operator = (const DOMEntityImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

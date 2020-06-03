@@ -34,7 +34,7 @@
 #include "DOMDocumentImpl.hpp"
 #include "DOMCasts.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static DOMDocument* sDocument = 0;
 static XMLMutex*    sDocumentMutex = 0;
@@ -557,4 +557,4 @@ void* DOMDocumentTypeImpl::getFeature(const XMLCh* feature, const XMLCh* version
     return fNode.getFeature(feature,version);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

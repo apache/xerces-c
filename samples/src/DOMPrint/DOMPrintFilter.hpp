@@ -29,7 +29,7 @@
 
 #include <xercesc/dom/DOMLSSerializerFilter.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 class DOMPrintFilter : public DOMLSSerializerFilter {
 public:

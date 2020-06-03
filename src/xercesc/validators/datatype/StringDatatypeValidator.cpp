@@ -27,7 +27,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -197,7 +197,7 @@ void StringDatatypeValidator::serialize(XSerializeEngine& serEng)
     AbstractStringValidator::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file StringDatatypeValidator.cpp

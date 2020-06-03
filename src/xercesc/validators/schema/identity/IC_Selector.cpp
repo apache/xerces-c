@@ -28,7 +28,7 @@
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 #include <xercesc/validators/schema/identity/FieldActivator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SelectorMatcher: Constructors and Destructor
@@ -194,7 +194,7 @@ IC_Selector::IC_Selector(MemoryManager* const )
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file IC_Selector.cpp

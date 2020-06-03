@@ -26,7 +26,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SchemaSymbols: Static data
@@ -1014,7 +1014,7 @@ const int SchemaSymbols::fgINT_MIN_VALUE = 0x80000000;
 
 const int SchemaSymbols::fgINT_MAX_VALUE = 0x7fffffff;
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file SchemaSymbols.cpp

@@ -43,7 +43,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ReaderMgr: Constructors and Destructor
@@ -1120,4 +1120,4 @@ bool ReaderMgr::popReader()
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

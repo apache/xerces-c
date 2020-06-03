@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/XMLFormatter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLPARSER_EXPORT LocalFileFormatTarget : public XMLFormatTarget {
 public:
@@ -94,6 +94,6 @@ private:
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

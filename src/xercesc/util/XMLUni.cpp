@@ -26,7 +26,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLUni: Static data
@@ -1878,4 +1878,4 @@ const XMLCh XMLUni::fgXercesDoXInclude[] =
 
 const XMLSize_t XMLUni::fgBooleanValueSpaceArraySize = sizeof XMLUni::fgBooleanValueSpace / sizeof (XMLUni::fgBooleanValueSpace[0]);
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMLMutexMgr.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //	Std mutex implementation.
 class StdMutexMgr : public XMLMutexMgr
@@ -40,7 +40,7 @@ class StdMutexMgr : public XMLMutexMgr
 		virtual void			unlock(XMLMutexHandle mtx);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 
 #endif

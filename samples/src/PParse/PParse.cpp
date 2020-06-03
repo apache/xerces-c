@@ -83,7 +83,7 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
             "    PParse [options] <XML file>\n\n"
             "This program demonstrates the progressive parse capabilities of\n"
 	         "the parser system. It allows you to do a scanFirst() call followed by\n"
@@ -98,7 +98,7 @@ static void usage()
             "      -f            - Enable full schema constraint checking [default is off].\n"
             "      -?            - Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         <<  XERCES_STD_QUALIFIER endl;
+         <<  std::endl;
 }
 
 
@@ -116,8 +116,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"
-              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+         std::cerr << "Error during initialization! :\n"
+              << StrX(toCatch.getMessage()) << std::endl;
          return 1;
     }
 
@@ -157,7 +157,7 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Always;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -v= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -179,8 +179,8 @@ int main(int argC, char* argV[])
         }
         else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
-                << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[parmInd]
+                << "', ignoring it\n" << std::endl;
         }
     }
 
@@ -226,7 +226,7 @@ int main(int argC, char* argV[])
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
         if (!parser->parseFirst(xmlFile, token))
         {
-            XERCES_STD_QUALIFIER cerr << "scanFirst() failed\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "scanFirst() failed\n" << std::endl;
             XMLPlatformUtils::Terminate();
             return 1;
         }
@@ -254,15 +254,15 @@ int main(int argC, char* argV[])
     }
     catch (const OutOfMemoryException&)
     {
-        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        std::cerr << "OutOfMemoryException" << std::endl;
         errorCode = 5;
     }
     catch (const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cerr << "\nAn error occurred: '" << xmlFile << "'\n"
+        std::cerr << "\nAn error occurred: '" << xmlFile << "'\n"
              << "Exception message is: \n"
              << StrX(toCatch.getMessage())
-             << "\n" << XERCES_STD_QUALIFIER endl;
+             << "\n" << std::endl;
         errorCode = 4;
     }
 
@@ -272,11 +272,11 @@ int main(int argC, char* argV[])
     }
 
     if (!errorCount) {
-        XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
+        std::cout << xmlFile << ": " << duration << " ms ("
             << handler.getElementCount() << " elems, "
             << handler.getAttrCount() << " attrs, "
             << handler.getSpaceCount() << " spaces, "
-            << handler.getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
+            << handler.getCharacterCount() << " chars)" << std::endl;
     }
 
     //

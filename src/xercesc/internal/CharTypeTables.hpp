@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  These are character type lookup tables. They are included into XMLReader
@@ -252,6 +252,6 @@ static const XMLCh gControl_Chars1_1[] =
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

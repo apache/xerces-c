@@ -27,7 +27,7 @@
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ContentSpecNode;
 class CMLeaf;
@@ -268,7 +268,7 @@ DFAContentModel::Occurence::Occurence(int minOcc, int maxOcc, int eltIndex)
     elemIndex = eltIndex;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

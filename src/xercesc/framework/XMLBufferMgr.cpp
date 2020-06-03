@@ -23,11 +23,11 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-//#include <string.h>
+//#include <cstring>
 #include <xercesc/framework/XMLBufferMgr.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -111,4 +111,4 @@ void XMLBufferMgr::releaseBuffer(XMLBuffer& toRelease)
     ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::BufMgr_BufferNotInPool, fMemoryManager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

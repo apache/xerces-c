@@ -27,7 +27,7 @@
 #include <xercesc/util/RefArrayOf.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RefArrayOf: Constructors and Destructor
@@ -266,4 +266,4 @@ template <class TElem> void RefArrayEnumerator<TElem>::Reset()
     fCurIndex = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

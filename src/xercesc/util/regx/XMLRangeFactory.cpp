@@ -30,9 +30,9 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/regx/UnicodeRangeFactory.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <string.h>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static functions
@@ -247,7 +247,7 @@ void XMLRangeFactory::initializeKeywordMap(RangeTokenMap *rangeTokMap) {
     fKeywordsInitialized = true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XMLRangeFactory.cpp

@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/IC_Key.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  IC_Key: Constructors and Destructor
@@ -59,7 +59,7 @@ IC_Key::IC_Key(MemoryManager* const manager)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file IC_Key.cpp

@@ -28,7 +28,7 @@
  *  corner cases.
  */
 
-#include <stdio.h>
+#include <cstdio>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
@@ -38,7 +38,7 @@
 #include <xercesc/dom/DOMRange.hpp>
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 bool errorOccurred = false;
 

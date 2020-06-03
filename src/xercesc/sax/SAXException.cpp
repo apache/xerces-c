@@ -21,7 +21,7 @@
 
 #include "SAXException.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // SAXNotSupportedException Constructors
@@ -70,5 +70,5 @@ SAXNotRecognizedException::SAXNotRecognizedException(const SAXException& toCopy)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

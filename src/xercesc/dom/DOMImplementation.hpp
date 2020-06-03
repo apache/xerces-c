@@ -28,7 +28,7 @@
 #include <xercesc/dom/DOMRangeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMDocument;
@@ -244,6 +244,6 @@ public:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

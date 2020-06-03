@@ -89,24 +89,24 @@ void StdInParseHandlers::resetDocument()
 // ---------------------------------------------------------------------------
 void StdInParseHandlers::error(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nError at (file " << StrX(e.getSystemId())
+    std::cerr << "\nError at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "): " << StrX(e.getMessage()) << std::endl;
 }
 
 void StdInParseHandlers::fatalError(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
+    std::cerr << "\nFatal Error at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "): " << StrX(e.getMessage()) << std::endl;
 }
 
 void StdInParseHandlers::warning(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nWarning at (file " << StrX(e.getSystemId())
+    std::cerr << "\nWarning at (file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "): " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "): " << StrX(e.getMessage()) << std::endl;
 }

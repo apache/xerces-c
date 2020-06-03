@@ -25,7 +25,7 @@
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This is a derivative of the framework abstract class which defines the
@@ -176,6 +176,6 @@ inline const XMLAttDef* SchemaAttDefList::findAttDefLocalPart(const   unsigned i
     return fList->get((void*)attLocalPart, uriID);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

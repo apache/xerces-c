@@ -32,7 +32,7 @@
 
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef JanitorMemFunCall<IdentityConstraintHandler>    CleanupType;
 
@@ -207,7 +207,7 @@ void IdentityConstraintHandler::reset()
     fMatcherStack->clear();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file IdentityConstraintHandler.cpp

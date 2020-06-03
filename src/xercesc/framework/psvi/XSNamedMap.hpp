@@ -27,7 +27,7 @@
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLStringPool;
 
@@ -129,7 +129,7 @@ private :
 
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/framework/psvi/XSNamedMap.c>

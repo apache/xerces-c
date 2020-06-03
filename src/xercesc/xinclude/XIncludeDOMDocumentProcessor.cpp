@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMDocument *
 XIncludeDOMDocumentProcessor::doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler, XMLEntityHandler* entityResolver /*=NULL*/){
@@ -77,4 +77,4 @@ XIncludeDOMDocumentProcessor::doXIncludeDOMProcess(const DOMDocument * const sou
     return xincludedDocument;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

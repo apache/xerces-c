@@ -28,7 +28,7 @@
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/DTD/DTDAttDef.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ContentSpecNode;
 class DTDAttDefList;
@@ -242,6 +242,6 @@ DTDElementDecl::setModelType(const DTDElementDecl::ModelTypes toSet)
     fModelType = toSet;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

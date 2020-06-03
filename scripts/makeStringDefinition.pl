@@ -53,7 +53,7 @@ Takes a word and produces a static XMLCh * definition for it.
 
 Options:
     -h Displays this help message
-    -x add the XERCES_CPP_NAMESPACE_QUALIFIER before each item
+    -x add the xercesc::before each item
 EOF
     exit(1);
 }
@@ -84,12 +84,12 @@ while ($word=~s/^(.)//) {
     }
   }
 	if($opt_x) {
-			print "XERCES_CPP_NAMESPACE_QUALIFIER ";
+			print "xercesc::";
 	}
 	print "$ch, ";
 }
 
 	if($opt_x) {
-			print "XERCES_CPP_NAMESPACE_QUALIFIER ";
+			print "xercesc::";
 	}
 print "chNull };\n";

@@ -28,7 +28,7 @@
 #include <xercesc/internal/ValidationContextImpl.hpp>
 #include <xercesc/util/XMLChar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -265,7 +265,7 @@ void QNameDatatypeValidator::serialize(XSerializeEngine& serEng)
     AbstractStringValidator::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file QNameDatatypeValidator.cpp

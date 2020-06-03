@@ -28,7 +28,7 @@
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -176,4 +176,4 @@ void XSDErrorReporter::emitError(const XMLException&  except,
     //    throw (XMLErrs::Codes) toEmit;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

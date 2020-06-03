@@ -32,7 +32,7 @@
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Wrapper4DOMLSInput: Constructor and Destructor
@@ -156,5 +156,5 @@ BinInputStream* Wrapper4DOMLSInput::makeStream() const
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

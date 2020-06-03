@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLSchemaDescription.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 XMLSchemaDescription::~XMLSchemaDescription()
 {
@@ -49,5 +49,5 @@ void XMLSchemaDescription::serialize(XSerializeEngine& serEng)
     //no data
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

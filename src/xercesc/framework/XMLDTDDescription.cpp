@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLDTDDescription.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 XMLDTDDescription::~XMLDTDDescription()
 {
@@ -50,5 +50,5 @@ void XMLDTDDescription::serialize(XSerializeEngine& serEng)
     //no data
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

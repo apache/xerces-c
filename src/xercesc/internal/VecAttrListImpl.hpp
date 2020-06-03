@@ -26,7 +26,7 @@
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLPARSER_EXPORT VecAttrListImpl : public XMemory, public AttributeList
 {
@@ -91,6 +91,6 @@ private :
     const RefVectorOf<XMLAttr>* fVector;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

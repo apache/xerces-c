@@ -27,7 +27,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This class provides a commonly used data structure, which is that of
@@ -218,6 +218,6 @@ inline void KVStringPair::set(  const   XMLCh* const newKey
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

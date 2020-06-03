@@ -30,7 +30,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * Constructs a BigDecimal from a string containing an optional (plus | minus)
@@ -515,5 +515,5 @@ void XMLBigDecimal::serialize(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

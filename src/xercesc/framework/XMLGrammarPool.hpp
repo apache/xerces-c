@@ -28,7 +28,7 @@
 #include <xercesc/framework/psvi/XSModel.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class Grammar;
 class XMLGrammarDescription;
@@ -317,6 +317,6 @@ private :
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

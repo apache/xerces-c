@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * Receive notification of DTD declaration events.
@@ -158,6 +158,6 @@ private :
     DeclHandler& operator=(const DeclHandler&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

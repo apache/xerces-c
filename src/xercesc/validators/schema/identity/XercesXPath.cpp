@@ -35,7 +35,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -1453,7 +1453,7 @@ void XPathScannerForSchema::addToken(ValueVectorOf<int>* const tokens,
     ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_TokenNotSupported, tokens->getMemoryManager());
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XercesPath.cpp

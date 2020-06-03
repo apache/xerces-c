@@ -27,7 +27,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/StdInInputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  StdInInputSource: Implementation of the input source interface
@@ -48,5 +48,5 @@ BinInputStream* StdInInputSource::makeStream() const
     return retStream;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

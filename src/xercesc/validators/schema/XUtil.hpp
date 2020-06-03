@@ -27,7 +27,7 @@
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMNode;
 class DOMElement;
@@ -66,6 +66,6 @@ private:
 	~XUtil() {};
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

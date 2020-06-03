@@ -21,14 +21,10 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 
 class DOMTreeErrorReporter : public ErrorHandler
@@ -116,7 +112,7 @@ private :
     char*   fLocalForm;
 };
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

@@ -68,25 +68,6 @@ typedef XMLUInt32           UCS4Ch;
 
 
 // ---------------------------------------------------------------------------
-//  Handle boolean. If the platform can handle booleans itself, then we
-//  map our boolean type to the native type. Otherwise we create a default
-//  one as an int and define const values for true and false.
-//
-//  This flag will be set in the per-development environment stuff above.
-// ---------------------------------------------------------------------------
-#if defined(XERCES_NO_NATIVE_BOOL)
-  #ifndef bool
-    typedef int     bool;
-  #endif
-  #ifndef true
-    #define  true     1
-  #endif
-  #ifndef false
-    #define false 0
-  #endif
-#endif
-
-// ---------------------------------------------------------------------------
 //  According to whether the compiler supports L"" type strings, we define
 //  the XMLStrL() macro one way or another.
 // ---------------------------------------------------------------------------
@@ -98,31 +79,11 @@ typedef XMLUInt32           UCS4Ch;
 
 
 // ---------------------------------------------------------------------------
-// Define namespace symbols if the compiler supports it.
+// Define versioned namespace
 // ---------------------------------------------------------------------------
-#if defined(XERCES_HAS_CPP_NAMESPACE)
-    #define XERCES_CPP_NAMESPACE_BEGIN namespace XERCES_CPP_NAMESPACE {
-    #define XERCES_CPP_NAMESPACE_END  }
-    #define XERCES_CPP_NAMESPACE_USE using namespace XERCES_CPP_NAMESPACE;
-    #define XERCES_CPP_NAMESPACE_QUALIFIER XERCES_CPP_NAMESPACE::
 
-    namespace XERCES_CPP_NAMESPACE { }
-    namespace xercesc = XERCES_CPP_NAMESPACE;
-#else
-    #define XERCES_CPP_NAMESPACE_BEGIN
-    #define XERCES_CPP_NAMESPACE_END
-    #define XERCES_CPP_NAMESPACE_USE
-    #define XERCES_CPP_NAMESPACE_QUALIFIER
-#endif
-
-#if defined(XERCES_STD_NAMESPACE)
-	#define XERCES_USING_STD(NAME) using std :: NAME;
-	#define XERCES_STD_QUALIFIER  std ::
-#else
-	#define XERCES_USING_STD(NAME)
-	#define XERCES_STD_QUALIFIER 
-#endif
-
+namespace XERCES_CPP_NAMESPACE { }
+namespace xercesc = XERCES_CPP_NAMESPACE;
 
 // ---------------------------------------------------------------------------
 //  Set up the import/export keyword  for our core projects. The

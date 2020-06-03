@@ -26,7 +26,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/dom/DOMImplementationList.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMImplementation;
@@ -51,6 +51,6 @@ public:
     virtual void                 release();
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

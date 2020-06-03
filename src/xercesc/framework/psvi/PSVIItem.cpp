@@ -24,7 +24,7 @@
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 PSVIItem::PSVIItem( MemoryManager* const manager ):  
         fMemoryManager(manager),
@@ -140,6 +140,6 @@ XSValue* PSVIItem::getActualValue() const
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

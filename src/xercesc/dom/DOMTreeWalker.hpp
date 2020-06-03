@@ -25,7 +25,7 @@
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMNodeFilter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 /**
@@ -271,6 +271,6 @@ public:
 
 #define GetDOMTreeWalkerMemoryManager GET_INDIRECT_MM(fCurrentNode)
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

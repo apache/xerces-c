@@ -39,9 +39,9 @@
 #include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
-#include <string.h>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 SAX2XMLReader * XMLReaderFactory::createXMLReader(  MemoryManager* const  manager
@@ -1622,4 +1622,4 @@ Grammar* SAX2XMLReaderImpl::getGrammar(const XMLCh* const nameSpaceKey)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

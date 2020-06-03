@@ -27,11 +27,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
-#else
-#include <fstream.h>
-#endif
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 // ---------------------------------------------------------------------------
@@ -39,7 +35,7 @@
 // ---------------------------------------------------------------------------
 void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
             "    SAX2Count [options] <XML file | List file>\n\n"
             "This program invokes the SAX2XMLReader, and then prints the\n"
             "number of elements, attributes, spaces and characters found\n"
@@ -59,7 +55,7 @@ void usage()
             "    -locale=ll_CC specify the locale, default: en_US.\n"
             "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         << XERCES_STD_QUALIFIER endl;
+         << std::endl;
 }
 
 
@@ -115,7 +111,7 @@ int main(int argC, char* argV[])
                 valScheme = SAX2XMLReader::Val_Always;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -v= value: " << parm << std::endl;
                 return 2;
             }
         }
@@ -164,8 +160,8 @@ int main(int argC, char* argV[])
         }
         else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
-                << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[argInd]
+                << "', ignoring it\n" << std::endl;
         }
     }
 
@@ -199,8 +195,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
-            << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+        std::cerr << "Error during initialization! Message:\n"
+            << StrX(toCatch.getMessage()) << std::endl;
         return 1;
     }
 
@@ -246,14 +242,14 @@ int main(int argC, char* argV[])
     unsigned long duration;
 
     bool more = true;
-    XERCES_STD_QUALIFIER ifstream fin;
+    std::ifstream fin;
 
     // the input is a list file
     if (doList)
         fin.open(argV[argInd]);
 
     if (fin.fail()) {
-        XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << XERCES_STD_QUALIFIER endl;
+        std::cerr <<"Cannot open the list file: " << argV[argInd] << std::endl;
         return 2;
     }
 
@@ -270,7 +266,7 @@ int main(int argC, char* argV[])
                     continue;
                 else {
                     xmlFile = fURI;
-                    XERCES_STD_QUALIFIER cerr << "==Parsing== " << xmlFile << XERCES_STD_QUALIFIER endl;
+                    std::cerr << "==Parsing== " << xmlFile << std::endl;
                 }
             }
             else
@@ -293,22 +289,22 @@ int main(int argC, char* argV[])
         }
         catch (const OutOfMemoryException&)
         {
-            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "OutOfMemoryException" << std::endl;
             errorOccurred = true;
             continue;
         }
         catch (const XMLException& e)
         {
-            XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
+            std::cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
-                << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+                << StrX(e.getMessage()) << "\n" << std::endl;
             errorOccurred = true;
             continue;
         }
 
         catch (...)
         {
-            XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+            std::cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
             errorOccurred = true;
             continue;
         }
@@ -317,11 +313,11 @@ int main(int argC, char* argV[])
         // Print out the stats that we collected and time taken
         if (!handler.getSawErrors())
         {
-            XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
+            std::cout << xmlFile << ": " << duration << " ms ("
                 << handler.getElementCount() << " elems, "
                 << handler.getAttrCount() << " attrs, "
                 << handler.getSpaceCount() << " spaces, "
-                << handler.getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
+                << handler.getCharacterCount() << " chars)" << std::endl;
         }
         else
             errorOccurred = true;

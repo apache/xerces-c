@@ -30,16 +30,12 @@
 #include    <xercesc/util/XMLNetAccessor.hpp>
 #include    <xercesc/util/BinInputStream.hpp>
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include	<iostream>
-#else
-#include	<iostream.h>
-#endif
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& os, const XMLCh* xmlStr)
+inline std::ostream& operator<<(std::ostream& os, const XMLCh* xmlStr)
 {
 	char* transcoded = XMLString::transcode(xmlStr);
     os << transcoded;
@@ -73,12 +69,12 @@ exercise(BinInputStream& stream)
 		
 		// Read bytes into our buffer
 		bytesRead = stream.readBytes(buffer, bufCnt);
-		//XERCES_STD_QUALIFIER cerr << "Read " << bytesRead << " bytes into a " << bufCnt << " byte buffer\n";
+		//std::cerr << "Read " << bytesRead << " bytes into a " << bufCnt << " byte buffer\n";
 
 		if (bytesRead > 0)
 		{
 			// Write the data to standard out
-			XERCES_STD_QUALIFIER cout.write((char*)buffer, bytesRead);
+			std::cout.write((char*)buffer, bytesRead);
 		}
 		
 		++iteration;
@@ -100,15 +96,15 @@ main(int argc, char** argv)
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cout << "Error during platform init! Message:\n"
-             << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
+        std::cout << "Error during platform init! Message:\n"
+             << toCatch.getMessage() << std::endl;
         return 1;
     }
     
     // Look for our one and only parameter
     if (argc != 2)
     {
-    	XERCES_STD_QUALIFIER cerr << "Usage: NetAccessorTest url\n"
+    	std::cerr << "Usage: NetAccessorTest url\n"
     			"\n"
     			"This test reads data from the given url and writes the result\n"
     			"to standard output.\n"
@@ -131,7 +127,7 @@ main(int argc, char** argv)
 		XMLNetAccessor* na = XMLPlatformUtils::fgNetAccessor;
 		if (na == 0)
 		{
-			XERCES_STD_QUALIFIER cerr <<  "No netaccessor is available. Aborting.\n";
+			std::cerr <<  "No netaccessor is available. Aborting.\n";
 			exit(2);
 		}
 		
@@ -139,7 +135,7 @@ main(int argc, char** argv)
 		BinInputStream* is = na->makeNew(xmlURL);
 		if (is == 0)
 		{
-			XERCES_STD_QUALIFIER cerr <<  "No binary input stream created. Aborting.\n";
+			std::cerr <<  "No binary input stream created. Aborting.\n";
 			exit(3);
 		}
 		
@@ -152,9 +148,9 @@ main(int argc, char** argv)
     }
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cout << "Exception during test:\n    "
+        std::cout << "Exception during test:\n    "
              << toCatch.getMessage()
-             << XERCES_STD_QUALIFIER endl;
+             << std::endl;
     }
 
     // And call the termination method

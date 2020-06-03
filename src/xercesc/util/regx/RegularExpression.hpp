@@ -34,7 +34,7 @@
 #include <xercesc/util/regx/OpFactory.hpp>
 #include <xercesc/util/regx/RegxUtil.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -763,7 +763,7 @@ protected:
       return ret;
   }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 /**

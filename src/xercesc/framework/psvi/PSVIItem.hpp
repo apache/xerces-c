@@ -24,7 +24,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * Represent the PSVI contributions for one element or one attribute information item.
@@ -304,6 +304,6 @@ inline PSVIItem::ASSESSMENT_TYPE PSVIItem::getValidationAttempted() const
     return fAssessmentType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

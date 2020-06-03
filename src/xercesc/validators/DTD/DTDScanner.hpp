@@ -25,7 +25,7 @@
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLScanner;
 
@@ -273,6 +273,6 @@ inline bool DTDScanner::isReadingExternalEntity() {
     return (fDocTypeReaderId != fReaderMgr->getCurrentReaderNum());
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

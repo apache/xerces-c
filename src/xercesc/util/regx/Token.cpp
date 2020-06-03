@@ -26,7 +26,7 @@
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/util/regx/RegxUtil.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -362,7 +362,7 @@ bool Token::isShorterThan(Token* const tok) {
     return length < tokLength;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End of file Token.cpp

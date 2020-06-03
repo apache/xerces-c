@@ -38,7 +38,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -1638,7 +1638,7 @@ bool RegularExpression::doTokenOverlap(const Op* op, Token* token)
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End of file RegularExpression.cpp

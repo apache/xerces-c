@@ -33,19 +33,14 @@
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
 #include <xercesc/framework/psvi/XSParticle.hpp>
 #include <xercesc/framework/psvi/XSModelGroup.hpp>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
 #include <fstream>
-#else
-#include <iostream.h>
-#include <fstream.h>
-#endif
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 // ---------------------------------------------------------------------------
 //  Forward references
@@ -100,7 +95,7 @@ private :
 char*   fLocalForm;
 };
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;
@@ -145,27 +140,27 @@ SCMPrintHandler::~SCMPrintHandler()
 void SCMPrintHandler::error(const SAXParseException& e)
 {
     fSawErrors = true;
-    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
+    std::cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void SCMPrintHandler::fatalError(const SAXParseException& e)
 {
     fSawErrors = true;
-    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+    std::cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void SCMPrintHandler::warning(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
+    std::cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void SCMPrintHandler::resetErrors()
@@ -178,7 +173,7 @@ void SCMPrintHandler::resetErrors()
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
     "    SCMPrint [options] <XSD file | List file>\n\n"
     "This program parses XML Schema file(s), to show how one can\n"
     "access the Schema Content Model information.\n\n"
@@ -187,7 +182,7 @@ static void usage()
     "    -l     Indicate the input file is a List File that has a list of XSD files.\n"
     "           Default to off (Input file is a XSD file).\n"
 	"    -?     Show this help.\n\n"
-    << XERCES_STD_QUALIFIER endl;
+    << std::endl;
 }
 
 // ---------------------------------------------------------------------------
@@ -212,8 +207,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cerr   << "Error during initialization! Message:\n"
-        << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+        std::cerr   << "Error during initialization! Message:\n"
+        << StrX(toCatch.getMessage()) << std::endl;
         errorCode = 2;
     }
     if(errorCode) {
@@ -250,8 +245,8 @@ int main(int argC, char* argV[])
         }
         else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
-                << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[argInd]
+                << "', ignoring it\n" << std::endl;
         }
     }
 
@@ -286,14 +281,14 @@ int main(int argC, char* argV[])
 
         bool more = true;
         bool parsedOneSchemaOkay = false;
-        XERCES_STD_QUALIFIER ifstream fin;
+        std::ifstream fin;
 
         // the input is a list file
         if (doList)
             fin.open(argV[argInd]);
 
         if (fin.fail()) {
-            XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << XERCES_STD_QUALIFIER endl;
+            std::cerr <<"Cannot open the list file: " << argV[argInd] << std::endl;
             return 3;
         }
 
@@ -310,7 +305,7 @@ int main(int argC, char* argV[])
                         continue;
                     else {
                         xsdFile = fURI;
-                        XERCES_STD_QUALIFIER cerr << "==Parsing== " << xsdFile << XERCES_STD_QUALIFIER endl;
+                        std::cerr << "==Parsing== " << xsdFile << std::endl;
                     }
                 }
                 else
@@ -334,7 +329,7 @@ int main(int argC, char* argV[])
 
         if (parsedOneSchemaOkay)
         {
-            XERCES_STD_QUALIFIER cout << "********** Printing out information from Schema **********" << "\n\n";
+            std::cout << "********** Printing out information from Schema **********" << "\n\n";
             bool updatedXSModel;
             XSModel *xsModel = grammarPool->getXSModel(updatedXSModel);
             if (xsModel)
@@ -342,11 +337,11 @@ int main(int argC, char* argV[])
                 StringList *namespaces = xsModel->getNamespaces();
                 for (unsigned i = 0; i < namespaces->size(); i++) {
 
-                    XERCES_STD_QUALIFIER cout << "Processing Namespace:   ";
+                    std::cout << "Processing Namespace:   ";
                     const XMLCh *nameSpace = namespaces->elementAt(i);
                     if (nameSpace && *nameSpace)
-                        XERCES_STD_QUALIFIER cout << StrX(nameSpace);
-                    XERCES_STD_QUALIFIER cout << "\n============================================" << XERCES_STD_QUALIFIER endl << XERCES_STD_QUALIFIER endl;
+                        std::cout << StrX(nameSpace);
+                    std::cout << "\n============================================" << std::endl << std::endl;
 
                     processElements(xsModel->getComponentsByNamespace(XSConstants::ELEMENT_DECLARATION,
                                                                   nameSpace));
@@ -356,31 +351,31 @@ int main(int argC, char* argV[])
             }
             else
             {
-                XERCES_STD_QUALIFIER cout << "No XSModel to print" << "\n\n";
+                std::cout << "No XSModel to print" << "\n\n";
             }
         }
         else
         {
-            XERCES_STD_QUALIFIER cout << "Did not parse a schema document cleanly so not printing Schema for Schema XSModel information";
+            std::cout << "Did not parse a schema document cleanly so not printing Schema for Schema XSModel information";
         }
 
-        XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
+        std::cout << std::endl;
     }
     catch (const OutOfMemoryException&)
     {
-        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException during parsing: '" << xsdFile << "'\n" << XERCES_STD_QUALIFIER endl;
+        std::cerr << "OutOfMemoryException during parsing: '" << xsdFile << "'\n" << std::endl;
         errorCode = 6;
     }
     catch (const XMLException& e)
     {
-        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xsdFile << "'\n"
+        std::cerr << "\nError during parsing: '" << xsdFile << "'\n"
         << "Exception message is:  \n"
-        << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+        << StrX(e.getMessage()) << std::endl;
         errorCode = 4;
     }
     catch (...)
     {
-        XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xsdFile << "'\n" << XERCES_STD_QUALIFIER endl;
+        std::cerr << "\nUnexpected exception during parsing: '" << xsdFile << "'\n" << std::endl;
         errorCode = 5;
     }
 
@@ -393,19 +388,19 @@ int main(int argC, char* argV[])
 
 void printBasic(XSObject *xsObject, const char *type)
 {
-    XERCES_STD_QUALIFIER cout << "Name:\t\t\t";
+    std::cout << "Name:\t\t\t";
     const XMLCh *nameSpace = xsObject->getNamespace();
     if (nameSpace && *nameSpace) {
-        XERCES_STD_QUALIFIER cout << StrX(nameSpace) << ", ";
+        std::cout << StrX(nameSpace) << ", ";
     }
-    XERCES_STD_QUALIFIER cout << StrX(xsObject->getName()) << "\n";
-    XERCES_STD_QUALIFIER cout << "Component Type:\t" << type << XERCES_STD_QUALIFIER endl;
+    std::cout << StrX(xsObject->getName()) << "\n";
+    std::cout << "Component Type:\t" << type << std::endl;
 }
 
 void processElements(XSNamedMap<XSObject> *xsElements)
 {
     if (!xsElements || xsElements->getLength() == 0) {
-        XERCES_STD_QUALIFIER cout << "no elements\n\n"  << XERCES_STD_QUALIFIER endl;
+        std::cout << "no elements\n\n"  << std::endl;
         return;
     }
     for (XMLSize_t i=0; i < xsElements->getLength(); i++) {
@@ -414,68 +409,68 @@ void processElements(XSNamedMap<XSObject> *xsElements)
 
         // Content Model
         XSTypeDefinition *xsTypeDef = xsElement->getTypeDefinition();
-        XERCES_STD_QUALIFIER cout << "Content Model" << "\n";
-        XERCES_STD_QUALIFIER cout << "\tType:\t";
+        std::cout << "Content Model" << "\n";
+        std::cout << "\tType:\t";
         if (xsTypeDef->getTypeCategory() == XSTypeDefinition::SIMPLE_TYPE) {
-            XERCES_STD_QUALIFIER cout << "Simple\n";
+            std::cout << "Simple\n";
         } else {
-            XERCES_STD_QUALIFIER cout << "Complex\n";
+            std::cout << "Complex\n";
         }
-        XERCES_STD_QUALIFIER cout << "\tName:\t"
+        std::cout << "\tName:\t"
             << StrX(xsTypeDef->getName()) << "\n";
 
-        XERCES_STD_QUALIFIER cout << "\n--------------------------------------------" << XERCES_STD_QUALIFIER endl;
+        std::cout << "\n--------------------------------------------" << std::endl;
     }
 }
 
 void processSimpleTypeDefinition(XSSimpleTypeDefinition * xsSimpleTypeDef)
 {
     XSTypeDefinition *xsBaseTypeDef = xsSimpleTypeDef->getBaseType();
-    XERCES_STD_QUALIFIER cout << "Base:\t\t\t";
-    XERCES_STD_QUALIFIER cout << StrX(xsBaseTypeDef->getName()) << XERCES_STD_QUALIFIER endl;
+    std::cout << "Base:\t\t\t";
+    std::cout << StrX(xsBaseTypeDef->getName()) << std::endl;
 
     int facets = xsSimpleTypeDef->getDefinedFacets();
     if (facets) {
-        XERCES_STD_QUALIFIER cout << "Facets:\n";
+        std::cout << "Facets:\n";
 
         if (facets & XSSimpleTypeDefinition::FACET_LENGTH)
-                XERCES_STD_QUALIFIER cout << "\tLength:\t\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_LENGTH)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tLength:\t\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_LENGTH)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_MINLENGTH)
-                XERCES_STD_QUALIFIER cout << "\tMinLength:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MINLENGTH)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tMinLength:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MINLENGTH)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_MAXLENGTH)
-                XERCES_STD_QUALIFIER cout << "\tMaxLength:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXLENGTH)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tMaxLength:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXLENGTH)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_PATTERN) {
             StringList *lexicalPatterns = xsSimpleTypeDef->getLexicalPattern();
             if (lexicalPatterns && lexicalPatterns->size()) {
-                XERCES_STD_QUALIFIER cout << "\tPattern:\t\t";
+                std::cout << "\tPattern:\t\t";
                 for (unsigned i = 0; i < lexicalPatterns->size(); i++) {
-                    XERCES_STD_QUALIFIER cout << StrX(lexicalPatterns->elementAt(i));
+                    std::cout << StrX(lexicalPatterns->elementAt(i));
                 }
-                XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
+                std::cout << std::endl;
             }
         }
         if (facets & XSSimpleTypeDefinition::FACET_WHITESPACE)
-                XERCES_STD_QUALIFIER cout << "\tWhitespace:\t\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_WHITESPACE)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tWhitespace:\t\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_WHITESPACE)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_MAXINCLUSIVE)
-                XERCES_STD_QUALIFIER cout << "\tMaxInclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXINCLUSIVE)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tMaxInclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXINCLUSIVE)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_MAXEXCLUSIVE)
-                XERCES_STD_QUALIFIER cout << "\tMaxExclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXEXCLUSIVE)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tMaxExclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXEXCLUSIVE)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_MINEXCLUSIVE)
-                XERCES_STD_QUALIFIER cout << "\tMinExclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MINEXCLUSIVE)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tMinExclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MINEXCLUSIVE)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_MININCLUSIVE)
-                XERCES_STD_QUALIFIER cout << "\tMinInclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MININCLUSIVE)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tMinInclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MININCLUSIVE)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_TOTALDIGITS)
-                XERCES_STD_QUALIFIER cout << "\tTotalDigits:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_TOTALDIGITS)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tTotalDigits:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_TOTALDIGITS)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_FRACTIONDIGITS)
-                XERCES_STD_QUALIFIER cout << "\tFractionDigits:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_FRACTIONDIGITS)) << XERCES_STD_QUALIFIER endl;
+                std::cout << "\tFractionDigits:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_FRACTIONDIGITS)) << std::endl;
         if (facets & XSSimpleTypeDefinition::FACET_ENUMERATION) {
             StringList *lexicalEnums = xsSimpleTypeDef->getLexicalEnumeration();
             if (lexicalEnums && lexicalEnums->size()) {
-                XERCES_STD_QUALIFIER cout << "\tEnumeration:\n";
+                std::cout << "\tEnumeration:\n";
                 for (unsigned i = 0; i < lexicalEnums->size(); i++) {
-                    XERCES_STD_QUALIFIER cout << "\t\t\t" << StrX(lexicalEnums->elementAt(i)) << "\n";
+                    std::cout << "\t\t\t" << StrX(lexicalEnums->elementAt(i)) << "\n";
                 }
-                XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
+                std::cout << std::endl;
             }
         }
     }
@@ -485,13 +480,13 @@ void printCompositorTypeConnector(XSModelGroup::COMPOSITOR_TYPE type)
 {
     switch (type) {
         case XSModelGroup::COMPOSITOR_SEQUENCE :
-            XERCES_STD_QUALIFIER cout << ",";
+            std::cout << ",";
             break;
         case XSModelGroup::COMPOSITOR_CHOICE :
-            XERCES_STD_QUALIFIER cout << "|";
+            std::cout << "|";
             break;
         case XSModelGroup::COMPOSITOR_ALL :
-            XERCES_STD_QUALIFIER cout << "*";
+            std::cout << "*";
             break;
     }
 }
@@ -499,15 +494,15 @@ void printCompositorTypeConnector(XSModelGroup::COMPOSITOR_TYPE type)
 void processParticle(XSParticle *xsParticle)
 {
     if (!xsParticle) {
-        XERCES_STD_QUALIFIER cout << "xsParticle is NULL";
+        std::cout << "xsParticle is NULL";
         return;
     }
     XSParticle::TERM_TYPE termType = xsParticle->getTermType();
     if (termType == XSParticle::TERM_ELEMENT) {
         XSElementDeclaration *xsElement = xsParticle->getElementTerm();
-        XERCES_STD_QUALIFIER cout << StrX(xsElement->getName());
+        std::cout << StrX(xsElement->getName());
     } else if (termType == XSParticle::TERM_MODELGROUP) {
-        XERCES_STD_QUALIFIER cout << "(";
+        std::cout << "(";
 
         XSModelGroup *xsModelGroup = xsParticle->getModelGroupTerm();
         XSModelGroup::COMPOSITOR_TYPE compositorType = xsModelGroup->getCompositor();
@@ -518,9 +513,9 @@ void processParticle(XSParticle *xsParticle)
         }
         processParticle(xsParticleList->elementAt(xsParticleList->size()-1));
 
-        XERCES_STD_QUALIFIER cout << ")";
+        std::cout << ")";
     } else if (termType == XSParticle::TERM_WILDCARD) {
-        XERCES_STD_QUALIFIER cout << "* (wildcard)";
+        std::cout << "* (wildcard)";
     }
 }
 
@@ -528,16 +523,16 @@ void processComplexTypeDefinition(XSComplexTypeDefinition *xsComplexTypeDef)
 {
     XSTypeDefinition *xsBaseTypeDef = xsComplexTypeDef->getBaseType();
     if (xsBaseTypeDef) {
-        XERCES_STD_QUALIFIER cout << "Base:\t\t\t";
-        XERCES_STD_QUALIFIER cout << StrX(xsBaseTypeDef->getName()) << "\n";
+        std::cout << "Base:\t\t\t";
+        std::cout << StrX(xsBaseTypeDef->getName()) << "\n";
     }
 
-    XERCES_STD_QUALIFIER cout << "Content Model:\t";
+    std::cout << "Content Model:\t";
     XSComplexTypeDefinition::CONTENT_TYPE contentType = xsComplexTypeDef->getContentType();
     if (contentType == XSComplexTypeDefinition::CONTENTTYPE_ELEMENT ||
         contentType == XSComplexTypeDefinition::CONTENTTYPE_MIXED) {
         processParticle(xsComplexTypeDef->getParticle());
-        XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
+        std::cout << std::endl;
     }
 }
 
@@ -551,15 +546,15 @@ void processTypeDefinitions(XSNamedMap<XSObject> *xsTypeDefs)
         printBasic(xsTypeDef, "Type Definition");
 
         // Content Model
-        XERCES_STD_QUALIFIER cout << "Category:\t";
+        std::cout << "Category:\t";
         if (xsTypeDef->getTypeCategory() == XSTypeDefinition::SIMPLE_TYPE) {
-            XERCES_STD_QUALIFIER cout << "\tSimple\n";
+            std::cout << "\tSimple\n";
             processSimpleTypeDefinition((XSSimpleTypeDefinition *)xsTypeDef);
         } else {
-            XERCES_STD_QUALIFIER cout << "\tComplex\n";
+            std::cout << "\tComplex\n";
             processComplexTypeDefinition((XSComplexTypeDefinition *)xsTypeDef);
         }
 
-        XERCES_STD_QUALIFIER cout << "\n--------------------------------------------" << XERCES_STD_QUALIFIER endl;
+        std::cout << "\n--------------------------------------------" << std::endl;
     }
 }

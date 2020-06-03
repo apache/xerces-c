@@ -32,7 +32,7 @@
 #include <xercesc/util/NullPointerException.hpp>
 #include <new>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Constructors and Destructor
@@ -660,4 +660,4 @@ void RefHashTableOfEnumerator<TVal, THasher>::findNext()
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

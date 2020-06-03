@@ -34,7 +34,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMNode;
@@ -75,6 +75,6 @@ private:
     DOMDeepNodeListImpl & operator = (const DOMDeepNodeListImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

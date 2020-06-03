@@ -51,7 +51,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Local declaration
@@ -230,10 +230,10 @@ private:
     //  fBuiltInRegistry
     //      This is a hashtable of built-in primitive datatype validators.
     // -----------------------------------------------------------------------
-    XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XERCES_CPP_NAMESPACE_QUALIFIER DatatypeValidator>*        fUserDefinedRegistry;
-    static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
-    static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XMLCanRepGroup, PtrHasher>*    fCanRepRegistry;
-    XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager* const fMemoryManager;
+    xercesc::RefHashTableOf<xercesc::DatatypeValidator>*        fUserDefinedRegistry;
+    static xercesc::RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
+    static xercesc::RefHashTableOf<XMLCanRepGroup, PtrHasher>*    fCanRepRegistry;
+    xercesc::MemoryManager* const fMemoryManager;
 
     friend class XPath2ContextImpl;
     friend class XMLInitializer;
@@ -276,7 +276,7 @@ inline void DatatypeValidatorFactory::cleanUp() {
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

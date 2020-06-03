@@ -23,7 +23,7 @@
 #define XERCESC_INCLUDE_GUARD_PSVIHANDLER_HPP
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class PSVIElement;
@@ -143,6 +143,6 @@ inline void PSVIHandler::handlePartialElementPSVI(const XMLCh*        const /*lo
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

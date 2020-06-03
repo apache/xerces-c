@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/TransService.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 //
@@ -100,6 +100,6 @@ private :
     bool    fSwapped;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

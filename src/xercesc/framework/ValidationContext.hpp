@@ -27,7 +27,7 @@
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLRefInfo;
 class DTDEntityDecl;
@@ -133,7 +133,7 @@ private :
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

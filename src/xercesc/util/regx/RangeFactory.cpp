@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RangeFactory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RangeFactory: Constructors and Destructor
@@ -40,7 +40,7 @@ RangeFactory::~RangeFactory() {
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file RangeFactory.cpp

@@ -45,7 +45,7 @@
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -916,7 +916,7 @@ inline void TraverseSchema::addImportedNS(const int namespaceURI) {
         fImportedNSList->addElement(namespaceURI);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

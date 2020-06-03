@@ -29,7 +29,7 @@
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/schema/PSVIDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ContentSpecNode;
 class SchemaAttDefList;
@@ -433,6 +433,6 @@ SchemaElementDecl::getIdentityConstraintAt(XMLSize_t index) const {
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

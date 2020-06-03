@@ -27,7 +27,7 @@
 #include <xercesc/framework/XMLGrammarPoolImpl.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  GrammarResolver: Constructor and Destructor
@@ -442,4 +442,4 @@ XSModel *GrammarResolver::getXSModel()
     return fXSModel; 
 }
 
-XERCES_CPP_NAMESPACE_END
+}

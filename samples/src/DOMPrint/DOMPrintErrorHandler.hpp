@@ -25,7 +25,7 @@
 
 #include <xercesc/dom/DOMErrorHandler.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 class DOMPrintErrorHandler : public DOMErrorHandler
 {

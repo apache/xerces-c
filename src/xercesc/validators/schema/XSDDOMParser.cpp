@@ -34,7 +34,7 @@
 #include <xercesc/dom/impl/DOMTextImpl.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSDDOMParser: Constructors and Destructor
@@ -521,4 +521,4 @@ XSDDOMParser::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

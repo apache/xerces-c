@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This is a simple in memory message loader implementation. For those
@@ -96,6 +96,6 @@ private :
     XMLCh*  fMsgDomain;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

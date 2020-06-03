@@ -29,7 +29,7 @@
 #include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 class XSTSTest
 {

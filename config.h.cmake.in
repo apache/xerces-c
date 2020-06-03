@@ -24,9 +24,6 @@
 /* Define to 1 if you have the <arpa/nameser_compat.h> header file. */
 #cmakedefine HAVE_ARPA_NAMESER_COMPAT_H 1
 
-/* define if bool is a built-in type */
-#cmakedefine HAVE_BOOL 1
-
 /* Define to 1 if you have the `catclose' function. */
 #cmakedefine HAVE_CATCLOSE 1
 
@@ -144,9 +141,6 @@
 /* Define to 1 if you have the `memset' function. */
 #cmakedefine HAVE_MEMSET 1
 
-/* define if the compiler implements namespaces */
-#cmakedefine HAVE_NAMESPACES 1
-
 /* Define to 1 if you have the <netdb.h> header file. */
 #cmakedefine HAVE_NETDB_H 1
 
@@ -186,18 +180,6 @@
 /* Define to 1 if you have the <stddef.h> header file. */
 #cmakedefine HAVE_STDDEF_H 1
 
-/* Define to 1 if you have the <stdio.h> header file. */
-#cmakedefine HAVE_STDIO_H 1
-
-/* Define to 1 if you have the <stdlib.h> header file. */
-#cmakedefine HAVE_STDLIB_H 1
-
-/* define if the compiler supports ISO C++ standard library */
-#cmakedefine HAVE_STD_LIBS 1
-
-/* define if the compiler supports the std namespace */
-#cmakedefine HAVE_STD_NAMESPACE 1
-
 /* Define to 1 if you have the `strcasecmp' function. */
 #cmakedefine HAVE_STRCASECMP 1
 
@@ -209,12 +191,6 @@
 
 /* Define to 1 if you have the `stricmp' function. */
 #cmakedefine HAVE_STRICMP 1
-
-/* Define to 1 if you have the <strings.h> header file. */
-#cmakedefine HAVE_STRINGS_H 1
-
-/* Define to 1 if you have the <string.h> header file. */
-#cmakedefine HAVE_STRING_H 1
 
 /* Define to 1 if you have the `strncasecmp' function. */
 #cmakedefine HAVE_STRNCASECMP 1
@@ -343,9 +319,6 @@
 /* Define if DLL symbols should be exported */
 #cmakedefine XERCES_DLL_EXPORT 1
 
-/* Define if namespaces is supported by the compiler */
-#cmakedefine XERCES_HAS_CPP_NAMESPACE 1
-
 /* Define to have SSE2 instruction support detected at runtime using __cpuid
    */
 #cmakedefine XERCES_HAVE_CPUID_INTRINSIC 1
@@ -375,15 +348,9 @@
 /* Define if there is support for L"widestring" */
 #cmakedefine XERCES_LSTRSUPPORT 1
 
-/* Define if the isstream library can be included as <iostream> */
-#cmakedefine XERCES_NEW_IOSTREAMS 1
-
 /* Define to have XMemory.hpp avoid declaring a matching operator delete for
    the placement operator new */
 #cmakedefine XERCES_NO_MATCHING_DELETE_OPERATOR 1
-
-/* Define if there is no native bool support in this environment */
-#cmakedefine XERCES_NO_NATIVE_BOOL 1
 
 /* Define to use backslash as an extra path delimiter character */
 #cmakedefine XERCES_PATH_DELIMITER_BACKSLASH 1
@@ -417,9 +384,6 @@
 
 /* Define if building a static library */
 #cmakedefine XERCES_STATIC_LIBRARY 1
-
-/* Define if the std namespace is supported */
-#cmakedefine XERCES_STD_NAMESPACE 1
 
 /* An appropriate unsigned 16 bit integer type */
 #define XERCES_U16BIT_INT @XERCES_U16BIT_INT@
@@ -486,26 +450,3 @@
 
 /* Define to the 16 bit type used to represent Xerces UTF-16 characters */
 #define XERCES_XMLCH_T @XERCES_XMLCH_T@
-
-/* Define to empty if `const' does not conform to ANSI C. */
-#if !@HAVE_CONST@
-#define const
-#endif
-
-/* Define to `__inline__' or `__inline' if that's what the C compiler
-   calls it, or to nothing if 'inline' is not supported under any name.  */
-#ifndef __cplusplus
-#if !@HAVE_INLINE@
-#if @NEED_INLINE@
-#define inline @inline_keyword@
-#else
-#define inline
-#endif
-#endif
-#endif
-
-/* Define to empty if the keyword `volatile' does not work. Warning: valid
-code using `volatile' can become incorrect without. Disable with care. */
-#if !@HAVE_VOLATILE@
-#define volatile
-#endif

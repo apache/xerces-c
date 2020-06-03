@@ -38,7 +38,7 @@
 #include "DOMDocumentTypeImpl.hpp"
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMAttr;
 
@@ -880,4 +880,4 @@ DOMNode* DOMElementImpl::getPreviousLogicalSibling(const DOMNode* n) const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

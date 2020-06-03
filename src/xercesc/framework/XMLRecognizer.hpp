@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  *  This class provides some simple code to recognize the encodings of
@@ -133,6 +133,6 @@ private:
     XMLRecognizer& operator=(const XMLRecognizer&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

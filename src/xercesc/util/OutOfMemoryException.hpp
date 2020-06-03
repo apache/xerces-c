@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static const XMLCh gDefOutOfMemoryErrMsg[] =
 {
@@ -91,6 +91,6 @@ inline XMLFileLoc OutOfMemoryException::getSrcLine() const {
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

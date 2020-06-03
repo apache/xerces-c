@@ -40,7 +40,7 @@
 #include "DOMNodeImpl.hpp"
 #include "DOMCharacterDataImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMTextImpl: public DOMText, public HasDOMNodeImpl, public HasDOMChildImpl {
@@ -103,6 +103,6 @@ private:
     DOMTextImpl & operator = (const DOMTextImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

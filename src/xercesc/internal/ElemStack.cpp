@@ -22,14 +22,14 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <string.h>
+#include <cstring>
 #include <xercesc/util/EmptyStackException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ElemStack: Constructors and Destructor
@@ -888,4 +888,4 @@ void WFElemStack::expandStack()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

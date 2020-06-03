@@ -30,7 +30,7 @@
 #include <xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp>
 #include <xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const XMLCh WinSockNetAccessor::fgMyName[] =
 {
@@ -76,5 +76,5 @@ BinInputStream* WinSockNetAccessor::makeNew(const XMLURL&  urlSource, const XMLN
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

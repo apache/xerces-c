@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class describes all properties of a Schema Model Group
@@ -145,6 +145,6 @@ inline XSAnnotation* XSModelGroupDefinition::getAnnotation() const
 
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

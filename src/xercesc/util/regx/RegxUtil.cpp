@@ -25,7 +25,7 @@
 #include <xercesc/util/regx/RegxUtil.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 XMLCh* RegxUtil::decomposeToSurrogates(XMLInt32 ch,
                                        MemoryManager* const manager) {
@@ -96,7 +96,7 @@ XMLCh* RegxUtil::stripExtendedComment(const XMLCh* const expression,
     return buffer;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file RegxUtil.cpp

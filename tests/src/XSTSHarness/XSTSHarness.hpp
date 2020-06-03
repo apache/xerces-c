@@ -27,20 +27,16 @@
 // ---------------------------------------------------------------------------
 
 #include <xercesc/util/PlatformUtils.hpp>
-#include <stdlib.h>
-#include <string.h>
-#if defined(XERCES_NEW_IOSTREAMS)
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 typedef enum
 {
@@ -90,7 +86,7 @@ private :
     char*   fLocalForm;
 };
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

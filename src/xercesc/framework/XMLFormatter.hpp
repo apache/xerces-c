@@ -24,7 +24,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLFormatTarget;
 class XMLTranscoder;
@@ -533,6 +533,6 @@ inline XMLFormatter::UnRepFlags XMLFormatter::getUnRepFlags() const
     return fUnRepFlags;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

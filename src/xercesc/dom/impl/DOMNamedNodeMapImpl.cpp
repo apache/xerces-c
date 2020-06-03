@@ -31,7 +31,7 @@
 #include "DOMDocumentImpl.hpp"
 #include "DOMNodeImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMNamedNodeMapImpl::DOMNamedNodeMapImpl(DOMNode *ownerNod)
 {
@@ -337,4 +337,4 @@ DOMNode *DOMNamedNodeMapImpl::removeNamedItemNS(const XMLCh *namespaceURI,
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

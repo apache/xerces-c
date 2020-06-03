@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 /**
  * The <code>DOMXPathNSResolver</code> interface permit prefix strings
  * in the expression to be properly bound to namespaceURI strings.
@@ -125,6 +125,6 @@ public:
     //@}
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

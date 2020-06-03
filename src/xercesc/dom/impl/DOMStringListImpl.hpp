@@ -26,7 +26,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/dom/DOMStringList.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMStringListImpl: public XMemory,
@@ -51,6 +51,6 @@ public:
     virtual void         release();
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

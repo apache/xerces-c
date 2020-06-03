@@ -83,32 +83,32 @@ static bool basicTests()
 // ---------------------------------------------------------------------------
 bool testRefHashTable()
 {
-    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
+    std::wcout  << L"----------------------------------\n"
                 << L"Testing RefHashTableOf class\n"
-                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
     try
     {
-        XERCES_STD_QUALIFIER wcout << L"Testing basic RefHashtable methods" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"Testing basic RefHashtable methods" << std::endl;
         if (!basicTests())
         {
-            XERCES_STD_QUALIFIER wcout  << L"RefHashtable basic test methods failed"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"RefHashtable basic test methods failed"
+                        << std::endl;
             retVal = false;
         }
          else
         {
-            XERCES_STD_QUALIFIER wcout << L"RefHashtable basic tests passed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"RefHashtable basic tests passed" << std::endl;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
     return retVal;

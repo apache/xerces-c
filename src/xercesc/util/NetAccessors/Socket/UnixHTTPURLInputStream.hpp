@@ -24,7 +24,7 @@
 
 #include <xercesc/util/NetAccessors/BinHTTPInputStreamCommon.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class implements the BinInputStream interface specified by the XML
@@ -56,6 +56,6 @@ private :
     int                 fSocket;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // UNIXHTTPURLINPUTSTREAM_HPP

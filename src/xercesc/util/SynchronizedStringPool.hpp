@@ -26,7 +26,7 @@
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/Mutexes.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This class provides a synchronized string pool implementation.
@@ -81,6 +81,6 @@ private :
     XMLMutex             fMutex;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

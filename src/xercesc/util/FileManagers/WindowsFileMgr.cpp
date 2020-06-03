@@ -30,7 +30,7 @@
 #define INVALID_SET_FILE_POINTER ((DWORD)-1)
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static bool isBackSlash(XMLCh c) {
     return c == chBackSlash ||
@@ -427,5 +427,5 @@ WindowsFileMgr::isRelative(const XMLCh* const toCheck, MemoryManager* const /*ma
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

@@ -25,9 +25,9 @@
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <stdio.h>
+#include <cstdio>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 static const XMLSize_t gPrimes[] = {997, 9973, 99991, 999983, 0 };  // To do - add a few more.
@@ -227,4 +227,4 @@ void DOMNodeIDMap::growTable()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

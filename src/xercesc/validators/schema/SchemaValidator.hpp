@@ -29,7 +29,7 @@
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class GrammarResolver;
 class DatatypeValidator;
@@ -438,6 +438,6 @@ inline bool SchemaValidator::getIsXsiTypeSet() const
     return (fXsiType!=0);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

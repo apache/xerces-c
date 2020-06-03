@@ -23,13 +23,9 @@
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
-#include <string.h>
-#include <stdlib.h>
-#if defined(XERCES_NEW_IOSTREAMS)
+#include <cstring>
+#include <cstdlib>
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include <xercesc/util/PlatformUtils.hpp>
 #include "StdInParseHandlers.hpp"
 
@@ -73,7 +69,7 @@ private :
     char*   fLocalForm;
 };
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

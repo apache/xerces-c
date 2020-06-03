@@ -25,7 +25,7 @@
 #include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLAttDefs;
 
@@ -180,6 +180,6 @@ private :
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

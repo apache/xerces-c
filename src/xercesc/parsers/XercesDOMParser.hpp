@@ -26,7 +26,7 @@
 #include <xercesc/parsers/AbstractDOMParser.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class EntityResolver;
@@ -691,6 +691,6 @@ inline const XMLEntityResolver* XercesDOMParser::getXMLEntityResolver() const
     return fXMLEntityResolver;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

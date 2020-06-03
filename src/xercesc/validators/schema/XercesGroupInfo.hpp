@@ -37,7 +37,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -194,7 +194,7 @@ inline void XercesGroupInfo::setCheckElementConsistency(const bool aValue) {
     fCheckElementConsistency = aValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

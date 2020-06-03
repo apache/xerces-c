@@ -50,7 +50,7 @@
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -163,7 +163,7 @@ ValueStoreCache::getGlobalValueStoreFor(const IdentityConstraint* const ic) {
 inline void ValueStoreCache::endDocument() {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

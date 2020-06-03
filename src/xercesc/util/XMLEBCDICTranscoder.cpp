@@ -21,7 +21,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLEBCDICTranscoder.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -202,4 +202,4 @@ XMLEBCDICTranscoder::~XMLEBCDICTranscoder()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

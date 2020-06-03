@@ -31,7 +31,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLEntityResolver;
 class XMLResourceIdentifier;
@@ -710,6 +710,6 @@ inline const DOMLSParserFilter* DOMLSParserImpl::getFilter() const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

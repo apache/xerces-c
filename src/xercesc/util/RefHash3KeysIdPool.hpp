@@ -29,7 +29,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // This hash table is a combination of RefHash2KeyTableOf (with an additional integer as key3)
 // and NameIdPool with an id as index
@@ -270,7 +270,7 @@ private :
     MemoryManager* const                fMemoryManager;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/RefHash3KeysIdPool.c>

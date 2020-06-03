@@ -27,7 +27,7 @@
 #include <xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp>
 #include <xercesc/util/NetAccessors/MacOSURLAccessCF/URLAccessCFBinInputStream.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const XMLCh
 MacOSURLAccessCF::sMyID[] =
@@ -58,5 +58,5 @@ MacOSURLAccessCF::makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpIn
 	return result;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

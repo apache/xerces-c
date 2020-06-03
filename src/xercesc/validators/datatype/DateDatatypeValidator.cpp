@@ -25,7 +25,7 @@
 #include <xercesc/validators/datatype/DateDatatypeValidator.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -132,7 +132,7 @@ void DateDatatypeValidator::serialize(XSerializeEngine& serEng)
     DateTimeValidator::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file DateDatatypeValidator::cpp

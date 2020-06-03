@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/ParenToken.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ParenToken: Constructors and Destructors
@@ -43,7 +43,7 @@ ParenToken::~ParenToken() {
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End of file ParenToken.cpp

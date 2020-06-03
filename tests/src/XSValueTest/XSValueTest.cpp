@@ -31,13 +31,9 @@
 #	include <config.h>
 #endif
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
-#else
-#include <fstream.h>
-#endif
 
-#include <stdio.h>
+#include <cstdio>
 #include <math.h>
 
 #include <xercesc/framework/psvi/XSValue.hpp>
@@ -6729,8 +6725,8 @@ int main()
     catch (const XMLException& toCatch)
     {
         StrX msg(toCatch.getMessage());
-        XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
-            << msg << XERCES_STD_QUALIFIER endl;
+        std::cerr << "Error during initialization! Message:\n"
+            << msg << std::endl;
         return 1;
     }
 

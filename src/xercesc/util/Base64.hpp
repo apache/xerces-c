@@ -26,7 +26,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class provides encode/decode for RFC 2045 Base64 as
@@ -261,6 +261,6 @@ inline void Base64::split3rdOctet(const XMLByte& ch, XMLByte& b3, XMLByte& b4) {
     b4 = ( ch & 0x3f );
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

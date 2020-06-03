@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 /**
@@ -252,6 +252,6 @@ inline const XMLCh* DOMException::getMessage() const
     return msg;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

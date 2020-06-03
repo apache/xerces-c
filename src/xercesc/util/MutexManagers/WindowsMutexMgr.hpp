@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMLMutexMgr.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /*
 	The mutex manager to use on MS Windows platforms
@@ -42,7 +42,7 @@ class WindowsMutexMgr : public XMLMutexMgr
 		virtual void			unlock(XMLMutexHandle mtx);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 
 #endif

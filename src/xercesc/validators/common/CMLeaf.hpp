@@ -25,7 +25,7 @@
 #include <xercesc/validators/common/CMNode.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This class represents a leaf in the content spec node tree of an
@@ -248,6 +248,6 @@ inline void CMLeaf::calcLastPos(CMStateSet& toSet) const
     toSet.setBit(fPosition);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

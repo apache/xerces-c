@@ -37,7 +37,7 @@
 #include "DOMParentNode.hpp"
 #include "DOMNodeImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMDocumentFragmentImpl: public DOMDocumentFragment,
@@ -69,7 +69,7 @@ public:
     DOMPARENTIMPL_DECL;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

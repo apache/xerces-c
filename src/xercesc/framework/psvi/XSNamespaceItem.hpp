@@ -26,7 +26,7 @@
 #include <xercesc/framework/psvi/XSObject.hpp>
 #include <xercesc/framework/psvi/XSNamedMap.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class contains all properties of the Schema Namespace Information infoitem.  
@@ -240,6 +240,6 @@ inline const XMLCh *XSNamespaceItem::getSchemaNamespace() const
 
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -40,7 +40,7 @@
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local, static data
@@ -762,4 +762,4 @@ void TranscodeFromStr::transcode(const XMLByte *in, XMLSize_t length, XMLTransco
     fString[fCharsWritten] = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -26,7 +26,7 @@
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLMsgLoader;
 
@@ -153,6 +153,6 @@ inline bool DTDValidator::handlesSchema() const
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

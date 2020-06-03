@@ -25,9 +25,9 @@
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/internal/CharTypeTables.hpp>
-#include <string.h>
+#include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLChar1_0: static data initialization
@@ -8835,7 +8835,7 @@ XMLByte XMLChar1_1::fgCharCharsTable1_1[0x10000] =
 
 #if defined(NEED_TO_GEN_TABLE)
 
-#include <stdio.h>
+#include <cstdio>
 
 static XMLCh gTmpCharTable[0x10000];
 
@@ -9073,4 +9073,4 @@ static CharFlagKicker gKicker;
 #endif
 
 
-XERCES_CPP_NAMESPACE_END
+}

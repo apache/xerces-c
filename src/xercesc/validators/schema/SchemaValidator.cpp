@@ -42,7 +42,7 @@
 #include <xercesc/validators/schema/XSDLocator.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Constructors and Destructor
@@ -2091,4 +2091,4 @@ SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -28,7 +28,7 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class is the wrapper for the Mac OS CFURLAccess code
@@ -61,6 +61,6 @@ MacOSURLAccessCF::getId() const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // MACOSURLACCESSCF_HPP

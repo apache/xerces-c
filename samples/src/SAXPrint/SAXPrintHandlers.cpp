@@ -103,8 +103,8 @@ void SAXPrintHandlers::writeChars(const XMLByte* const toWrite,
     // Without the cast, it was printing the pointer value in hex.
     // Quite annoying, considering every other platform printed
     // the string with the explicit cast to char* below.
-    XERCES_STD_QUALIFIER cout.write((char *) toWrite, (int) count);
-	XERCES_STD_QUALIFIER cout.flush();
+    std::cout.write((char *) toWrite, (int) count);
+	std::cout.flush();
 }
 
 
@@ -113,26 +113,26 @@ void SAXPrintHandlers::writeChars(const XMLByte* const toWrite,
 // ---------------------------------------------------------------------------
 void SAXPrintHandlers::error(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
+    std::cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void SAXPrintHandlers::fatalError(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+    std::cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void SAXPrintHandlers::warning(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
+    std::cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 

@@ -103,9 +103,9 @@
 # endif /* BYTE_ORDER == LITTLE_ENDIAN */
 
 #include <wchar.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -116,7 +116,7 @@
 #include "IconvGNUTransService.hpp"
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 // Description of encoding schemas, supported by iconv()
@@ -1139,4 +1139,4 @@ bool IconvGNUTranscoder::canTranscodeTo
     return (rc != (size_t)-1) && (len == 0);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

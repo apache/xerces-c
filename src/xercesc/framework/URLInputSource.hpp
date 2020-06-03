@@ -25,7 +25,7 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/sax/InputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class BinInputStream;
 
@@ -231,6 +231,6 @@ inline const XMLURL& URLInputSource::urlSrc() const
     return fURL;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

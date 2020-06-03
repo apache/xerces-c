@@ -129,8 +129,7 @@ AC_SUBST([BUILD_STATIC], [$enable_static])
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h locale.h \
-                  memory.h netdb.h netinet/in.h nl_types.h stddef.h stdint.h stdlib.h \
-                  string.h strings.h \
+                  memory.h netdb.h netinet/in.h nl_types.h stddef.h stdint.h \
                   sys/param.h sys/socket.h sys/time.h sys/timeb.h \
                   unistd.h wchar.h wctype.h \
                   CoreServices/CoreServices.h \
@@ -139,9 +138,6 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h loc
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
-AC_C_CONST
-AC_C_INLINE
-AC_C_VOLATILE
 
 AC_CHECK_SIZEOF(wchar_t)
 AC_CHECK_TYPE(size_t)
@@ -152,10 +148,6 @@ AC_TYPE_SIZE_T
 
 XERCES_INT_TYPES
 
-AC_CXX_HAVE_BOOL
-AC_CXX_HAVE_NAMESPACES
-AC_CXX_HAVE_STD_NAMESPACE
-AC_CXX_HAVE_STD_LIBS
 AC_CXX_HAVE_LSTRING
 
 ACX_PTHREAD
@@ -229,7 +221,7 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                  )
 AC_MSG_CHECKING([for wcsrtombs])
 AC_RUN_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>
-#include <string.h>]],
+#include <cstring>]],
                                  [[
 mbstate_t st;
 memset(&st, 0, sizeof(st));
@@ -251,7 +243,7 @@ else
                  )
 AC_MSG_CHECKING([for mbsrtowcs])
 AC_RUN_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>
-#include <string.h>]],
+#include <cstring>]],
                                  [[
 mbstate_t st;
 memset(&st, 0, sizeof(st));
@@ -363,13 +355,10 @@ AC_DEFINE_UNQUOTED([XERCES_PLATFORM_EXPORT], [$platform_export], [Define as the 
 AC_DEFINE_UNQUOTED([XERCES_PLATFORM_IMPORT], [$platform_import], [Define as the platform's import attribute])
 AC_DEFINE_UNQUOTED([XERCES_TEMPLATE_EXTERN], [$template_extern], [Define as the platform's template extern attribute])
 
-AS_IF([test ! $ac_cv_cxx_have_bool],
-	AC_DEFINE([XERCES_NO_NATIVE_BOOL], 1, [Define if there is no native bool support in this environment]))
-
 XERCES_XMLCH_SELECTION
 
 AC_MSG_CHECKING([whether the compiler chokes on a placement operator delete])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <stdlib.h>
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <cstdlib>
 
                                         class XMemory
                                         {
@@ -522,16 +511,6 @@ AS_IF([test x$ac_cv_type_ssize_t = xyes],
 	AC_DEFINE([XERCES_SSIZE_MAX], [SSIZE_MAX], [Define as the appropriate SSIZE_MAX macro]),
 	AC_DEFINE([XERCES_SSIZE_T], [long], [Define as the appropriate ssize_t type])
 	AC_DEFINE([XERCES_SSIZE_MAX], [LONG_MAX], [Define as the appropriate SSIZE_MAX macro]))
-
-AS_IF([test x$ac_cv_cxx_have_namespaces = xyes],
-	AC_DEFINE([XERCES_HAS_CPP_NAMESPACE], 1, [Define if namespaces is supported by the compiler]))
-
-AS_IF([test x$ac_cv_cxx_have_std_namespace = xyes],
-	AC_DEFINE([XERCES_STD_NAMESPACE], 1, [Define if the std namespace is supported]))
-
-AS_IF([test x$ac_cv_cxx_have_std_libs = xyes],
-	AC_DEFINE([XERCES_NEW_IOSTREAMS], 1, [Define if the isstream library can be included as <iostream>]))
-
 
 AC_OUTPUT
 

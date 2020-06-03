@@ -26,7 +26,7 @@
 #include <xercesc/util/SynchronizedStringPool.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLSynchronizedStringPool: Constructors and Destructor
@@ -126,4 +126,4 @@ unsigned int XMLSynchronizedStringPool::getStringCount() const
     return fCurId+constCount-1;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

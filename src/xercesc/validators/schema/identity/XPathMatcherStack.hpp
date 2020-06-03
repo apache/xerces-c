@@ -28,7 +28,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/XPathMatcher.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT XPathMatcherStack : public XMemory
 {
@@ -129,7 +129,7 @@ inline void XPathMatcherStack::addMatcher(XPathMatcher* const matcher) {
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

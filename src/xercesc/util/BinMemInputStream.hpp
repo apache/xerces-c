@@ -25,7 +25,7 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT BinMemInputStream : public BinInputStream
 {
@@ -129,6 +129,6 @@ inline XMLSize_t BinMemInputStream::getSize() const
     return fCapacity;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
