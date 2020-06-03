@@ -11,7 +11,7 @@
 language: c
 
 sudo: false
-dist: trusty
+dist: bionic
 
 cache:
   directories:
@@ -24,6 +24,17 @@ addons:
     - autoconf
     - automake
     - libtool
+    - cmake
+    - ninja-build
+  homebrew:
+    packages:
+    - icu
+    - curl
+    - autoconf
+    - automake
+    - libtool
+    - cmake
+    - ninja
 
 os:
   - linux
