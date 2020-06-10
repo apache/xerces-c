@@ -96,8 +96,6 @@ public :
       */
     void operator delete(void* p);
 
-     //The Borland compiler is complaining about duplicate overloading of delete
-#if !defined(XERCES_NO_MATCHING_DELETE_OPERATOR)
     /**
       * This method provides a matching delete for the custom operator new
       *
@@ -113,7 +111,6 @@ public :
       * @param ptr    The memory location where the object had to be allocated
       */
     void operator delete(void* p, void* ptr);
-#endif
 
     //@}
 
