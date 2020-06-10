@@ -90,9 +90,6 @@ void XMemory::operator delete(void* p)
     }
 }
 
-//The Borland compiler is complaining about duplicate overloading of delete
-#if !defined(XERCES_NO_MATCHING_DELETE_OPERATOR)
-
 void XMemory::operator delete(void* p, MemoryManager* manager)
 {
     assert(manager != 0);
@@ -117,8 +114,6 @@ void XMemory::operator delete(void* p, MemoryManager* manager)
 void XMemory::operator delete(void* /*p*/, void* /*ptr*/)
 {
 }
-
-#endif
 
 }
 

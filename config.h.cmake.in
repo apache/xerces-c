@@ -348,10 +348,6 @@
 /* Define if there is support for L"widestring" */
 #cmakedefine XERCES_LSTRSUPPORT 1
 
-/* Define to have XMemory.hpp avoid declaring a matching operator delete for
-   the placement operator new */
-#cmakedefine XERCES_NO_MATCHING_DELETE_OPERATOR 1
-
 /* Define to use backslash as an extra path delimiter character */
 #cmakedefine XERCES_PATH_DELIMITER_BACKSLASH 1
 

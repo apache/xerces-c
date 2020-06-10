@@ -366,27 +366,6 @@ AC_DEFINE_UNQUOTED([XERCES_TEMPLATE_EXTERN], [$template_extern], [Define as the 
 
 XERCES_XMLCH_SELECTION
 
-AC_MSG_CHECKING([whether the compiler chokes on a placement operator delete])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <cstdlib>
-
-                                        class XMemory
-                                        {
-                                        public :
-                                            void* operator new(size_t s) { return 0; }
-                                            void* operator new(size_t s, void* ptr) { return 0; }
-                                            void operator delete(void* p) {}
-                                            void operator delete(void* p, void* ptr) {}
-                                        };]],
-                                     [[ ]])],
-                    [
-                      AC_MSG_RESULT([no])
-                    ],
-                    [
-                      AC_MSG_RESULT([yes])
-                      AC_DEFINE_UNQUOTED([XERCES_NO_MATCHING_DELETE_OPERATOR], 1, [Define to have XMemory.hpp avoid declaring a matching operator delete for the placement operator new])
-                    ]
-                 )
-
 if test "$have_sse2" = "yes"; then
     no_sse2_CXXFLAGS="$CXXFLAGS"
 

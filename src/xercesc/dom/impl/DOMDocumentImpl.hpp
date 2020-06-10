@@ -490,12 +490,6 @@ inline void * operator new(size_t amt, xercesc::DOMDocument *doc)
     return p;
 }
 
-// ---------------------------------------------------------------------------
-//  For DOM:
-//  Bypass compiler warning:
-//    no matching operator delete found; memory will not be freed if initialization throws an exception
-// ---------------------------------------------------------------------------
-#if !defined(XERCES_NO_MATCHING_DELETE_OPERATOR)
 inline void operator delete(void* /*ptr*/, xercesc::DOMDocumentImpl * /*doc*/, xercesc::DOMMemoryManager::NodeObjectType /*type*/)
 {
     return;
@@ -513,6 +507,5 @@ inline void operator delete(void* /*ptr*/, xercesc::DOMDocument * /*doc*/)
 {
     return;
 }
-#endif
 
 #endif
