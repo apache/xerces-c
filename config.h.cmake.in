@@ -114,9 +114,6 @@
 /* Define to 1 if you have the <locale.h> header file. */
 #cmakedefine HAVE_LOCALE_H 1
 
-/* define if the compiler implements L"widestring" */
-#cmakedefine HAVE_LSTRING 1
-
 /* Define to 1 if you have the <machine/endian.h> header file. */
 #cmakedefine HAVE_MACHINE_ENDIAN_H 1
 

@@ -157,8 +157,6 @@ AC_TYPE_SIZE_T
 
 XERCES_INT_TYPES
 
-AC_CXX_HAVE_LSTRING
-
 ACX_PTHREAD
 
 # Checks for library functions.
