@@ -49,24 +49,12 @@
 //  These defines are set by configure as appropriate for the platform.
 // ---------------------------------------------------------------------------
 
-#undef XERCES_AUTOCONF
-#undef XERCES_HAVE_CSTDINT
-#undef XERCES_HAVE_STDINT_H
 #undef XERCES_HAVE_SYS_TYPES_H
-#undef XERCES_HAVE_INTTYPES_H
 #undef XERCES_HAVE_INTRIN_H
 #undef XERCES_HAVE_EMMINTRIN_H
 #undef XERCES_INCLUDE_WCHAR_H
 
-#undef XERCES_S16BIT_INT
-#undef XERCES_S32BIT_INT
-#undef XERCES_S64BIT_INT
-#undef XERCES_U16BIT_INT
-#undef XERCES_U32BIT_INT
-#undef XERCES_U64BIT_INT
 #undef XERCES_XMLCH_T
-#undef XERCES_SIZE_T
-#undef XERCES_SSIZE_T
 
 #undef XERCES_LSTRSUPPORT
 
@@ -79,33 +67,16 @@
 #undef XERCES_TEMPLATE_EXTERN
 
 // ---------------------------------------------------------------------------
-//  Include standard headers, if available, that we may rely on below.
+//  Include standard headers that we may rely on below.
 // ---------------------------------------------------------------------------
-#if defined(__cplusplus) && XERCES_HAVE_CSTDINT
-#	include <cstdint>
-#elif XERCES_HAVE_STDINT_H
-#		if defined(__cplusplus)
-#			define __STDC_LIMIT_MACROS
-#		endif
-#		include <stdint.h>
-#endif
-#if XERCES_HAVE_INTTYPES_H
-#	include <inttypes.h>
-#endif
-#if XERCES_HAVE_SYS_TYPES_H
-#	include <sys/types.h>
-#endif
-#if XERCES_INCLUDE_WCHAR_H
-#	include <wchar.h>
-#endif
+#include <cstdint>
+#include <cstddef>
+#include <cwchar>
 
 // ---------------------------------------------------------------------------
 //  XMLSize_t is the unsigned integral type.
 // ---------------------------------------------------------------------------
-typedef XERCES_SIZE_T				XMLSize_t;
-typedef XERCES_SSIZE_T				XMLSSize_t;
-#undef XERCES_SIZE_MAX
-#undef XERCES_SSIZE_MAX
+typedef size_t					XMLSize_t;
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
@@ -115,16 +86,16 @@ typedef XERCES_XMLCH_T				XMLCh;
 // ---------------------------------------------------------------------------
 //  Define unsigned 16, 32, and 64 bit integers
 // ---------------------------------------------------------------------------
-typedef XERCES_U16BIT_INT			XMLUInt16;
-typedef XERCES_U32BIT_INT			XMLUInt32;
-typedef XERCES_U64BIT_INT			XMLUInt64;
+typedef uint16_t				XMLUInt16;
+typedef uint32_t				XMLUInt32;
+typedef uint64_t				XMLUInt64;
 
 // ---------------------------------------------------------------------------
 //  Define signed 16, 32, and 64 bit integers
 // ---------------------------------------------------------------------------
-typedef XERCES_S16BIT_INT			XMLInt16;
-typedef XERCES_S32BIT_INT			XMLInt32;
-typedef XERCES_S64BIT_INT			XMLInt64;
+typedef int16_t					XMLInt16;
+typedef int32_t					XMLInt32;
+typedef int64_t					XMLInt64;
 
 // ---------------------------------------------------------------------------
 //  XMLFilePos is the type used to represent a file position.

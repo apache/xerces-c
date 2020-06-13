@@ -1,20 +1,6 @@
 /* config.h.cmake.in.  Not generated, but originated from autoheader.  */
 /* This file must be kept up-to-date with needed substitutions from config.h.in. */
 
-/* Define to 1 if you have the <cstdint> header file. */
-#cmakedefine HAVE_CSTDINT 1
-
-/* Define to 1 if you have the <stdint.h> header file. */
-#cmakedefine HAVE_STDINT_H 1
-
-#if defined(__cplusplus) && defined(HAVE_CSTDINT)
-#include <cstdint>
-#elif HAVE_STDINT_H
-#include <stdint.h>
-#elif HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif
-
 /* Define to specify no threading is used */
 #cmakedefine APP_NO_THREADS 1
 
@@ -92,9 +78,6 @@
 
 /* Define to 1 if you have the `iconv_open' function. */
 #cmakedefine HAVE_ICONV_OPEN 1
-
-/* Define to 1 if you have the <inttypes.h> header file. */
-#cmakedefine HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the <langinfo.h> header file. */
 #cmakedefine HAVE_LANGINFO_H 1
@@ -292,24 +275,6 @@
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "@PACKAGE_VERSION@"
 
-/* The size of `int', as computed by sizeof. */
-#define SIZEOF_INT @SIZEOF_INT@
-
-/* The size of `long', as computed by sizeof. */
-#define SIZEOF_LONG @SIZEOF_LONG@
-
-/* The size of `long long', as computed by sizeof. */
-#define SIZEOF_LONG_LONG @SIZEOF_LONG_LONG@
-
-/* The size of `short', as computed by sizeof. */
-#define SIZEOF_SHORT @SIZEOF_SHORT@
-
-/* The size of `wchar_t', as computed by sizeof. */
-#define SIZEOF_WCHAR_T @SIZEOF_WCHAR_T@
-
-/* The size of `__int64', as computed by sizeof. */
-#define SIZEOF___INT64 @SIZEOF___INT64@
-
 /* Version number of package */
 #define VERSION "@PACKAGE_VERSION@"
 
@@ -329,9 +294,6 @@
 
 /* Define to 1 if you have intrin.h */
 #cmakedefine XERCES_HAVE_INTRIN_H 1
-
-/* Define to 1 if we have inttypes.h */
-#cmakedefine XERCES_HAVE_INTTYPES_H 1
 
 /* Define to have SSE2 instruction used at runtime */
 #cmakedefine XERCES_HAVE_SSE2_INTRINSIC 1
@@ -354,38 +316,8 @@
 /* Define as the platform's import attribute */
 #define XERCES_PLATFORM_IMPORT @XERCES_PLATFORM_IMPORT@
 
-/* An appropriate signed 16 bit integer type */
-#define XERCES_S16BIT_INT @XERCES_S16BIT_INT@
-
-/* An appropriate signed 32 bit integer type */
-#define XERCES_S32BIT_INT @XERCES_S32BIT_INT@
-
-/* An appropriate signed 64 bit integer type */
-#define XERCES_S64BIT_INT @XERCES_S64BIT_INT@
-
-/* Define as the appropriate SIZE_MAX macro */
-#define XERCES_SIZE_MAX @XERCES_SIZE_MAX@
-
-/* Define as the appropriate size_t type */
-#define XERCES_SIZE_T @XERCES_SIZE_T@
-
-/* Define as the appropriate SSIZE_MAX macro */
-#define XERCES_SSIZE_MAX @XERCES_SSIZE_MAX@
-
-/* Define as the appropriate ssize_t type */
-#define XERCES_SSIZE_T @XERCES_SSIZE_T@
-
 /* Define if building a static library */
 #cmakedefine XERCES_STATIC_LIBRARY 1
-
-/* An appropriate unsigned 16 bit integer type */
-#define XERCES_U16BIT_INT @XERCES_U16BIT_INT@
-
-/* An appropriate unsigned 32 bit integer type */
-#define XERCES_U32BIT_INT @XERCES_U32BIT_INT@
-
-/* An appropriate unsigned 64 bit integer type */
-#define XERCES_U64BIT_INT @XERCES_U64BIT_INT@
 
 /* Define to use the POSIX file mgr */
 #cmakedefine XERCES_USE_FILEMGR_POSIX 1
