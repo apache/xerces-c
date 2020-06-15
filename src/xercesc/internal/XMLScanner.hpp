@@ -245,8 +245,8 @@ public :
         , const unsigned int    maxSysIdChars
         ,       XMLCh* const    pubIdToFill
         , const unsigned int    maxPubIdChars
-        ,       XMLSSize_t&     lineToFill
-        ,       XMLSSize_t&     colToFill
+        ,       XMLSize_t&      lineToFill
+        ,       XMLSize_t&      colToFill
     ) const;*/
     const Locator* getLocator() const;
     const ReaderMgr* getReaderMgr() const;

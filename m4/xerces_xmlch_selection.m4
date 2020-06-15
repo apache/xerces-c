@@ -122,14 +122,14 @@ AC_DEFUN([XERCES_XMLCH_SELECTION],
 
         *-uint16_t-*)
             xmlch=uint16_t
-            xmlch_type=$xerces_cv_type_u16bit_int
+            xmlch_type=uint16_t
             break
             ;;
 
         *)
             AS_IF([test $i -eq 2], [
                 xmlch=uint16_t
-                xmlch_type=$xerces_cv_type_u16bit_int
+                xmlch_type=uint16_t
                 AC_MSG_RESULT([none available; falling back to uint16_t])
                 ]
             )

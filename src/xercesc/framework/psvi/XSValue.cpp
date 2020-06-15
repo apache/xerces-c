@@ -25,6 +25,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <float.h>
+#include <limits>
 
 #include <xercesc/framework/psvi/XSValue.hpp>
 
@@ -95,21 +96,21 @@ namespace XERCES_CPP_NAMESPACE {
  *    dt_ENTITY                           str              [4] NCName           NA             content
  *    ---------------------------------------------------------------------------------------------------------
  * 30 dt_ENTITIES                         str              ws seped ENTITY      NA             content
- *    dt_integer               num                         lexical              yes            long
- *    dt_nonPositiveInteger    num                         lexical              yes            long
- *    dt_negativeInteger       num                         lexical              yes            long
- *    dt_long                  num                         lexical              yes            long
+ *    dt_integer               num                         lexical              yes            int64_t
+ *    dt_nonPositiveInteger    num                         lexical              yes            int64_t
+ *    dt_negativeInteger       num                         lexical              yes            int64_t
+ *    dt_long                  num                         lexical              yes            int64_t
  *    ---------------------------------------------------------------------------------------------------------
- * 35 dt_int                   num                         lexical              yes            int
- *    dt_short                 num                         lexical              yes            short
- *    dt_byte                  num                         lexical              yes            char
- *    dt_nonNegativeInteger    num                         lexical              yes            unsigned long
- *    dt_unsignedLong          num                         lexical              yes            unsigned long
+ * 35 dt_int                   num                         lexical              yes            int32_t
+ *    dt_short                 num                         lexical              yes            int16_t
+ *    dt_byte                  num                         lexical              yes            int8_t
+ *    dt_nonNegativeInteger    num                         lexical              yes            uint64_t
+ *    dt_unsignedLong          num                         lexical              yes            uint64_t
  *    ---------------------------------------------------------------------------------------------------------
- * 40 dt_unsignedInt           num                         lexical              yes            unsigned int
- *    dt_unsignedShort         num                         lexical              yes            unsigned short
- *    dt_unsignedByte          num                         lexical              yes            unsigned char
- *    dt_positiveInteger       num                         lexical              yes            unsigned long
+ * 40 dt_unsignedInt           num                         lexical              yes            uint32_t
+ *    dt_unsignedShort         num                         lexical              yes            uint16_t
+ *    dt_unsignedByte          num                         lexical              yes            uint8_t
+ *    dt_positiveInteger       num                         lexical              yes            uint64_t
  *
  ***/
 
@@ -1316,25 +1317,25 @@ XSValue::getActValNumerics(const XMLCh*         const content
                     retVal->fData.fValue.f_long = actVal.f_long;
                     break;
                 case XSValue::dt_int:
-                    retVal->fData.fValue.f_int = (int) actVal.f_long;
+                    retVal->fData.fValue.f_int = static_cast<int32_t>(actVal.f_long);
                     break;
                 case XSValue::dt_short:
-                    retVal->fData.fValue.f_short = (short) actVal.f_long;
+                    retVal->fData.fValue.f_short = static_cast<int16_t>(actVal.f_long);
                     break;
                 case XSValue::dt_byte:
-                    retVal->fData.fValue.f_char = (char) actVal.f_long;
+                    retVal->fData.fValue.f_char = static_cast<int8_t>(actVal.f_long);
                     break;
                 case XSValue::dt_unsignedLong:
                     retVal->fData.fValue.f_ulong = actVal.f_ulong;
                     break;
                 case XSValue::dt_unsignedInt:
-                    retVal->fData.fValue.f_uint = (unsigned int) actVal.f_ulong;
+                    retVal->fData.fValue.f_uint = static_cast<uint32_t>(actVal.f_ulong);
                     break;
                 case XSValue::dt_unsignedShort:
-                    retVal->fData.fValue.f_ushort = (unsigned short) actVal.f_ulong;
+                    retVal->fData.fValue.f_ushort = static_cast<uint16_t>(actVal.f_ulong);
                     break;
                 case XSValue::dt_unsignedByte:
-                    retVal->fData.fValue.f_uchar = (unsigned char) actVal.f_ulong;
+                    retVal->fData.fValue.f_uchar = static_cast<uint8_t>(actVal.f_ulong);
                     break;
                 default:
                     return 0;
@@ -1570,7 +1571,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
 
     if (XSValue::numericSign[datatype])
     {
-        retVal.f_long = strtol(nptr, &endptr, (int)10);
+        retVal.f_long = strtoll(nptr, &endptr, (int)10);
     }
     else
     {
@@ -1580,7 +1581,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
             return false;
         }
 
-        retVal.f_ulong = strtoul(nptr, &endptr, (int)10);
+        retVal.f_ulong = strtoull(nptr, &endptr, (int)10);
     }
 
     // need to check out-of-bounds before checking erange...
@@ -1601,8 +1602,8 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
             break;
         case XSValue::dt_int:
             // strtol will set value to LONG_MIN/LONG_MAX if ERANGE error
-            if ((retVal.f_long < INT_MIN) ||
-                (retVal.f_long > INT_MAX) ||
+            if ((retVal.f_long < std::numeric_limits<int32_t>::min()) ||
+                (retVal.f_long > std::numeric_limits<int32_t>::max()) ||
                 (errno == ERANGE))
             {
                 status = st_FOCA0002;
@@ -1610,16 +1611,16 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
             }
             break;
         case XSValue::dt_short:
-            if ((retVal.f_long < SHRT_MIN) ||
-                (retVal.f_long > SHRT_MAX))
+            if ((retVal.f_long < std::numeric_limits<int16_t>::min()) ||
+                (retVal.f_long > std::numeric_limits<int16_t>::max()))
             {
                 status = st_FOCA0002;
                 return false;
             }
             break;
         case XSValue::dt_byte:
-            if ((retVal.f_long < SCHAR_MIN) ||
-                (retVal.f_long > SCHAR_MAX))
+            if ((retVal.f_long < std::numeric_limits<int8_t>::min()) ||
+                (retVal.f_long > std::numeric_limits<int8_t>::max()))
             {
                 status = st_FOCA0002;
                 return false;
@@ -1627,7 +1628,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
             break;
         case XSValue::dt_unsignedInt:
             // strtoul will set value to LONG_INT if ERANGE error
-            if ((retVal.f_ulong > UINT_MAX)  ||
+            if ((retVal.f_ulong > std::numeric_limits<uint32_t>::max())  ||
                 (errno == ERANGE))
             {
                 status = st_FOCA0002;
@@ -1635,14 +1636,14 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
             }
             break;
         case XSValue::dt_unsignedShort:
-            if (retVal.f_ulong > USHRT_MAX)
+            if (retVal.f_ulong > std::numeric_limits<uint16_t>::max())
             {
                 status = st_FOCA0002;
                 return false;
             }
             break;
         case XSValue::dt_unsignedByte:
-            if (retVal.f_ulong > UCHAR_MAX)
+            if (retVal.f_ulong > std::numeric_limits<uint8_t>::max())
             {
                 status = st_FOCA0002;
                 return false;

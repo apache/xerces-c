@@ -24,7 +24,6 @@
 
 include(CheckCXXSourceCompiles)
 include(CheckTypeSize)
-include(XercesIntTypes)
 
 check_cxx_source_compiles("
 int main() {
@@ -74,7 +73,7 @@ if(xmlch_type_found EQUAL -1)
   message(FATAL_ERROR "${xmlch_type} xmlch_type unavailable")
 endif()
 
-set(XERCES_XMLCH_T ${XERCES_U16BIT_INT})
+set(XERCES_XMLCH_T uint16_t)
 set(XERCES_USE_CHAR16_T 0)
 set(XERCES_INCLUDE_WCHAR_H 0)
 if(xmlch_type STREQUAL "char16_t")

@@ -156,7 +156,7 @@ XMLUTF16Transcoder::transcodeTo(const   XMLCh* const    srcData
         for (XMLSize_t index = 0; index < countToDo; index++)
         {
             // To avoid flakey compilers, use a temp
-            const UTF16Ch tmpCh = UTF16Ch(*srcPtr++);
+            const UTF16Ch tmpCh = static_cast<UTF16Ch>(*srcPtr++);
             *outPtr++ = BitOps::swapBytes(tmpCh);
         }
     }

@@ -23,6 +23,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
+#include <limits>
 
 namespace XERCES_CPP_NAMESPACE {
 
@@ -146,7 +147,7 @@ XMLByte* Base64::encode(const XMLByte* const inputData
     if (!inputData || !outputLength) {
         return 0;
     }
-    else if (XERCES_SIZE_MAX - inputLength < 2) {
+    else if (std::numeric_limits<size_t>::max() - inputLength < 2) {
         return 0;
     }
 

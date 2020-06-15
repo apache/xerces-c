@@ -46,25 +46,89 @@
 #include	<xercesc/util/Xerces_autoconf_config.hpp>
 
 // ---------------------------------------------------------------------------
+//  Include standard headers that we may rely on below.
+// ---------------------------------------------------------------------------
+#include <cstdint>
+#include <cstddef>
+#ifdef XERCES_INCLUDE_WCHAR_H
+#include <cwchar>
+#endif
+
+// ---------------------------------------------------------------------------
 //  Include the Xerces version information; this is kept in a separate file to
 //  make modification simple and obvious. Updates to the version header file
 // ---------------------------------------------------------------------------
 #include    <xercesc/util/XercesVersion.hpp>
 
+/**
+ * Unsigned integer of at least 64 bits.
+ */
+typedef uint64_t                                XMLSize_t;
+
+/**
+ * Signed integer of at least 64 bits.
+ */
+typedef int64_t                                XMLSSize_t;
+
+/**
+ * XML Character.  Platform-dependent 16-bit type.
+ */
+typedef XERCES_XMLCH_T                          XMLCh;
 
 // ---------------------------------------------------------------------------
-//  Some general typedefs that are defined for internal flexibility.
-//
-//  Note  that UTF16Ch is fixed at 16 bits, whereas XMLCh floats in size per
-//  platform, to whatever is the native wide char format there. UCS4Ch is
-//  fixed at 32 bits. The types we defined them in terms of are defined per
-//  compiler, using whatever types are the right ones for them to get these
-//  16/32 bit sizes.
-//
+//  Integer definitions
 // ---------------------------------------------------------------------------
-typedef unsigned char       XMLByte;
-typedef XMLUInt16           UTF16Ch;
-typedef XMLUInt32           UCS4Ch;
+
+/**
+ * Unsigned 16-bit integer.
+ */
+typedef uint16_t                                XMLUInt16;
+/**
+ * Unsigned 32-bit integer.
+ */
+typedef uint32_t                                XMLUInt32;
+/**
+ * Unsigned 64-bit integer.
+ */
+typedef uint64_t                                XMLUInt64;
+
+/**
+ * Signed 16-bit integer.
+ */
+typedef int16_t                                 XMLInt16;
+/**
+ * Signed 32-bit integer.
+ */
+typedef int32_t                                 XMLInt32;
+/**
+ * Signed 64-bit integer.
+ */
+typedef int64_t                                 XMLInt64;
+
+/**
+ * File position.
+ */
+typedef uint64_t                                XMLFilePos;
+
+/**
+ * File location (line number, character position).
+ */
+typedef uint64_t                                XMLFileLoc;
+
+/**
+ * Byte.
+ */
+typedef uint8_t             XMLByte;
+
+/**
+ * UTF-16 character; fixed at 16 bits.
+ */
+typedef char16_t            UTF16Ch;
+
+/**
+ * UCS-4 character; fixed at 32 bits.
+ */
+typedef char32_t            UCS4Ch;
 
 
 // ---------------------------------------------------------------------------

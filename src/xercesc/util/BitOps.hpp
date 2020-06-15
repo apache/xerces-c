@@ -38,6 +38,12 @@ public:
         return XMLCh(((toSwap >> 8) | (toSwap << 8)) & 0xFFFF);
     }
 
+    static inline UTF16Ch swapBytes(const UTF16Ch toSwap)
+    {
+        //The mask is required to overcome a compiler error on solaris
+        return XMLCh(((toSwap >> 8) | (toSwap << 8)) & 0xFFFF);
+    }
+
     static inline unsigned int swapBytes(const XMLUInt32 toSwap)
     {
         return
@@ -49,6 +55,16 @@ public:
         );
     }
 
+    static inline UCS4Ch swapBytes(const UCS4Ch toSwap)
+    {
+        return
+        (
+            (toSwap >> 24)
+            | (toSwap << 24)
+            | ((toSwap & 0xFF00) << 8)
+            | ((toSwap & 0xFF0000) >> 8)
+        );
+    }
 
 
 protected :
