@@ -61,6 +61,8 @@ private :
     CurlURLInputStream(const CurlURLInputStream&);
     CurlURLInputStream& operator=(const CurlURLInputStream&);
     
+    void cleanup();
+
     static size_t staticWriteCallback(char *buffer,
                                       size_t size,
                                       size_t nitems,
