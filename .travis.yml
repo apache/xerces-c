@@ -29,6 +29,8 @@ os:
   - linux
   - osx
 
+osx_image: xcode12.5
+
 env:
   matrix:
     - BUILD=autoconf TYPE=Release MUTEXMGR=posix NETWORK=ON NETACCESSOR=curl MSGLOADER=inmemory TRANSCODER=iconv XMLCH=char16_t
