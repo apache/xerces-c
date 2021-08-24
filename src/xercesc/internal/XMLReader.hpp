@@ -253,6 +253,8 @@ private:
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
+    void cleanup();
+
     void checkForSwapped();
 
     void doInitCharSizeChecks();
