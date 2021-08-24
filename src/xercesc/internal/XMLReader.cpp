@@ -124,8 +124,16 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 {
     setXMLVersion(version);
 
-    // Do an initial load of raw bytes
-    refreshRawBuffer();
+    try
+    {
+        // Do an initial load of raw bytes
+        refreshRawBuffer();
+    }
+    catch (const XMLPlatformUtilsException&)
+    {
+        cleanup();
+        throw;
+    }
 
     // Ask the transcoding service if it supports src offset info
     fSrcOfsSupported = XMLPlatformUtils::fgTransService->supportsSrcOfs();
@@ -207,8 +215,16 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 {
     setXMLVersion(version);
 
-    // Do an initial load of raw bytes
-    refreshRawBuffer();
+    try
+    {
+        // Do an initial load of raw bytes
+        refreshRawBuffer();
+    }
+    catch (const XMLPlatformUtilsException&)
+    {
+        cleanup();
+        throw;
+    }
 
     // Copy the encoding string to our member
     fEncodingStr = XMLString::replicate(encodingStr, fMemoryManager);
@@ -390,8 +406,16 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 {
     setXMLVersion(version);
 
-    // Do an initial load of raw bytes
-    refreshRawBuffer();
+    try
+    {
+        // Do an initial load of raw bytes
+        refreshRawBuffer();
+    }
+    catch (const XMLPlatformUtilsException&)
+    {
+        cleanup();
+        throw;
+    }
 
     // Ask the transcoding service if it supports src offset info
     fSrcOfsSupported = XMLPlatformUtils::fgTransService->supportsSrcOfs();
@@ -456,11 +480,22 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 
 XMLReader::~XMLReader()
 {
+    cleanup();
+}
+
+
+void XMLReader::cleanup()
+{
     fMemoryManager->deallocate(fEncodingStr);
+    fEncodingStr = NULL;
     fMemoryManager->deallocate(fPublicId);
+    fPublicId = NULL;
     fMemoryManager->deallocate(fSystemId);
+    fSystemId = NULL;
     delete fStream;
+    fStream = NULL;
     delete fTranscoder;
+    fTranscoder = NULL;
 }
 
 
