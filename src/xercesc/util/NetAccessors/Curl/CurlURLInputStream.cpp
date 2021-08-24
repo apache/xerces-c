@@ -160,7 +160,20 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
     while(fBufferHeadPtr == fBuffer)
     {
     	int runningHandles = 0;
-        readMore(&runningHandles);
+        try
+        {
+            readMore(&runningHandles);
+        }
+        catch(const MalformedURLException&)
+        {
+            cleanup();
+            throw;
+        }
+        catch(const NetAccessorException&)
+        {
+            cleanup();
+            throw;
+        }
     	if(runningHandles == 0) break;
     }
 
@@ -174,18 +187,31 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
 
 CurlURLInputStream::~CurlURLInputStream()
 {
+    cleanup();
+}
+
+
+void CurlURLInputStream::cleanup()
+{
+    if (!fMulti )
+        return;
+
     // Remove the easy handle from the multi stack
     curl_multi_remove_handle(fMulti, fEasy);
 
     // Cleanup the easy handle
     curl_easy_cleanup(fEasy);
+    fEasy = NULL;
 
     // Cleanup the multi handle
     curl_multi_cleanup(fMulti);
+    fMulti = NULL;
 
     if(fContentType) fMemoryManager->deallocate(fContentType);
+    fContentType = NULL;
 
     if(fHeadersList) curl_slist_free_all(fHeadersList);
+    fHeadersList = NULL;
 }
 
 
