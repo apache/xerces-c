@@ -563,7 +563,7 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
         {
             charSizes[0] = (unsigned char)bytesEaten;
         }
-        else
+        else if( charsDecoded > 0 )
         {
             //  ICU does not return an extra element to allow us to figure
             //  out the last char size, so we have to compute it from the
@@ -574,10 +574,9 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
                 charSizes[index] = (unsigned char)(fSrcOffsets[index + 1]
                                                     - fSrcOffsets[index]);
             }
-            if( charsDecoded > 0 ) {
-                charSizes[charsDecoded - 1] = (unsigned char)(bytesEaten
-                                              - fSrcOffsets[charsDecoded - 1]);
-            }
+
+            charSizes[charsDecoded - 1] = (unsigned char)(bytesEaten
+                                          - fSrcOffsets[charsDecoded - 1]);
         }
     }
 
