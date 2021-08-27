@@ -70,7 +70,7 @@ XMLChTranscoder::transcodeFrom( const   XMLByte* const          srcData
     bytesEaten = countToDo * sizeof(XMLCh);
 
     // Set the character sizes to the fixed size
-    memset(charSizes, sizeof(XMLCh), countToDo);
+    memset(charSizes, static_cast<int>(sizeof(XMLCh)), countToDo);
 
     // Return the chars we transcoded
     return countToDo;
