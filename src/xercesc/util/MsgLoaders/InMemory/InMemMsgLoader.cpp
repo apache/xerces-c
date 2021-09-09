@@ -25,6 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/BitOps.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
@@ -153,14 +154,28 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     XMLCh* tmp4 = 0;
     
     bool bRet = false;
-    if (repText1)
-        tmp1 = XMLString::transcode(repText1, manager);
-    if (repText2)
-        tmp2 = XMLString::transcode(repText2, manager);
-    if (repText3)
-        tmp3 = XMLString::transcode(repText3, manager);
-    if (repText4)
-        tmp4 = XMLString::transcode(repText4, manager);
+    try
+    {
+        if (repText1)
+            tmp1 = XMLString::transcode(repText1, manager);
+        if (repText2)
+            tmp2 = XMLString::transcode(repText2, manager);
+        if (repText3)
+            tmp3 = XMLString::transcode(repText3, manager);
+        if (repText4)
+            tmp4 = XMLString::transcode(repText4, manager);
+    }
+    catch( const TranscodingException& )
+    {
+        if (tmp1)
+            manager->deallocate(tmp1);
+        if (tmp2)
+            manager->deallocate(tmp2);
+        if (tmp3)
+            manager->deallocate(tmp3);
+        // Note: tmp4 cannot leak
+        throw;
+    }
 
     bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4, manager);
 
