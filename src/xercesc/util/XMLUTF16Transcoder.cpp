@@ -111,7 +111,7 @@ XMLUTF16Transcoder::transcodeFrom(  const   XMLByte* const       srcData
     bytesEaten = countToDo * sizeof(UTF16Ch);
 
     // Set the character sizes to the fixed size
-    memset(charSizes, sizeof(UTF16Ch), countToDo);
+    memset(charSizes, static_cast<int>(sizeof(UTF16Ch)), countToDo);
 
     // Return the chars we transcoded
     return countToDo;
