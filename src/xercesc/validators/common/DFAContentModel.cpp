@@ -1603,6 +1603,32 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     (
         fElemMapSize * sizeof(signed char*)
     );
+    memset(conflictTable, 0, fElemMapSize * sizeof(signed char*));
+
+    struct ConflictTableKeeper
+    {
+        MemoryManager* fMemoryManager;
+        signed char**  fConflictTable;
+        unsigned int   fElemMapSize;
+
+        ConflictTableKeeper(MemoryManager* memoryManager,
+                            signed char** conflictTable,
+                            unsigned int elemMapSize):
+            fMemoryManager(memoryManager),
+            fConflictTable(conflictTable),
+            fElemMapSize(elemMapSize)
+        {
+        }
+
+        ~ConflictTableKeeper()
+        {
+            for (int i = 0; i < fElemMapSize; i++)
+                fMemoryManager->deallocate(fConflictTable[i]);
+            fMemoryManager->deallocate(fConflictTable);
+        }
+    };
+
+    ConflictTableKeeper keeper(fMemoryManager, conflictTable, fElemMapSize);
 
     // initialize the conflict table
     for (j = 0; j < fElemMapSize; j++) {
@@ -1676,10 +1702,6 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
             }
         }
     }
-
-    for (i = 0; i < fElemMapSize; i++)
-        fMemoryManager->deallocate(conflictTable[i]);
-    fMemoryManager->deallocate(conflictTable);
 }
 
 }
