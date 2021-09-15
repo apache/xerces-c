@@ -1229,7 +1229,7 @@ void SAX2XMLReaderImpl::error(  const   unsigned int
         , systemId
         , lineNum
         , colNum
-        , fMemoryManager
+        , fMemoryManager->getExceptionMemoryManager()
     );
 
     if (!fErrorHandler)
