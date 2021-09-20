@@ -19,18 +19,7 @@
 
 # Run "cmake" to generate the build files for your platform
 
-cmake_minimum_required(VERSION 3.2.0)
-
-# Use new variable expansion policy.
-if (POLICY CMP0053)
-  cmake_policy(SET CMP0053 NEW)
-endif(POLICY CMP0053)
-if (POLICY CMP0054)
-  cmake_policy(SET CMP0054 NEW)
-endif(POLICY CMP0054)
-if (POLICY CMP0067)
-  cmake_policy(SET CMP0067 NEW)
-endif(POLICY CMP0067)
+cmake_minimum_required(VERSION 3.12.0)
 
 # Try C++14, then fall back to C++11 and C++98.  Used for feature tests
 # for optional features.
