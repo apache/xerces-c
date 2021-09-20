@@ -1642,9 +1642,10 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     // for each state, check whether it has overlap transitions
     for (i = 0; i < fTransTableSize; i++) {
         for (j = 0; j < fElemMapSize; j++) {
+            if (fTransTable[i][j] == XMLContentModel::gInvalidTrans)
+                continue;
             for (k = j+1; k < fElemMapSize; k++) {
-                if (fTransTable[i][j] != XMLContentModel::gInvalidTrans &&
-                    fTransTable[i][k] != XMLContentModel::gInvalidTrans &&
+                if (fTransTable[i][k] != XMLContentModel::gInvalidTrans &&
                     conflictTable[j][k] == 0) {
 
                     // If this is text in a Schema mixed content model, skip it.
