@@ -1085,7 +1085,7 @@ endif()
 if(XERCES_USE_NETACCESSOR_CURL)
   list(APPEND libxerces_c_SOURCES ${curl_sources})
   list(APPEND libxerces_c_HEADERS ${curl_headers})
-  list(APPEND libxerces_c_DEPS ${CURL_LIBRARIES})
+  list(APPEND libxerces_c_DEPS CURL::libcurl)
 endif()
 
 if(XERCES_USE_NETACCESSOR_SOCKET)
