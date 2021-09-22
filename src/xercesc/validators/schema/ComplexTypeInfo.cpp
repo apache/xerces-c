@@ -32,6 +32,7 @@
 #include <xercesc/validators/common/SimpleContentModel.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
 #include <xercesc/internal/XTemplateSerializer.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 
 namespace XERCES_CPP_NAMESPACE {
@@ -323,10 +324,19 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(bool checkUPA)
     ContentSpecNode* aSpecNode = new (fMemoryManager) ContentSpecNode(*fContentSpec);
 
     if (checkUPA) {
-        fContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
-        (
-            fContentSpecOrgURISize * sizeof(unsigned int)
-        ); //new unsigned int[fContentSpecOrgURISize];
+        try
+        {
+            fContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
+            (
+                fContentSpecOrgURISize * sizeof(unsigned int)
+            ); //new unsigned int[fContentSpecOrgURISize];
+        }
+        catch (const OutOfMemoryException&)
+        {
+            delete aSpecNode;
+
+            throw;
+        }
     }
 
     aSpecNode = convertContentSpecTree(aSpecNode, checkUPA, useRepeatingLeafNodes(aSpecNode));
