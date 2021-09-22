@@ -964,8 +964,8 @@ XMLScanner::getLastExtLocation(         XMLCh* const    sysIdToFill
                                 , const unsigned int    maxSysIdChars
                                 ,       XMLCh* const    pubIdToFill
                                 , const unsigned int    maxPubIdChars
-                                ,       XMLSSize_t&     lineToFill
-                                ,       XMLSSize_t&     colToFill) const
+                                ,       XMLSize_t&      lineToFill
+                                ,       XMLSize_t&      colToFill) const
 {
     // Create a local info object and get it filled in by the reader manager
     ReaderMgr::LastExtEntityInfo lastInfo;

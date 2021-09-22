@@ -48,24 +48,12 @@
 // ---------------------------------------------------------------------------
 //  These defines are set by cmake as appropriate for the platform.
 // ---------------------------------------------------------------------------
-#define XERCES_AUTOCONF 1
 #cmakedefine XERCES_HAVE_SYS_TYPES_H 1
-#cmakedefine XERCES_HAVE_CSTDINT 1
-#cmakedefine XERCES_HAVE_STDINT_H 1
-#cmakedefine XERCES_HAVE_INTTYPES_H 1
 #cmakedefine XERCES_HAVE_INTRIN_H 1
 #cmakedefine XERCES_HAVE_EMMINTRIN_H 1
 #cmakedefine XERCES_INCLUDE_WCHAR_H 1
 
-#define XERCES_S16BIT_INT @XERCES_S16BIT_INT@
-#define XERCES_S32BIT_INT @XERCES_S32BIT_INT@
-#define XERCES_S64BIT_INT @XERCES_S64BIT_INT@
-#define XERCES_U16BIT_INT @XERCES_U16BIT_INT@
-#define XERCES_U32BIT_INT @XERCES_U32BIT_INT@
-#define XERCES_U64BIT_INT @XERCES_U64BIT_INT@
 #define XERCES_XMLCH_T @XERCES_XMLCH_T@
-#define XERCES_SIZE_T @XERCES_SIZE_T@
-#define XERCES_SSIZE_T @XERCES_SSIZE_T@
 
 #cmakedefine XERCES_LSTRSUPPORT 1
 #cmakedefine XERCES_MFC_SUPPORT 1
@@ -82,63 +70,6 @@
 #ifdef XERCES_DLL_EXPORT
 #  define DLL_EXPORT
 #endif
-
-// ---------------------------------------------------------------------------
-//  Include standard headers, if available, that we may rely on below.
-// ---------------------------------------------------------------------------
-#if defined(__cplusplus) && defined(XERCES_HAVE_CSTDINT)
-#  include <cstdint>
-#endif
-#if XERCES_HAVE_STDINT_H
-#  include <stdint.h>
-#endif
-#if XERCES_HAVE_INTTYPES_H
-#  include <inttypes.h>
-#endif
-#if XERCES_HAVE_SYS_TYPES_H
-#  include <sys/types.h>
-#endif
-#if XERCES_INCLUDE_WCHAR_H
-#  include <wchar.h>
-#endif
-
-// ---------------------------------------------------------------------------
-//  XMLSize_t is the unsigned integral type.
-// ---------------------------------------------------------------------------
-typedef XERCES_SIZE_T				XMLSize_t;
-typedef XERCES_SSIZE_T				XMLSSize_t;
-
-#define XERCES_SIZE_MAX @XERCES_SIZE_MAX@
-#define XERCES_SSIZE_MAX @XERCES_SSIZE_MAX@
-
-// ---------------------------------------------------------------------------
-//  Define our version of the XML character
-// ---------------------------------------------------------------------------
-typedef XERCES_XMLCH_T				XMLCh;
-
-// ---------------------------------------------------------------------------
-//  Define unsigned 16, 32, and 64 bit integers
-// ---------------------------------------------------------------------------
-typedef XERCES_U16BIT_INT			XMLUInt16;
-typedef XERCES_U32BIT_INT			XMLUInt32;
-typedef XERCES_U64BIT_INT			XMLUInt64;
-
-// ---------------------------------------------------------------------------
-//  Define signed 16, 32, and 64 bit integers
-// ---------------------------------------------------------------------------
-typedef XERCES_S16BIT_INT			XMLInt16;
-typedef XERCES_S32BIT_INT			XMLInt32;
-typedef XERCES_S64BIT_INT			XMLInt64;
-
-// ---------------------------------------------------------------------------
-//  XMLFilePos is the type used to represent a file position.
-// ---------------------------------------------------------------------------
-typedef XMLUInt64			        XMLFilePos;
-
-// ---------------------------------------------------------------------------
-//  XMLFileLoc is the type used to represent a file location (line/column).
-// ---------------------------------------------------------------------------
-typedef XMLUInt64			        XMLFileLoc;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it is on in the build environment

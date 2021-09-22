@@ -205,14 +205,14 @@ public:
 
         union {
                          bool      f_bool;
-                         char      f_char;
-                unsigned char      f_uchar;
-                         short     f_short;
-                unsigned short     f_ushort;
-                         int       f_int;
-                unsigned int       f_uint;
-                         long      f_long;
-                unsigned long      f_ulong;
+                         int8_t    f_char;
+                         uint8_t   f_uchar;
+                         int16_t   f_short;
+                         uint16_t  f_ushort;
+                         int32_t   f_int;
+                         uint32_t  f_uint;
+                         int64_t   f_long;
+                         uint64_t  f_ulong;
                          float     f_float;
                          double    f_double;
                          XMLCh*    f_strVal;
@@ -253,8 +253,8 @@ private:
 
     typedef union
     {
-                long  f_long;
-       unsigned long  f_ulong;
+      int64_t  f_long;
+      uint64_t f_ulong;
     } t_value;
 
     /** @name Constructors */
