@@ -597,65 +597,26 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
         return 0;
     }
 
-    ContentSpecNode* saveNode = specNode;
+    ContentSpecNode* const saveNode = specNode;
     ContentSpecNode* retNode = specNode;
 
-    if (minOccurs == 1 && maxOccurs == 1) {
-    }
-    else if (minOccurs == 0 && maxOccurs == 1) {
-
-        retNode = new (fMemoryManager) ContentSpecNode
-        (
-            ContentSpecNode::ZeroOrOne
-            , retNode
-            , 0
-            , true
-            , true
-            , fMemoryManager
-        );
-    }
-    else if (minOccurs == 0 && maxOccurs == -1) {
-        retNode = new (fMemoryManager) ContentSpecNode
-        (
-            ContentSpecNode::ZeroOrMore
-            , retNode
-            , 0
-            , true
-            , true
-            , fMemoryManager
-        );
-    }
-    else if (minOccurs == 1 && maxOccurs == -1) {
-        retNode = new (fMemoryManager) ContentSpecNode
-        (
-            ContentSpecNode::OneOrMore
-            , retNode
-            , 0
-            , true
-            , true
-            , fMemoryManager
-        );
-    }
-    // if what is being repeated is a leaf avoid expanding the tree
-    else if(bAllowCompactSyntax &&
-        (saveNode->getType()==ContentSpecNode::Leaf ||
-        (saveNode->getType() & 0x0f)==ContentSpecNode::Any ||
-        (saveNode->getType() & 0x0f)==ContentSpecNode::Any_Other ||
-        (saveNode->getType() & 0x0f)==ContentSpecNode::Any_NS))
+    try
     {
-        retNode = new (fMemoryManager) ContentSpecNode
-        (
-            ContentSpecNode::Loop
-            , retNode
-            , 0
-            , true
-            , true
-            , fMemoryManager
-        );
-        retNode->setMinOccurs(minOccurs);
-        retNode->setMaxOccurs(maxOccurs);
+        if (minOccurs == 1 && maxOccurs == 1) {
+        }
+        else if (minOccurs == 0 && maxOccurs == 1) {
 
-        if(minOccurs==0)
+            retNode = new (fMemoryManager) ContentSpecNode
+            (
+                ContentSpecNode::ZeroOrOne
+                , retNode
+                , 0
+                , true
+                , true
+                , fMemoryManager
+            );
+        }
+        else if (minOccurs == 0 && maxOccurs == -1) {
             retNode = new (fMemoryManager) ContentSpecNode
             (
                 ContentSpecNode::ZeroOrMore
@@ -665,7 +626,61 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
                 , true
                 , fMemoryManager
             );
-        else
+        }
+        else if (minOccurs == 1 && maxOccurs == -1) {
+            retNode = new (fMemoryManager) ContentSpecNode
+            (
+                ContentSpecNode::OneOrMore
+                , retNode
+                , 0
+                , true
+                , true
+                , fMemoryManager
+            );
+        }
+        // if what is being repeated is a leaf avoid expanding the tree
+        else if(bAllowCompactSyntax &&
+            (saveNode->getType()==ContentSpecNode::Leaf ||
+            (saveNode->getType() & 0x0f)==ContentSpecNode::Any ||
+            (saveNode->getType() & 0x0f)==ContentSpecNode::Any_Other ||
+            (saveNode->getType() & 0x0f)==ContentSpecNode::Any_NS))
+        {
+            retNode = new (fMemoryManager) ContentSpecNode
+            (
+                ContentSpecNode::Loop
+                , retNode
+                , 0
+                , true
+                , true
+                , fMemoryManager
+            );
+            retNode->setMinOccurs(minOccurs);
+            retNode->setMaxOccurs(maxOccurs);
+
+            if(minOccurs==0)
+                retNode = new (fMemoryManager) ContentSpecNode
+                (
+                    ContentSpecNode::ZeroOrMore
+                    , retNode
+                    , 0
+                    , true
+                    , true
+                    , fMemoryManager
+                );
+            else
+                retNode = new (fMemoryManager) ContentSpecNode
+                (
+                    ContentSpecNode::OneOrMore
+                    , retNode
+                    , 0
+                    , true
+                    , true
+                    , fMemoryManager
+                );
+
+        }
+        else if (maxOccurs == -1) {
+
             retNode = new (fMemoryManager) ContentSpecNode
             (
                 ContentSpecNode::OneOrMore
@@ -676,112 +691,35 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
                 , fMemoryManager
             );
 
-    }
-    else if (maxOccurs == -1) {
-
-        retNode = new (fMemoryManager) ContentSpecNode
-        (
-            ContentSpecNode::OneOrMore
-            , retNode
-            , 0
-            , true
-            , true
-            , fMemoryManager
-        );
-
-        for (int i=0; i < (minOccurs-1); i++) {
-            retNode = new (fMemoryManager) ContentSpecNode
-            (
-                ContentSpecNode::Sequence
-                , saveNode
-                , retNode
-                , false
-                , true
-                , fMemoryManager
-            );
-        }
-    }
-    else {
-
-        if (minOccurs == 0) {
-
-            ContentSpecNode* optional = new (fMemoryManager) ContentSpecNode
-            (
-                ContentSpecNode::ZeroOrOne
-                , saveNode
-                , 0
-                , true
-                , true
-                , fMemoryManager
-            );
-
-            retNode = optional;
-
-            for (int i=0; i < (maxOccurs-1); i++) {
+            for (int i=0; i < (minOccurs-1); i++) {
                 retNode = new (fMemoryManager) ContentSpecNode
                 (
                     ContentSpecNode::Sequence
+                    , saveNode
                     , retNode
-                    , optional
-                    , true
                     , false
+                    , true
                     , fMemoryManager
                 );
             }
         }
         else {
 
-            if (minOccurs > 1) {
-
-                retNode = new (fMemoryManager) ContentSpecNode
-                (
-                    ContentSpecNode::Sequence
-                    , retNode
-                    , saveNode
-                    , true
-                    , false
-                    , fMemoryManager
-                );
-
-                for (int i=1; i < (minOccurs-1); i++) {
-                    retNode = new (fMemoryManager) ContentSpecNode
-                    (
-                        ContentSpecNode::Sequence
-                        , retNode
-                        , saveNode
-                        , true
-                        , false
-                        , fMemoryManager
-                    );
-                }
-            }
-
-            int counter = maxOccurs-minOccurs;
-
-            if (counter > 0) {
+            if (minOccurs == 0) {
 
                 ContentSpecNode* optional = new (fMemoryManager) ContentSpecNode
                 (
                     ContentSpecNode::ZeroOrOne
                     , saveNode
                     , 0
-                    , false
-                    , true
-                    , fMemoryManager
-                );
-
-                retNode = new (fMemoryManager) ContentSpecNode
-                (
-                    ContentSpecNode::Sequence
-                    , retNode
-                    , optional
                     , true
                     , true
                     , fMemoryManager
                 );
 
-                for (int j=1; j < counter; j++) {
+                retNode = optional;
 
+                for (int i=0; i < (maxOccurs-1); i++) {
                     retNode = new (fMemoryManager) ContentSpecNode
                     (
                         ContentSpecNode::Sequence
@@ -793,7 +731,85 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
                     );
                 }
             }
+            else {
+
+                if (minOccurs > 1) {
+
+                    retNode = new (fMemoryManager) ContentSpecNode
+                    (
+                        ContentSpecNode::Sequence
+                        , specNode
+                        , saveNode
+                        , true
+                        , false
+                        , fMemoryManager
+                    );
+
+                    for (int i=1; i < (minOccurs-1); i++) {
+                        retNode = new (fMemoryManager) ContentSpecNode
+                        (
+                            ContentSpecNode::Sequence
+                            , retNode
+                            , saveNode
+                            , true
+                            , false
+                            , fMemoryManager
+                        );
+                    }
+                }
+
+                int counter = maxOccurs-minOccurs;
+
+                if (counter > 0) {
+
+                    ContentSpecNode* optional = new (fMemoryManager) ContentSpecNode
+                    (
+                        ContentSpecNode::ZeroOrOne
+                        , saveNode
+                        , 0
+                        , false
+                        , true
+                        , fMemoryManager
+                    );
+
+                    try
+                    {
+                        retNode = new (fMemoryManager) ContentSpecNode
+                        (
+                            ContentSpecNode::Sequence
+                            , retNode
+                            , optional
+                            , true
+                            , true
+                            , fMemoryManager
+                        );
+                    }
+                    catch( const OutOfMemoryException& )
+                    {
+                        delete optional;
+                        throw;
+                    }
+
+                    for (int j=1; j < counter; j++) {
+
+                        retNode = new (fMemoryManager) ContentSpecNode
+                        (
+                            ContentSpecNode::Sequence
+                            , retNode
+                            , optional
+                            , true
+                            , false
+                            , fMemoryManager
+                        );
+                    }
+                }
+            }
         }
+    }
+    catch( const OutOfMemoryException& )
+    {
+        delete retNode;
+        throw;
     }
 
     return retNode;
