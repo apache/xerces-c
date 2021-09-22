@@ -526,12 +526,31 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
         ||   ((curType & 0x0f) == ContentSpecNode::Sequence))
     {
         ContentSpecNode* childNode = curNode->getFirst();
-        ContentSpecNode* leftNode = convertContentSpecTree(childNode, checkUPA, bAllowCompactSyntax);
+        ContentSpecNode* leftNode;
+        try
+        {
+            leftNode = convertContentSpecTree(childNode, checkUPA, bAllowCompactSyntax);
+        }
+        catch( const OutOfMemoryException& )
+        {
+            curNode->setAdoptFirst(false);
+            delete curNode;
+            throw;
+        }
         ContentSpecNode* rightNode = curNode->getSecond();
 
         if (!rightNode) {
 
-            retNode = expandContentModel(leftNode, minOccurs, maxOccurs, bAllowCompactSyntax);
+            try
+            {
+                retNode = expandContentModel(leftNode, minOccurs, maxOccurs, bAllowCompactSyntax);
+            }
+            catch( const OutOfMemoryException& )
+            {
+                curNode->setAdoptFirst(false);
+                delete curNode;
+                throw;
+            }
             curNode->setAdoptFirst(false);
             delete curNode;
             return retNode;
@@ -545,7 +564,16 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
         }
 
         childNode = rightNode;
-        rightNode =  convertContentSpecTree(childNode, checkUPA, bAllowCompactSyntax);
+        try
+        {
+            rightNode =  convertContentSpecTree(childNode, checkUPA, bAllowCompactSyntax);
+        }
+        catch( const OutOfMemoryException& )
+        {
+            curNode->setAdoptSecond(false);
+            delete curNode;
+            throw;
+        }
 
         if (rightNode != childNode) {
 
