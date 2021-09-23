@@ -738,7 +738,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
                     retNode = new (fMemoryManager) ContentSpecNode
                     (
                         ContentSpecNode::Sequence
-                        , specNode
+                        , retNode
                         , saveNode
                         , true
                         , false
