@@ -32,6 +32,7 @@
 //
 
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
@@ -93,7 +94,15 @@ public :
             fDynamicBuffer->fArraySize = fBitCount / CMSTATE_BITFIELD_CHUNK;
             if (fBitCount % CMSTATE_BITFIELD_CHUNK)
                 fDynamicBuffer->fArraySize++;
-            fDynamicBuffer->fBitArray = (XMLInt32**) fDynamicBuffer->fMemoryManager->allocate(fDynamicBuffer->fArraySize*sizeof(XMLInt32*));
+            try
+            {
+                fDynamicBuffer->fBitArray = (XMLInt32**) fDynamicBuffer->fMemoryManager->allocate(fDynamicBuffer->fArraySize*sizeof(XMLInt32*));
+            }
+            catch( const OutOfMemoryException& )
+            {
+                fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer);
+                throw;
+            }
             for(XMLSize_t index = 0; index < fDynamicBuffer->fArraySize; index++)
                 fDynamicBuffer->fBitArray[index]=NULL;
         }
