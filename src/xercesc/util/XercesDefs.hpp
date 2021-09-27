@@ -66,11 +66,6 @@
 typedef size_t                                  XMLSize_t;
 
 /**
- * Signed integer of at least 64 bits.
- */
-typedef int64_t                                 XMLSSize_t;
-
-/**
  * XML Character.  Platform-dependent 16-bit type.
  */
 typedef XERCES_XMLCH_T                          XMLCh;
