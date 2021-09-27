@@ -61,14 +61,9 @@
 #include    <xercesc/util/XercesVersion.hpp>
 
 /**
- * Unsigned integer of at least 64 bits.
+ * XML size type.
  */
-typedef uint64_t                                XMLSize_t;
-
-/**
- * Signed integer of at least 64 bits.
- */
-typedef int64_t                                XMLSSize_t;
+typedef size_t                                  XMLSize_t;
 
 /**
  * XML Character.  Platform-dependent 16-bit type.
