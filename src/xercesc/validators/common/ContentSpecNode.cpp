@@ -26,6 +26,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -52,31 +53,49 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy) :
     , fMinOccurs(toCopy.fMinOccurs)
     , fMaxOccurs(toCopy.fMaxOccurs)
 {
-    const QName* tempElement = toCopy.getElement();
-    if (tempElement)
-        fElement = new (fMemoryManager) QName(*tempElement);
+    try
+    {
+        const QName* tempElement = toCopy.getElement();
+        if (tempElement)
+            fElement = new (fMemoryManager) QName(*tempElement);
 
-    const ContentSpecNode *tmp = toCopy.getFirst();
-    if (tmp)
-        fFirst = new (fMemoryManager) ContentSpecNode(*tmp);
+        const ContentSpecNode *tmp = toCopy.getFirst();
+        if (tmp)
+            fFirst = new (fMemoryManager) ContentSpecNode(*tmp);
 
-    tmp = toCopy.getSecond();
-    if (tmp)
-        fSecond = new (fMemoryManager) ContentSpecNode(*tmp);
+        tmp = toCopy.getSecond();
+        if (tmp)
+            fSecond = new (fMemoryManager) ContentSpecNode(*tmp);
+    }
+    catch (const OutOfMemoryException&)
+    {
+        cleanup();
+
+        throw;
+    }
+
 }
 
 ContentSpecNode::~ContentSpecNode()
 {
+    cleanup();
+}
+
+void ContentSpecNode::cleanup()
+{
     // Delete our children, avoiding recursive cleanup
     if (fAdoptFirst && fFirst) {
-		deleteChildNode(fFirst);
+        deleteChildNode(fFirst);
+        fFirst = NULL;
     }
 
     if (fAdoptSecond && fSecond) {
-		deleteChildNode(fSecond);
+        deleteChildNode(fSecond);
+        fSecond = NULL;
     }
 
     delete fElement;
+    fElement = NULL;
 }
 
 void ContentSpecNode::deleteChildNode(ContentSpecNode* node)
