@@ -128,6 +128,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
+    void cleanup();
     void buildDFA(ContentSpecNode* const curNode);
     CMNode* buildSyntaxTree(ContentSpecNode* const curNode, unsigned int& curIndex);
     unsigned int* makeDefStateList() const;
