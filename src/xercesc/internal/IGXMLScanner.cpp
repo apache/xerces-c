@@ -1374,7 +1374,14 @@ void IGXMLScanner::scanDocTypeDecl()
         // Get copies of the ids we got
         pubId = XMLString::replicate(bbPubId.getRawBuffer(), fMemoryManager);
         sysId = XMLString::replicate(bbSysId.getRawBuffer(), fMemoryManager);
+    }
 
+    // Insure that the ids get cleaned up, if they got allocated
+    ArrayJanitor<XMLCh> janSysId(sysId, fMemoryManager);
+    ArrayJanitor<XMLCh> janPubId(pubId, fMemoryManager);
+
+    if (hasExtSubset)
+    {
         // Skip spaces and check again for the opening of an internal subset
         fReaderMgr.skipPastSpaces();
 
@@ -1383,10 +1390,6 @@ void IGXMLScanner::scanDocTypeDecl()
             hasIntSubset = true;
         }
     }
-
-    // Insure that the ids get cleaned up, if they got allocated
-    ArrayJanitor<XMLCh> janSysId(sysId, fMemoryManager);
-    ArrayJanitor<XMLCh> janPubId(pubId, fMemoryManager);
 
     //  If we have a doc type handler and advanced callbacks are enabled,
     //  call the doctype event.
