@@ -1498,33 +1498,45 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode
             retNode = buildSyntaxTree(cursor, curIndex);
             for(unsigned int i=0;i<nLoopCount;i++)
             {
-                CMNode* newRight = buildSyntaxTree(rightNode, curIndex);
-                //
-                //  Now handle our level. We use our left child's last pos set and our
-                //  right child's first pos set, so get them now for convenience.
-                //
-                const CMStateSet& last  = retNode->getLastPos();
-                const CMStateSet& first = newRight->getFirstPos();
-
-                //
-                //  Now, for every position which is in our left child's last set
-                //  add all of the states in our right child's first set to the
-                //  follow set for that position.
-                //
-                CMStateSetEnumerator enumLast(&last);
-                while(enumLast.hasMoreElements())
+                CMNode* newRight = nullptr;
+                try
                 {
-                    XMLSize_t index=enumLast.nextElement();
-                    *fFollowList[index] |= first;
+                    newRight = buildSyntaxTree(rightNode, curIndex);
+
+                    //
+                    //  Now handle our level. We use our left child's last pos set and our
+                    //  right child's first pos set, so get them now for convenience.
+                    //
+                    const CMStateSet& last  = retNode->getLastPos();
+                    const CMStateSet& first = newRight->getFirstPos();
+
+                    //
+                    //  Now, for every position which is in our left child's last set
+                    //  add all of the states in our right child's first set to the
+                    //  follow set for that position.
+                    //
+                    CMStateSetEnumerator enumLast(&last);
+                    while(enumLast.hasMoreElements())
+                    {
+                        XMLSize_t index=enumLast.nextElement();
+                        *fFollowList[index] |= first;
+                    }
+
+                    retNode = new (fMemoryManager) CMBinaryOp
+                    (
+                        ContentSpecNode::Sequence
+                        , retNode
+                        , newRight
+                        , fLeafCount
+                        , fMemoryManager
+                    );
                 }
-                retNode = new (fMemoryManager) CMBinaryOp
-                (
-                    ContentSpecNode::Sequence
-                    , retNode
-                    , newRight
-                    , fLeafCount
-                    , fMemoryManager
-                );
+                catch( const OutOfMemoryException& )
+                {
+                    delete newRight;
+                    delete retNode;
+                    throw;
+                }
             }
             return retNode;
         }
