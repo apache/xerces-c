@@ -201,6 +201,8 @@ void DFAContentModel::cleanup()
             delete fLeafList[index];
         fMemoryManager->deallocate(fLeafList); //delete [] fLeafList;
     }
+
+    delete fHeadNode;
 }
 
 
@@ -674,6 +676,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
         fLeafCount * sizeof(ContentSpecNode::NodeTypes)
     ); //new ContentSpecNode::NodeTypes[fLeafCount];
     //
+    memset(fLeafListType, 0, fLeafCount*sizeof(ContentSpecNode::NodeTypes));
     //  And, moving onward... We now need to build the follow position sets
     //  for all the nodes. So we allocate an array of pointers to state sets,
     //  one for each leaf node (i.e. each significant DFA position.)
@@ -780,10 +783,12 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     (
         fLeafCount * sizeof(QName*)
     ); //new QName*[fLeafCount];
+    memset(fElemMap, 0, fLeafCount * sizeof(QName*));
     fElemMapType = (ContentSpecNode::NodeTypes*) fMemoryManager->allocate
     (
         fLeafCount * sizeof(ContentSpecNode::NodeTypes)
     ); //new ContentSpecNode::NodeTypes[fLeafCount];
+    memset(fElemMapType, 0, fLeafCount * sizeof(ContentSpecNode::NodeTypes));
     fElemMapSize = 0;
 
     Occurence** elemOccurenceMap=0;
@@ -962,6 +967,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //
 
     delete fHeadNode;
+    fHeadNode = nullptr;
 
     //
     //  Init our two state flags. Basically the unmarked state counter is
@@ -1003,330 +1009,360 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  the states to do counter.
     //
     CMStateSet* newSet = 0;
-    while (unmarkedState < curState)
+
+    // Lamba that is called after the while (unmarkedState < curState) loop
+    // in the normal and exception cases.
+    const auto finalizeProcessingAndCleanup = [&]()
     {
+        // Store the current state count in the trans table size
+        fTransTableSize = curState;
+
         //
-        //  Get the next unmarked state out of the list of states to do.
-        //  And get the associated transition table entry.
+        // Fill in the occurence information for each looping state
+        // if we're using counters.
         //
-        setT = statesToDo[unmarkedState];
-        unsigned int* transEntry = fTransTable[unmarkedState];
-
-        // Mark this one final if it contains the EOC state
-        fFinalStateFlags[unmarkedState] = setT->getBit(fEOCPos);
-
-        // Bump up the unmarked state count, marking this state done
-        unmarkedState++;
-
-#ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
-        // Optimization(Jan, 2001)
-        unsigned int sorterIndex = 0;
-        // Optimization(Jan, 2001)
-#endif
-
-        // Loop through each possible input symbol in the element map
-        for (unsigned int elemIndex = 0; elemIndex < fElemMapSize; elemIndex++)
-        {
-            //
-            //  Build up a set of states which is the union of all of the
-            //  follow sets of DFA positions that are in the current state. If
-            //  we gave away the new set last time through then create a new
-            //  one. Otherwise, zero out the existing one.
-            //
-            if (!newSet)
-                newSet = new (fMemoryManager) CMStateSet
-                (
-                    fLeafCount
-                    , fMemoryManager
-                );
-            else
-                newSet->zeroBits();
-
-#ifdef OBSOLETED
-// unoptimized code
-            for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++)
-            {
-                // If this leaf index (DFA position) is in the current set...
-                if (setT->getBit(leafIndex))
-                {
-                    //
-                    //  If this leaf is the current input symbol, then we want
-                    //  to add its follow list to the set of states to transition
-                    //  to from the current state.
-                    //
-                    const QName* leaf = fLeafList[leafIndex]->getElement();
-                    const QName* element = fElemMap[elemIndex];
-                    if (fDTD) {
-                        if (XMLString::equals(leaf->getRawName(), element->getRawName())) {
-                            *newSet |= *fFollowList[leafIndex];
-                        }
-                    }
-                    else {
-                        if ((leaf->getURI() == element->getURI()) &&
-                            (XMLString::equals(leaf->getLocalPart(), element->getLocalPart()))) {
-                            *newSet |= *fFollowList[leafIndex];
-                        }
+        if (elemOccurenceMap != 0) {
+            fCountingStates = (Occurence**)fMemoryManager->allocate(fTransTableSize*sizeof(Occurence*));
+            memset(fCountingStates, 0, fTransTableSize*sizeof(Occurence*));
+            for (unsigned int i = 0; i < fTransTableSize; ++i) {
+                unsigned int * transitions = fTransTable[i];
+                for (unsigned int j = 0; j < fElemMapSize; ++j) {
+                    if (i == transitions[j]) {
+                        Occurence* old=elemOccurenceMap[j];
+                        if(old!=0)
+                            fCountingStates[i] = new (fMemoryManager) Occurence(old->minOccurs, old->maxOccurs, old->elemIndex);
+                        break;
                     }
                 }
-            } // for leafIndex
+            }
+            for (unsigned int j = 0; j < fLeafCount; ++j) {
+                if(elemOccurenceMap[j]!=0)
+                    delete elemOccurenceMap[j];
+            }
+            fMemoryManager->deallocate(elemOccurenceMap);
+        }
+
+        // If the last temp set was not stored, then clean it up
+        if (newSet)
+            delete newSet;
+
+        //
+        //  Now we can clean up all of the temporary data that was needed during
+        //  DFA build.
+        //
+
+        for (index = 0; index < fLeafCount; index++)
+            delete fFollowList[index];
+        fMemoryManager->deallocate(fFollowList); //delete [] fFollowList;
+        fFollowList = NULL;
+
+        //
+        // removeAll() will delete all data, XMLInteger,
+        // while the keys are to be deleted by the
+        // deletion of statesToDo.
+        //
+        delete stateTable;
+
+        for (index = 0; index < curState; index++)
+            delete statesToDo[index];
+        fMemoryManager->deallocate(statesToDo); //delete [] statesToDo;
+
+        for (index = 0; index < fLeafCount; index++)
+            delete fLeafList[index];
+        fMemoryManager->deallocate(fLeafList); //delete [] fLeafList;
+        fLeafList = NULL;
+
+#ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
+        fMemoryManager->deallocate(leafSorter); //delete [] leafSorter;
 #endif
+        for (index=0; index < fElemMapSize; index++)
+            fMemoryManager->deallocate(leafSorter[index]);
+        fMemoryManager->deallocate(leafSorter);
+    };
+
+    try
+    {
+        while (unmarkedState < curState)
+        {
+            //
+            //  Get the next unmarked state out of the list of states to do.
+            //  And get the associated transition table entry.
+            //
+            setT = statesToDo[unmarkedState];
+            unsigned int* transEntry = fTransTable[unmarkedState];
+
+            // Mark this one final if it contains the EOC state
+            fFinalStateFlags[unmarkedState] = setT->getBit(fEOCPos);
+
+            // Bump up the unmarked state count, marking this state done
+            unmarkedState++;
 
 #ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
             // Optimization(Jan, 2001)
-            int leafIndex = leafSorter[sorterIndex++];
-
-            while (leafIndex != -1)
-            {
-                // If this leaf index (DFA position) is in the current set...
-                if (setT->getBit(leafIndex))
-                {
-                    //
-                    //  If this leaf is the current input symbol, then we
-                    //  want to add its follow list to the set of states to
-                    //  transition to from the current state.
-                    //
-                    *newSet |= *fFollowList[leafIndex];
-                }
-                leafIndex = leafSorter[sorterIndex++];
-            } // while (leafIndex != -1)
+            unsigned int sorterIndex = 0;
+            // Optimization(Jan, 2001)
 #endif
 
-            unsigned int* fLeafIndexes=leafSorter[elemIndex];
-            unsigned int fNumItems=fLeafIndexes[0];
-            if(fNumItems!=0)
+            // Loop through each possible input symbol in the element map
+            for (unsigned int elemIndex = 0; elemIndex < fElemMapSize; elemIndex++)
             {
-                // The algorithm requires finding the leaf that is present both in the bitfield of the current state, and in the
-                // list of places where the currently tested item can appear. When this occurs, the follow list of this parent item
-                // is added to the bitfield representing the next state.
-                // Both the bitfield and the list of places are sorted, so we can analyze them in two ways; either iterating over the
-                // parent items, testing the bitfield for the existence of the parent (N times a constant Tb), or by iterating over the
-                // bitfield (restricted to the range of the sorted list of places), using a binary search to locate the leaf in the
-                // sorted list of places (M times log(N) testing operations Ts)
-                // Assuming that the time to test a bit is roughly the same of the time needed to compute the average of two integers,
-                // plus a couple of comparisons and additions, we compare N agains M*log(N) to decide which algorithm should be faster given
-                // the two sets
-                if(fNumItems <= setT->getBitCountInRange(fLeafIndexes[1], fLeafIndexes[fNumItems])*log((float)fNumItems))
-                {
-                    for(unsigned int i=1; i<=fNumItems; ++i)
-                        if(setT->getBit(fLeafIndexes[i]))
-                        {
-                            //
-                            //  If this leaf is the current input symbol, then we
-                            //  want to add its follow list to the set of states to
-                            //  transition to from the current state.
-                            //
-                            *newSet |= *fFollowList[ fLeafIndexes[i] ];
-                        }
-                }
+                //
+                //  Build up a set of states which is the union of all of the
+                //  follow sets of DFA positions that are in the current state. If
+                //  we gave away the new set last time through then create a new
+                //  one. Otherwise, zero out the existing one.
+                //
+                if (!newSet)
+                    newSet = new (fMemoryManager) CMStateSet
+                    (
+                        fLeafCount
+                        , fMemoryManager
+                    );
                 else
-                {
-                    // Further optimization: given that the bitfield enumerator returns the numbers in order,
-                    // every time we raise the lower marker we know it will true also for the next bits, so
-                    // the next binary search will not start from 1 but from this index
-                    unsigned int lowIndex = 1;
-                    // Start the enumerator from the first index in the sorted list of places,
-                    // as nothing before that point will match
-                    CMStateSetEnumerator enumBits(setT, fLeafIndexes[1]);
-                    while(enumBits.hasMoreElements())
-                    {
-                        unsigned int bitIndex=enumBits.nextElement();
-                        // if this leaf is greater than the last index in the sorted list of places,
-                        // nothing can be found from now on, so get out of here
-                        if(bitIndex > fLeafIndexes[fNumItems])
-                            break;
+                    newSet->zeroBits();
 
-                        // Check if this leaf index (DFA position) is in the current set
-                        // (using binary search: the indexes are sorted)
-                        unsigned int first=lowIndex,last=fNumItems,i;
-                        while(first<=last)
-                        {
-                            i=(first+last)/2;
-                            if(fLeafIndexes[i]>bitIndex)
-                                last=i-1;
-                            else if(fLeafIndexes[i]<bitIndex)
-                                lowIndex=first=i+1;
-                            else
+#ifdef OBSOLETED
+// unoptimized code
+                for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++)
+                {
+                    // If this leaf index (DFA position) is in the current set...
+                    if (setT->getBit(leafIndex))
+                    {
+                        //
+                        //  If this leaf is the current input symbol, then we want
+                        //  to add its follow list to the set of states to transition
+                        //  to from the current state.
+                        //
+                        const QName* leaf = fLeafList[leafIndex]->getElement();
+                        const QName* element = fElemMap[elemIndex];
+                        if (fDTD) {
+                            if (XMLString::equals(leaf->getRawName(), element->getRawName())) {
+                                *newSet |= *fFollowList[leafIndex];
+                            }
+                        }
+                        else {
+                            if ((leaf->getURI() == element->getURI()) &&
+                                (XMLString::equals(leaf->getLocalPart(), element->getLocalPart()))) {
+                                *newSet |= *fFollowList[leafIndex];
+                            }
+                        }
+                    }
+                } // for leafIndex
+#endif
+
+#ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
+                // Optimization(Jan, 2001)
+                int leafIndex = leafSorter[sorterIndex++];
+
+                while (leafIndex != -1)
+                {
+                    // If this leaf index (DFA position) is in the current set...
+                    if (setT->getBit(leafIndex))
+                    {
+                        //
+                        //  If this leaf is the current input symbol, then we
+                        //  want to add its follow list to the set of states to
+                        //  transition to from the current state.
+                        //
+                        *newSet |= *fFollowList[leafIndex];
+                    }
+                    leafIndex = leafSorter[sorterIndex++];
+                } // while (leafIndex != -1)
+#endif
+
+                unsigned int* fLeafIndexes=leafSorter[elemIndex];
+                unsigned int fNumItems=fLeafIndexes[0];
+                if(fNumItems!=0)
+                {
+                    // The algorithm requires finding the leaf that is present both in the bitfield of the current state, and in the
+                    // list of places where the currently tested item can appear. When this occurs, the follow list of this parent item
+                    // is added to the bitfield representing the next state.
+                    // Both the bitfield and the list of places are sorted, so we can analyze them in two ways; either iterating over the
+                    // parent items, testing the bitfield for the existence of the parent (N times a constant Tb), or by iterating over the
+                    // bitfield (restricted to the range of the sorted list of places), using a binary search to locate the leaf in the
+                    // sorted list of places (M times log(N) testing operations Ts)
+                    // Assuming that the time to test a bit is roughly the same of the time needed to compute the average of two integers,
+                    // plus a couple of comparisons and additions, we compare N agains M*log(N) to decide which algorithm should be faster given
+                    // the two sets
+                    if(fNumItems <= setT->getBitCountInRange(fLeafIndexes[1], fLeafIndexes[fNumItems])*log((float)fNumItems))
+                    {
+                        for(unsigned int i=1; i<=fNumItems; ++i)
+                            if(setT->getBit(fLeafIndexes[i]))
                             {
                                 //
                                 //  If this leaf is the current input symbol, then we
                                 //  want to add its follow list to the set of states to
                                 //  transition to from the current state.
                                 //
-                                *newSet |= *fFollowList[bitIndex];
+                                *newSet |= *fFollowList[ fLeafIndexes[i] ];
+                            }
+                    }
+                    else
+                    {
+                        // Further optimization: given that the bitfield enumerator returns the numbers in order,
+                        // every time we raise the lower marker we know it will true also for the next bits, so
+                        // the next binary search will not start from 1 but from this index
+                        unsigned int lowIndex = 1;
+                        // Start the enumerator from the first index in the sorted list of places,
+                        // as nothing before that point will match
+                        CMStateSetEnumerator enumBits(setT, fLeafIndexes[1]);
+                        while(enumBits.hasMoreElements())
+                        {
+                            unsigned int bitIndex=enumBits.nextElement();
+                            // if this leaf is greater than the last index in the sorted list of places,
+                            // nothing can be found from now on, so get out of here
+                            if(bitIndex > fLeafIndexes[fNumItems])
                                 break;
+
+                            // Check if this leaf index (DFA position) is in the current set
+                            // (using binary search: the indexes are sorted)
+                            unsigned int first=lowIndex,last=fNumItems,i;
+                            while(first<=last)
+                            {
+                                i=(first+last)/2;
+                                if(fLeafIndexes[i]>bitIndex)
+                                    last=i-1;
+                                else if(fLeafIndexes[i]<bitIndex)
+                                    lowIndex=first=i+1;
+                                else
+                                {
+                                    //
+                                    //  If this leaf is the current input symbol, then we
+                                    //  want to add its follow list to the set of states to
+                                    //  transition to from the current state.
+                                    //
+                                    *newSet |= *fFollowList[bitIndex];
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            //
-            //  If this new set is not empty, then see if its in the list
-            //  of states to do. If not, then add it.
-            //
-            if (!newSet->isEmpty())
-            {
                 //
-                //  Search the 'states to do' list to see if this new
-                //  state set is already in there.
+                //  If this new set is not empty, then see if its in the list
+                //  of states to do. If not, then add it.
                 //
-                /***
-                unsigned int stateIndex = 0;
-                for (; stateIndex < curState; stateIndex++)
-                {
-                    if (*statesToDo[stateIndex] == *newSet)
-                        break;
-                }
-                ***/
-
-                XMLInteger *stateObj = stateTable->get(newSet);
-                unsigned int stateIndex = (stateObj == 0 ? curState : stateObj->intValue());
-
-                // If we did not find it, then add it
-                if (stateIndex == curState)
+                if (!newSet->isEmpty())
                 {
                     //
-                    //  Put this new state into the states to do and init
-                    //  a new entry at the same index in the transition
-                    //  table.
+                    //  Search the 'states to do' list to see if this new
+                    //  state set is already in there.
                     //
-                    statesToDo[curState] = newSet;
-                    fTransTable[curState] = makeDefStateList();
-                    stateTable->put
-                    (
-                        newSet
-                        , new (fMemoryManager) XMLInteger(curState)
-                    );
-
-                    // We now have a new state to do so bump the count
-                    curState++;
-
-                    //
-                    //  Null out the new set to indicate we adopted it. This
-                    //  will cause the creation of a new set on the next time
-                    //  around the loop.
-                    //
-                    newSet = 0;
-                }
-
-                //
-                //  Now set this state in the transition table's entry for this
-                //  element (using its index), with the DFA state we will move
-                //  to from the current state when we see this input element.
-                //
-                transEntry[elemIndex] = stateIndex;
-
-                // Expand the arrays if we're full
-                if (curState == curArraySize)
-                {
-                    //
-                    //  Yikes, we overflowed the initial array size, so we've
-                    //  got to expand all of these arrays. So adjust up the
-                    //  size by 50% and allocate new arrays.
-                    //
-                    const unsigned int newSize = (unsigned int)(curArraySize * 1.5);
-                    CMStateSet** newToDo = (CMStateSet**)
-                        fMemoryManager->allocate
-                        (
-                            newSize * sizeof(CMStateSet*)
-                        ); //new const CMStateSet*[newSize];
-                    bool* newFinalFlags = (bool*) fMemoryManager->allocate
-                    (
-                        newSize * sizeof(bool)
-                    ); //new bool[newSize];
-                    unsigned int** newTransTable = (unsigned int**)
-                        fMemoryManager->allocate
-                        (
-                            newSize * sizeof(unsigned int*)
-                        ); //new unsigned int*[newSize];
-
-                    // Copy over all of the existing content
-                    for (unsigned int expIndex = 0; expIndex < curArraySize; expIndex++)
+                    /***
+                    unsigned int stateIndex = 0;
+                    for (; stateIndex < curState; stateIndex++)
                     {
-                        newToDo[expIndex] = statesToDo[expIndex];
-                        newFinalFlags[expIndex] = fFinalStateFlags[expIndex];
-                        newTransTable[expIndex] = fTransTable[expIndex];
+                        if (*statesToDo[stateIndex] == *newSet)
+                            break;
+                    }
+                    ***/
+
+                    XMLInteger *stateObj = stateTable->get(newSet);
+                    unsigned int stateIndex = (stateObj == 0 ? curState : stateObj->intValue());
+
+                    // If we did not find it, then add it
+                    if (stateIndex == curState)
+                    {
+                        //
+                        //  Put this new state into the states to do and init
+                        //  a new entry at the same index in the transition
+                        //  table.
+                        //
+                        statesToDo[curState] = newSet;
+                        fTransTable[curState] = makeDefStateList();
+                        stateTable->put
+                        (
+                            newSet
+                            , new (fMemoryManager) XMLInteger(curState)
+                        );
+
+                        // We now have a new state to do so bump the count
+                        curState++;
+
+                        //
+                        //  Null out the new set to indicate we adopted it. This
+                        //  will cause the creation of a new set on the next time
+                        //  around the loop.
+                        //
+                        newSet = 0;
                     }
 
-                    // Clean up the old stuff
-                    fMemoryManager->deallocate(statesToDo); //delete [] statesToDo;
-                    fMemoryManager->deallocate(fFinalStateFlags); //delete [] fFinalStateFlags;
-                    fMemoryManager->deallocate(fTransTable); //delete [] fTransTable;
+                    //
+                    //  Now set this state in the transition table's entry for this
+                    //  element (using its index), with the DFA state we will move
+                    //  to from the current state when we see this input element.
+                    //
+                    transEntry[elemIndex] = stateIndex;
 
-                    // Store the new array size and pointers
-                    curArraySize = newSize;
-                    statesToDo = newToDo;
-                    fFinalStateFlags = newFinalFlags;
-                    fTransTable = newTransTable;
-                } //if (curState == curArraySize)
-            } //if (!newSet->isEmpty())
-        } // for elemIndex
-    } //while
+                    // Expand the arrays if we're full
+                    if (curState == curArraySize)
+                    {
+                        //
+                        //  Yikes, we overflowed the initial array size, so we've
+                        //  got to expand all of these arrays. So adjust up the
+                        //  size by 50% and allocate new arrays.
+                        //
+                        const unsigned int newSize = (unsigned int)(curArraySize * 1.5);
+                        CMStateSet** newToDo = nullptr;
+                        bool* newFinalFlags = nullptr;
+                        unsigned int** newTransTable = nullptr;
+                        try
+                        {
+                            newToDo = (CMStateSet**)
+                                fMemoryManager->allocate
+                                (
+                                    newSize * sizeof(CMStateSet*)
+                                ); //new const CMStateSet*[newSize];
+                            newFinalFlags = (bool*) fMemoryManager->allocate
+                            (
+                                newSize * sizeof(bool)
+                            ); //new bool[newSize];
+                            newTransTable = (unsigned int**)
+                                fMemoryManager->allocate
+                                (
+                                    newSize * sizeof(unsigned int*)
+                                ); //new unsigned int*[newSize];
 
-    // Store the current state count in the trans table size
-    fTransTableSize = curState;
+                            // Copy over all of the existing content
+                            for (unsigned int expIndex = 0; expIndex < curArraySize; expIndex++)
+                            {
+                                newToDo[expIndex] = statesToDo[expIndex];
+                                newFinalFlags[expIndex] = fFinalStateFlags[expIndex];
+                                newTransTable[expIndex] = fTransTable[expIndex];
+                            }
+                        }
+                        catch( const OutOfMemoryException& e )
+                        {
+                            fMemoryManager->deallocate(newToDo);
+                            fMemoryManager->deallocate(newFinalFlags);
+                            fMemoryManager->deallocate(newTransTable);
+                            throw;
 
-    //
-    // Fill in the occurence information for each looping state
-    // if we're using counters.
-    //
-    if (elemOccurenceMap != 0) {
-        fCountingStates = (Occurence**)fMemoryManager->allocate(fTransTableSize*sizeof(Occurence*));
-        memset(fCountingStates, 0, fTransTableSize*sizeof(Occurence*));
-        for (unsigned int i = 0; i < fTransTableSize; ++i) {
-            unsigned int * transitions = fTransTable[i];
-            for (unsigned int j = 0; j < fElemMapSize; ++j) {
-                if (i == transitions[j]) {
-                    Occurence* old=elemOccurenceMap[j];
-                    if(old!=0)
-                        fCountingStates[i] = new (fMemoryManager) Occurence(old->minOccurs, old->maxOccurs, old->elemIndex);
-                    break;
-                }
-            }
-        }
-        for (unsigned int j = 0; j < fLeafCount; ++j) {
-            if(elemOccurenceMap[j]!=0)
-                delete elemOccurenceMap[j];
-        }
-        fMemoryManager->deallocate(elemOccurenceMap);
+                        }
+
+                        // Clean up the old stuff
+                        fMemoryManager->deallocate(statesToDo); //delete [] statesToDo;
+                        fMemoryManager->deallocate(fFinalStateFlags); //delete [] fFinalStateFlags;
+                        fMemoryManager->deallocate(fTransTable); //delete [] fTransTable;
+
+                        // Store the new array size and pointers
+                        curArraySize = newSize;
+                        statesToDo = newToDo;
+                        fFinalStateFlags = newFinalFlags;
+                        fTransTable = newTransTable;
+                    } //if (curState == curArraySize)
+                } //if (!newSet->isEmpty())
+            } // for elemIndex
+        } //while
+    }
+    catch( const OutOfMemoryException& e )
+    {
+        finalizeProcessingAndCleanup();
+        throw;
     }
 
-    // If the last temp set was not stored, then clean it up
-    if (newSet)
-        delete newSet;
-
-    //
-    //  Now we can clean up all of the temporary data that was needed during
-    //  DFA build.
-    //
-
-    for (index = 0; index < fLeafCount; index++)
-        delete fFollowList[index];
-    fMemoryManager->deallocate(fFollowList); //delete [] fFollowList;
-    fFollowList = NULL;
-
-    //
-    // removeAll() will delete all data, XMLInteger,
-    // while the keys are to be deleted by the
-    // deletion of statesToDo.
-    //
-    delete stateTable;
-
-    for (index = 0; index < curState; index++)
-        delete statesToDo[index];
-    fMemoryManager->deallocate(statesToDo); //delete [] statesToDo;
-
-    for (index = 0; index < fLeafCount; index++)
-        delete fLeafList[index];
-    fMemoryManager->deallocate(fLeafList); //delete [] fLeafList;
-    fLeafList = NULL;
-
-#ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
-    fMemoryManager->deallocate(leafSorter); //delete [] leafSorter;
-#endif
-    for (index=0; index < fElemMapSize; index++)
-        fMemoryManager->deallocate(leafSorter[index]);
-    fMemoryManager->deallocate(leafSorter);
+    finalizeProcessingAndCleanup();
 }
 
 unsigned int DFAContentModel::countLeafNodes(ContentSpecNode* const curNode)
