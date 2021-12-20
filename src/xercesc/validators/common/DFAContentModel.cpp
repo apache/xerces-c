@@ -682,7 +682,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     (
         fLeafCount * sizeof(CMStateSet*)
     ); //new CMStateSet*[fLeafCount];
-    memset(fLeafList, 0, fLeafCount*sizeof(CMStateSet*));
+    memset(fFollowList, 0, fLeafCount*sizeof(CMStateSet*));
     for (index = 0; index < fLeafCount; index++)
         fFollowList[index] = new (fMemoryManager) CMStateSet(fLeafCount, fMemoryManager);
 
