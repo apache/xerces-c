@@ -1302,7 +1302,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
     }
 
     // Push this read onto the reader manager
-    fReaderMgr.pushReader(newReader, 0);
+    fReaderMgr.pushReader(newReader, 0, false);
 
     // and reset security-related things if necessary:
     if(fSecurityManager != 0)
@@ -3201,7 +3201,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
 
         //  Push the reader. If its a recursive expansion, then emit an error
         //  and return an failure.
-        if (!fReaderMgr.pushReader(reader, decl))
+        if (!fReaderMgr.pushReader(reader, decl, false))
         {
             emitError(XMLErrs::RecursiveEntity, decl->getName());
             return EntityExp_Failed;
@@ -3262,7 +3262,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
         //  where it will become the subsequent input. If it fails, that
         //  means the entity is recursive, so issue an error. The reader
         //  will have just been discarded, but we just keep going.
-        if (!fReaderMgr.pushReader(valueReader, decl))
+        if (!fReaderMgr.pushReader(valueReader, decl, false))
             emitError(XMLErrs::RecursiveEntity, decl->getName());
 
         // here's where we need to check if there's a SecurityManager,

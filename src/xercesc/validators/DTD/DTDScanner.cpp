@@ -288,7 +288,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
         //  Push the reader. If its a recursive expansion, then emit an error
         //  and return an failure.
         //
-        if (!fReaderMgr->pushReader(reader, decl))
+        if (!fReaderMgr->pushReader(reader, decl, false))
         {
             fScanner->emitError(XMLErrs::RecursiveEntity, decl->getName());
             return false;
@@ -362,7 +362,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
         //  means the entity is recursive, so issue an error. The reader
         //  will have just been discarded, but we just keep going.
         //
-        if (!fReaderMgr->pushReader(valueReader, decl))
+        if (!fReaderMgr->pushReader(valueReader, decl, false))
             fScanner->emitError(XMLErrs::RecursiveEntity, decl->getName());
     }
 
@@ -2054,7 +2054,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         //  Push the reader. If its a recursive expansion, then emit an error
         //  and return an failure.
         //
-        if (!fReaderMgr->pushReader(reader, decl))
+        if (!fReaderMgr->pushReader(reader, decl, false))
         {
             fScanner->emitError(XMLErrs::RecursiveEntity, decl->getName());
             return EntityExp_Failed;
@@ -2088,7 +2088,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         //  means the entity is recursive, so issue an error. The reader
         //  will have just been discarded, but we just keep going.
         //
-        if (!fReaderMgr->pushReader(valueReader, decl))
+        if (!fReaderMgr->pushReader(valueReader, decl, false))
             fScanner->emitError(XMLErrs::RecursiveEntity, decl->getName());
     }
 

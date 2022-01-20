@@ -586,7 +586,7 @@ void XSAXMLScanner::scanReset(const InputSource& src)
     }
 
     // Push this read onto the reader manager
-    fReaderMgr.pushReader(newReader, 0);
+    fReaderMgr.pushReader(newReader, 0, false);
 
     // and reset security-related things if necessary:
     if(fSecurityManager != 0)

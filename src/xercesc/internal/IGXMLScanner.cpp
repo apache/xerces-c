@@ -19,6 +19,9 @@
  * $Id$
  */
 
+// SPDX-FileCopyrightText: Portions Copyright 2021 Siemens 
+// Modified on 15-Jul-2021 by Siemens and/or its affiliates to fix CVE-2018-1311: Apache Xerces-C use-after-free vulnerability scanning external DTD. Copyright 2021 Siemens.
+
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -1535,13 +1538,12 @@ void IGXMLScanner::scanDocTypeDecl()
             DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
             declDTD->setSystemId(sysId);
             declDTD->setIsExternal(true);
-            Janitor<DTDEntityDecl> janDecl(declDTD);
 
             // Mark this one as a throw at end
             reader->setThrowAtEnd(true);
 
             // And push it onto the stack, with its pseudo name
-            fReaderMgr.pushReader(reader, declDTD);
+            fReaderMgr.pushReader(reader, declDTD, true);
 
             // Tell it its not in an include section
             dtdScanner.scanExtSubsetDecl(false, true);
@@ -3098,13 +3100,12 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
     declDTD->setSystemId(src.getSystemId());
     declDTD->setIsExternal(true);
-    Janitor<DTDEntityDecl> janDecl(declDTD);
 
     // Mark this one as a throw at end
     newReader->setThrowAtEnd(true);
 
     // And push it onto the stack, with its pseudo name
-    fReaderMgr.pushReader(newReader, declDTD);
+    fReaderMgr.pushReader(newReader, declDTD, true);
 
     //  If we have a doc type handler and advanced callbacks are enabled,
     //  call the doctype event.

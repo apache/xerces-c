@@ -28,6 +28,8 @@
 #include <xercesc/sax/Locator.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
+#include <vector>
+
 namespace XERCES_CPP_NAMESPACE {
 
 class XMLEntityDecl;
@@ -159,6 +161,7 @@ public :
     (
                 XMLReader* const        reader
         ,       XMLEntityDecl* const    entity
+        ,       bool                    transferEntityOwnership
     );
     void reset();
 
@@ -202,6 +205,8 @@ private :
     const XMLReader* getLastExtEntity(const XMLEntityDecl*& itsEntity) const;
     bool popReader();
 
+    void popReaderAndEntity();
+
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -214,6 +219,10 @@ private :
     //  fCurEntity
     //      This is the current top of stack entity. We pull it off the stack
     //      and store it here for efficiency.
+    //
+    //  fOwnEntity
+    //      This is set to true if we own fCurEntity and should delete it when
+    //      we no longer need it.
     //
     //  fCurReader
     //      This is the current top of stack reader. We pull it off the
@@ -253,9 +262,43 @@ private :
     //      This flag controls whether we force conformant URI
     // -----------------------------------------------------------------------
     XMLEntityDecl*              fCurEntity;
+    bool                        fOwnEntity;
     XMLReader*                  fCurReader;
     XMLEntityHandler*           fEntityHandler;
-    RefStackOf<XMLEntityDecl>*  fEntityStack;
+
+    // Kind of std::unique_ptr except that we don't always have ownership
+    struct EntityPtrWithOwnershipFlag
+    {
+        XMLEntityDecl* fEntity = nullptr;
+        bool           fOwnEntity = false;
+
+        EntityPtrWithOwnershipFlag() = default;
+
+        EntityPtrWithOwnershipFlag(XMLEntityDecl* entity, bool ownEntity):
+            fEntity(entity), fOwnEntity(ownEntity) {}
+
+        EntityPtrWithOwnershipFlag(EntityPtrWithOwnershipFlag&& other):
+            fEntity(other.fEntity), fOwnEntity(other.fOwnEntity)
+        {
+            other.fOwnEntity = false;
+        }
+
+        EntityPtrWithOwnershipFlag(const EntityPtrWithOwnershipFlag&) = delete;
+        EntityPtrWithOwnershipFlag& operator=(const EntityPtrWithOwnershipFlag&) = delete;
+        EntityPtrWithOwnershipFlag& operator=(EntityPtrWithOwnershipFlag&&) = delete;
+
+        ~EntityPtrWithOwnershipFlag();
+
+        operator XMLEntityDecl*() {
+            return fEntity;
+        }
+
+        operator const XMLEntityDecl*() const {
+            return fEntity;
+        }
+    };
+
+    std::vector<EntityPtrWithOwnershipFlag> fEntityStack;
     unsigned int                fNextReaderNum;
     RefStackOf<XMLReader>*      fReaderStack;
     bool                        fThrowEOE;

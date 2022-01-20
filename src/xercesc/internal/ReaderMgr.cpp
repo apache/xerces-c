@@ -51,9 +51,9 @@ namespace XERCES_CPP_NAMESPACE {
 ReaderMgr::ReaderMgr(MemoryManager* const manager) :
 
     fCurEntity(0)
+    , fOwnEntity(false)
     , fCurReader(0)
     , fEntityHandler(0)
-    , fEntityStack(0)
     , fNextReaderNum(1)
     , fReaderStack(0)
     , fThrowEOE(false)
@@ -72,8 +72,9 @@ ReaderMgr::~ReaderMgr()
     //  entities it still references!)
     //
     delete fCurReader;
+    if (fOwnEntity)
+        delete fCurEntity;
     delete fReaderStack;
-    delete fEntityStack;
 }
 
 
@@ -357,9 +358,7 @@ void ReaderMgr::cleanStackBackTo(const XMLSize_t readerNum)
         if (fReaderStack->empty())
             ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::RdrMgr_ReaderIdNotFound, fMemoryManager);
 
-        delete fCurReader;
-        fCurReader = fReaderStack->pop();
-        fCurEntity = fEntityStack->pop();
+        popReaderAndEntity();
     }
 }
 
@@ -814,7 +813,7 @@ XMLEntityDecl* ReaderMgr::getCurrentEntity()
 XMLSize_t ReaderMgr::getReaderDepth() const
 {
     // If the stack doesn't exist, its obviously zero
-    if (!fEntityStack)
+    if (fEntityStack.empty())
         return 0;
 
     //
@@ -822,7 +821,7 @@ XMLSize_t ReaderMgr::getReaderDepth() const
     //  reader. So if there is no current reader and none on the stack,
     //  its zero, else its some non-zero value.
     //
-    XMLSize_t retVal = fEntityStack->size();
+    XMLSize_t retVal = fEntityStack.size();
     if (fCurReader)
         retVal++;
     return retVal;
@@ -874,8 +873,12 @@ bool ReaderMgr::isScanningPERefOutOfLiteral() const
 }
 
 
+// Caller should set transferEntityOwnership to true if the ReaderMgr object
+// should assume ownership of the passed entity, and delete it when it no
+// longer needs it.
 bool ReaderMgr::pushReader(         XMLReader* const        reader
-                            ,       XMLEntityDecl* const    entity)
+                            ,       XMLEntityDecl* const    entity
+                            ,       bool                    transferEntityOwnership)
 {
     //
     //  First, if an entity was passed, we have to confirm that this entity
@@ -887,19 +890,21 @@ bool ReaderMgr::pushReader(         XMLReader* const        reader
     //  nothing to do. If there is no entity stack yet, then of coures it
     //  cannot already be there.
     //
-    if (entity && fEntityStack)
+    if (entity && !fEntityStack.empty())
     {
-        const XMLSize_t count = fEntityStack->size();
+        const XMLSize_t count = fEntityStack.size();
         const XMLCh* const theName = entity->getName();
         for (XMLSize_t index = 0; index < count; index++)
         {
-            const XMLEntityDecl* curDecl = fEntityStack->elementAt(index);
+            const XMLEntityDecl* curDecl = fEntityStack[index];
             if (curDecl)
             {
                 if (XMLString::equals(theName, curDecl->getName()))
                 {
                     // Oops, already there so delete reader and return
                     delete reader;
+                    if (transferEntityOwnership)
+                        delete entity;
                     return false;
                 }
             }
@@ -913,10 +918,6 @@ bool ReaderMgr::pushReader(         XMLReader* const        reader
     if (!fReaderStack)
         fReaderStack = new (fMemoryManager) RefStackOf<XMLReader>(16, true, fMemoryManager);
 
-    // And the entity stack, which does not own its elements
-    if (!fEntityStack)
-        fEntityStack = new (fMemoryManager) RefStackOf<XMLEntityDecl>(16, false, fMemoryManager);
-
     //
     //  Push the current reader and entity onto their respective stacks.
     //  Note that the the current entity can be null if the current reader
@@ -925,7 +926,7 @@ bool ReaderMgr::pushReader(         XMLReader* const        reader
     if (fCurReader)
     {
         fReaderStack->push(fCurReader);
-        fEntityStack->push(fCurEntity);
+        fEntityStack.emplace_back(EntityPtrWithOwnershipFlag(fCurEntity, fOwnEntity));
     }
 
     //
@@ -934,6 +935,7 @@ bool ReaderMgr::pushReader(         XMLReader* const        reader
     //
     fCurReader = reader;
     fCurEntity = entity;
+    fOwnEntity = transferEntityOwnership;
 
     return true;
 }
@@ -954,9 +956,11 @@ void ReaderMgr::reset()
     //  And do the same for the entity stack, but don't delete the current
     //  entity (if any) since we don't own them.
     //
+    if (fOwnEntity)
+        delete fCurEntity;
     fCurEntity = 0;
-    if (fEntityStack)
-        fEntityStack->removeAllElements();
+    fOwnEntity = false;
+    fEntityStack.clear();
 }
 
 
@@ -1030,7 +1034,7 @@ ReaderMgr::getLastExtEntity(const XMLEntityDecl*& itsEntity) const
             {
                 // Move down to the previous element and get a pointer to it
                 index--;
-                curEntity = fEntityStack->elementAt(index);
+                curEntity = fEntityStack[index];
 
                 //
                 //  If its null or its an external entity, then this reader
@@ -1059,6 +1063,21 @@ ReaderMgr::getLastExtEntity(const XMLEntityDecl*& itsEntity) const
 }
 
 
+void ReaderMgr::popReaderAndEntity()
+{
+    delete fCurReader;
+    fCurReader = fReaderStack->pop();
+
+    if (fOwnEntity)
+        delete fCurEntity;
+    fCurEntity = fEntityStack.back().fEntity;
+    fOwnEntity = fEntityStack.back().fOwnEntity;
+    // Make sure to disown the last entity before trimming the stack.
+    fEntityStack.back().fOwnEntity = false;
+    fEntityStack.resize(fEntityStack.size() - 1);
+}
+
+
 bool ReaderMgr::popReader()
 {
     //
@@ -1080,10 +1099,7 @@ bool ReaderMgr::popReader()
     //  Delete the current reader and pop a new reader and entity off
     //  the stacks.
     //
-    delete fCurReader;
-    fCurReader = fReaderStack->pop();
-    fCurEntity = fEntityStack->pop();
-
+    popReaderAndEntity();
     //
     //  If there was a previous entity, and either the fThrowEOE flag is set
     //  or reader was marked as such, then throw an end of entity.
@@ -1119,11 +1135,16 @@ bool ReaderMgr::popReader()
             return false;
 
         // Else pop again and try it one more time
-        delete fCurReader;
-        fCurReader = fReaderStack->pop();
-        fCurEntity = fEntityStack->pop();
+        popReaderAndEntity();
     }
     return true;
+}
+
+
+ReaderMgr::EntityPtrWithOwnershipFlag::~EntityPtrWithOwnershipFlag()
+{
+    if (fOwnEntity)
+        delete fEntity;
 }
 
 }

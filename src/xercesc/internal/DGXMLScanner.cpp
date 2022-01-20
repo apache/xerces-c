@@ -19,6 +19,8 @@
  * $Id$
  */
 
+// SPDX-FileCopyrightText: Portions Copyright 2021 Siemens 
+// Modified on 15-Jul-2021 by Siemens and/or its affiliates to fix CVE-2018-1311: Apache Xerces-C use-after-free vulnerability scanning external DTD. Copyright 2021 Siemens.
 
 // ---------------------------------------------------------------------------
 //  Includes
@@ -1052,13 +1054,12 @@ void DGXMLScanner::scanDocTypeDecl()
             DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
             declDTD->setSystemId(sysId);
             declDTD->setIsExternal(true);
-            Janitor<DTDEntityDecl> janDecl(declDTD);
 
             // Mark this one as a throw at end
             reader->setThrowAtEnd(true);
 
             // And push it onto the stack, with its pseudo name
-            fReaderMgr.pushReader(reader, declDTD);
+            fReaderMgr.pushReader(reader, declDTD, true);
 
             // Tell it its not in an include section
             dtdScanner.scanExtSubsetDecl(false, true);
@@ -2131,13 +2132,12 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
     declDTD->setSystemId(src.getSystemId());
     declDTD->setIsExternal(true);
-    Janitor<DTDEntityDecl> janDecl(declDTD);
 
     // Mark this one as a throw at end
     newReader->setThrowAtEnd(true);
 
     // And push it onto the stack, with its pseudo name
-    fReaderMgr.pushReader(newReader, declDTD);
+    fReaderMgr.pushReader(newReader, declDTD, true);
 
     //  If we have a doc type handler and advanced callbacks are enabled,
     //  call the doctype event.
@@ -2476,7 +2476,7 @@ void DGXMLScanner::scanReset(const InputSource& src)
     }
 
     // Push this read onto the reader manager
-    fReaderMgr.pushReader(newReader, 0);
+    fReaderMgr.pushReader(newReader, 0, false);
 
     // and reset security-related things if necessary:
     if(fSecurityManager != 0)
@@ -3481,7 +3481,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
 
         //  Push the reader. If its a recursive expansion, then emit an error
         //  and return an failure.
-        if (!fReaderMgr.pushReader(reader, decl))
+        if (!fReaderMgr.pushReader(reader, decl, false))
         {
             emitError(XMLErrs::RecursiveEntity, decl->getName());
             return EntityExp_Failed;
@@ -3542,7 +3542,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
         //  where it will become the subsequent input. If it fails, that
         //  means the entity is recursive, so issue an error. The reader
         //  will have just been discarded, but we just keep going.
-        if (!fReaderMgr.pushReader(valueReader, decl))
+        if (!fReaderMgr.pushReader(valueReader, decl, false))
             emitError(XMLErrs::RecursiveEntity, decl->getName());
 
         // here's where we need to check if there's a SecurityManager,
