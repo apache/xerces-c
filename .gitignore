@@ -106,3 +106,6 @@ tests/scripts/*.log
 tests/scripts/*.trs
 tests/test-suite.log
 Testing/
+
+# Vincent
+build/
