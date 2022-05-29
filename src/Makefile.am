@@ -73,6 +73,9 @@ if XERCES_USE_NETACCESSOR_CURL
 libxerces_c_la_SOURCES += ${curl_sources}
 nobase_libxerces_c_la_HEADERS += ${curl_headers}
 AM_CPPFLAGS += ${CURL_FLAGS}
+if XERCES_PLATFORM_WIN32
+libxerces_c_la_LIBADD += -lws2_32
+endif
 endif
 
 if XERCES_USE_NETACCESSOR_SOCKET
