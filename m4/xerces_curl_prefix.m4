@@ -66,6 +66,7 @@ AC_DEFUN([XERCES_CURL_PREFIX],
 
 			orig_libs=$LIBS
 			LIBS="$curl_libs $LIBS"
+                        CPPFLAGS="$curl_flags $CPPFLAGS"
 
 			AC_LINK_IFELSE(
 				[AC_LANG_SOURCE([
@@ -82,6 +83,7 @@ AC_DEFUN([XERCES_CURL_PREFIX],
 				[], [xerces_cv_curl_present=no])
 
 			LIBS=$orig_libs
+                        CPPFLAGS=$orig_cppflags
 
 			if test x"$xerces_cv_curl_present" != x"no"; then
 				AC_MSG_RESULT([yes])
