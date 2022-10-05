@@ -48,9 +48,11 @@ class BinInputStream;
  *
  *  The passed buffer can be adopted or merely referenced. If it is adopted,
  *  then it must be dynamically allocated and will be destroyed when the
- *  input source is destroyed (no reference counting!.) If not adopted, the
- *  caller must insure that it remains valid until the input source object
- *  is destroyed.
+ *  input source is destroyed (no reference counting!.) Note that the
+ *  deallocation assumes that array deletion should be performed, so do
+ *  not pass a non-array-allocated buffer if asking for adoption.
+ *  If not adopted, the caller must insure that it remains valid until the
+ *  input source object is destroyed.
  *
  *  The other option indicates whether each stream created for this input
  *  source should get its own copy of the data, or whether it should just
