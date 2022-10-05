@@ -1271,7 +1271,7 @@ set_target_properties(xerces-c-headers PROPERTIES FOLDER "Library")
 add_library(xerces-c
   ${libxerces_c_SOURCES}
   ${libxerces_c_RESOURCES})
-target_link_libraries(xerces-c ${libxerces_c_DEPS})
+target_link_libraries(xerces-c PRIVATE ${libxerces_c_DEPS})
 if(XERCES_USE_NETACCESSOR_CURL)
   target_include_directories(xerces-c SYSTEM PRIVATE ${CURL_INCLUDE_DIRS})
 endif()
