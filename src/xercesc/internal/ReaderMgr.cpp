@@ -436,12 +436,6 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 );
         }
     }
-    catch(const XMLPlatformUtilsException&)
-    {
-        streamJanitor.release();
-
-        throw;
-    }
     catch(const OutOfMemoryException&)
     {
         streamJanitor.release();
