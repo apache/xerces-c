@@ -112,6 +112,7 @@ if(NOT XERCES_USE_MUTEXMGR_NOTHREAD)
   add_test_executable(ThreadTest
     src/ThreadTest/ThreadTest.cpp
   )
+  target_link_libraries(ThreadTest Threads::Threads)
 endif()
 
 # Fails to compile under gcc 4 (ambiguous calls to NullPointerException)
