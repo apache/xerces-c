@@ -2,7 +2,7 @@
 * text=auto
 
 # Text files with explicit CRLF line endings
-*.bat text eof=crlf
+*.bat text eol=crlf
 
 # Binary files
 *.gif binary
