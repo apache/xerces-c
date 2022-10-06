@@ -221,6 +221,28 @@ else
                     [
                       AC_MSG_RESULT([no])
                       AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 0, [Define to 1 if you have the `wcsrtombs' function.])
+                    ],
+                    [
+                      AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>
+                            #include <string.h>]],
+                                    [[
+                            mbstate_t st;
+                            memset(&st, 0, sizeof(st));
+                            char buffer[32];
+                            const wchar_t* src=L"help";
+                            wcsrtombs(buffer, &src, 32, &st);
+                            if(src==0)
+                                return 0;
+                            else
+                                return 1;]])],
+                        [
+                          AC_MSG_RESULT([yes])
+                          AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 1, [Define to 1 if you have the `wcsrtombs' function.])
+                        ],
+                        [
+                          AC_MSG_RESULT([no])
+                          AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 0, [Define to 1 if you have the `wcsrtombs' function.])
+                        ])
                     ]
                  )
 AC_MSG_CHECKING([for mbsrtowcs])
@@ -243,7 +265,29 @@ else
                     [
                       AC_MSG_RESULT([no])
                       AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 0, [Define to 1 if you have the `mbsrtowcs' function.])
-                    ]
+                    ],
+                    [
+                        AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>
+                        #include <string.h>]],
+                                [[
+                        mbstate_t st;
+                        memset(&st, 0, sizeof(st));
+                        wchar_t buffer[32];
+                        const char* src="help";
+                        mbsrtowcs(buffer, &src, 32, &st);
+                        if(src==0)
+                            return 0;
+                        else
+                            return 1;]])],
+                      [
+                        AC_MSG_RESULT([yes])
+                        AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 1, [Define to 1 if you have the `mbsrtowcs' function.])
+                      ],
+                      [
+                        AC_MSG_RESULT([no])
+                        AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 0, [Define to 1 if you have the `mbsrtowcs' function.])
+                      ])
+                    ] 
                  )
 
 AC_MSG_CHECKING([if iconv uses const pointers])
