@@ -24,7 +24,7 @@
 <p>This document highlights the release plan for &XercesCName;.</p>
 
 <s3 title="Next Target Release">
-        <p>There has been some discussion of incorporating some improvements and modernizing the code base a bit in 3.3.0 release.</p>
+        <p>There had been some discussion of incorporating some improvements and modernizing the code base a bit in a 4.0.0 release but there are no committers available with the interest in doing this work. At this time, no further releases are planned.</p>
 
 	<p>There will be no further releases in the Xerces-C++ 2-series.</p>
 </s3>

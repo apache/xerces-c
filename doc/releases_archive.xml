@@ -21,6 +21,7 @@
 <s1 title="Releases Archive">
     <s2 title="Release Information for earlier releases">
       <ul>
+        <li><link anchor="Release323">Release Information for &XercesCName; 3.2.3</link></li>
         <li><link anchor="Release322">Release Information for &XercesCName; 3.2.2</link></li>
         <li><link anchor="Release321">Release Information for &XercesCName; 3.2.1</link></li>
         <li><link anchor="Release320">Release Information for &XercesCName; 3.2.0</link></li>
@@ -54,6 +55,14 @@
         <li><link anchor="ReleaseBETA">Release Information for &XercesCName; BETA</link></li>
       </ul>
     </s2>
+
+<anchor name="Release323"/>
+<s2 title="Release Information for &XercesCName; 3.2.3">
+
+<p>For a list of bug fixes in &XercesCName; 3.2.3, see the
+<jump href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12344135&amp;projectId=10510">Release Notes</jump>
+</p>
+</s2>
 
 <anchor name="Release322"/>
 <s2 title="Release Information for &XercesCName; 3.2.2">
