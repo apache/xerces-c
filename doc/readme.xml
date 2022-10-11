@@ -39,6 +39,8 @@
         portability, care has been taken to make minimal use of templates and minimal use of
         #ifdefs.</p>
 
+        <note>Please note that &XercesCName; currently lacks active maintainers and
+        therefore may not be able to promptly address bugs and security vulnerabilities.</note>
     </s2>
 
     <s2 title="Applications of the &XercesCProjectName; Parser">
