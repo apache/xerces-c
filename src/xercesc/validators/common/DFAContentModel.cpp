@@ -1519,7 +1519,7 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode
             retNode = buildSyntaxTree(cursor, curIndex);
             for(unsigned int i=0;i<nLoopCount;i++)
             {
-                CMNode* newRight = nullptr;
+                CMNode* newRight = NULL;
                 try
                 {
                     newRight = buildSyntaxTree(rightNode, curIndex);
