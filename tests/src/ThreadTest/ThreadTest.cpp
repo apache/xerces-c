@@ -118,7 +118,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 //
 //------------------------------------------------------------------------------
 
-#include <Windows.h>
+#include <windows.h>
 #include <process.h>
 
 typedef DWORD (WINAPI *ThreadFunc)(void *);
