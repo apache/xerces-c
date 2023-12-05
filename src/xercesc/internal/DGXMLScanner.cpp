@@ -1052,13 +1052,12 @@ void DGXMLScanner::scanDocTypeDecl()
             DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
             declDTD->setSystemId(sysId);
             declDTD->setIsExternal(true);
-            Janitor<DTDEntityDecl> janDecl(declDTD);
 
             // Mark this one as a throw at end
             reader->setThrowAtEnd(true);
 
             // And push it onto the stack, with its pseudo name
-            fReaderMgr.pushReader(reader, declDTD);
+            fReaderMgr.pushReaderAdoptEntity(reader, declDTD);
 
             // Tell it its not in an include section
             dtdScanner.scanExtSubsetDecl(false, true);
@@ -2131,13 +2130,12 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
     declDTD->setSystemId(src.getSystemId());
     declDTD->setIsExternal(true);
-    Janitor<DTDEntityDecl> janDecl(declDTD);
 
     // Mark this one as a throw at end
     newReader->setThrowAtEnd(true);
 
     // And push it onto the stack, with its pseudo name
-    fReaderMgr.pushReader(newReader, declDTD);
+    fReaderMgr.pushReaderAdoptEntity(newReader, declDTD);
 
     //  If we have a doc type handler and advanced callbacks are enabled,
     //  call the doctype event.
