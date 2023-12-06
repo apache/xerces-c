@@ -1198,7 +1198,7 @@ if(XERCES_USE_MSGLOADER_ICONV)
 
   install(
     FILES "${RESTARGET}"
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/msg"
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/xerces-c/msg"
     COMPONENT "runtime")
 endif()
 
