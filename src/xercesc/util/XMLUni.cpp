@@ -1070,6 +1070,22 @@ const XMLCh XMLUni::fgXercesIdentityConstraintChecking[] =
     ,   chLatin_n, chLatin_g, chNull
 };
 
+//Xerces: http://apache.org/xml/features/nonvalidating/disallow-doctype
+const XMLCh XMLUni::fgXercesDisallowDoctype[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_n, chLatin_o, chLatin_n
+    ,   chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_n, chLatin_g, chForwardSlash
+    ,   chLatin_d, chLatin_i, chLatin_s, chLatin_a, chLatin_l, chLatin_l, chLatin_o
+    ,   chLatin_w, chDash, chLatin_d, chLatin_o, chLatin_c, chLatin_t, chLatin_y
+    ,   chLatin_p, chLatin_e, chNull
+};
+
 //Xerces: http://apache.org/xml/features/nonvalidating/load-external-dtd
 const XMLCh XMLUni::fgXercesLoadExternalDTD[] =
 {

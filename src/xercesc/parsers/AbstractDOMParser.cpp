@@ -317,6 +317,11 @@ const XMLSize_t& AbstractDOMParser::getLowWaterMark() const
     return fScanner->getLowWaterMark();
 }
 
+bool AbstractDOMParser::getDisallowDoctype() const
+{
+    return fScanner->getDisallowDTD();
+}
+
 bool AbstractDOMParser::getLoadExternalDTD() const
 {
     return fScanner->getLoadExternalDTD();
@@ -453,6 +458,11 @@ void AbstractDOMParser::setSecurityManager(SecurityManager* const securityManage
 void AbstractDOMParser::setLowWaterMark(XMLSize_t lwm)
 {
     fScanner->setLowWaterMark(lwm);
+}
+
+void AbstractDOMParser::setDisallowDoctype(const bool newState)
+{
+    fScanner->setDisallowDTD(newState);
 }
 
 void AbstractDOMParser::setLoadExternalDTD(const bool newState)
