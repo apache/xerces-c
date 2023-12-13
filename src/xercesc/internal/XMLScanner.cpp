@@ -1274,8 +1274,10 @@ void XMLScanner::scanProlog()
                         emitError(XMLErrs::DuplicateDocTypeDecl);
                     }
 
-                    const char* envvar = getenv("XERCES_DISABLE_DTD");
-                    if (fDisallowDTD || (envvar && !strcmp(envvar, "1"))) {
+                    const char* envvar;
+                    if (fDisallowDTD ||
+                        ((envvar = getenv("XERCES_DISABLE_DTD")) &&
+                         !strcmp(envvar, "1"))) {
                     	emitError(XMLErrs::InvalidDocumentStructure);
                     }
                     else {
