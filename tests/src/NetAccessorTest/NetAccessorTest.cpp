@@ -122,6 +122,8 @@ main(int argc, char** argv)
     // Get the URL
     char* url = argv[1];
     
+    int r = 1;
+
     // Do the test
     try
     {
@@ -148,11 +150,11 @@ main(int argc, char** argv)
 		
 		// Delete the is
 		delete is;
-	
+		r = 0;
     }
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cout << "Exception during test:\n    "
+        XERCES_STD_QUALIFIER cerr << "Exception during test:\n    "
              << toCatch.getMessage()
              << XERCES_STD_QUALIFIER endl;
     }
@@ -160,6 +162,6 @@ main(int argc, char** argv)
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    return r;
 }
 
