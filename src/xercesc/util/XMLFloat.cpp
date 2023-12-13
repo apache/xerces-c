@@ -51,7 +51,7 @@ void XMLFloat::checkBoundary(char* const strValue)
          *  float related checking
          */
 
-        // 3.2.4 The basic value space of float consists of the values m × 2^e, where 
+        // 3.2.4 The basic value space of float consists of the values m Ã— 2^e, where 
         //    m is an integer whose absolute value is less than 2^24, 
         //    and e is an integer between -149 and 104, inclusive
         static const double fltMin = pow(2.0,-149);
