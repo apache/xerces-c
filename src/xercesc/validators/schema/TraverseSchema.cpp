@@ -8051,9 +8051,9 @@ bool TraverseSchema::wildcardAllowsNamespace(const SchemaAttDef* const wildCard,
     }
 
     // All of the following must be true:
-    //    2.1 The constraint is a pair of not and a namespace name or ·absent
-    //    2.2 The value must not be identical to the ·namespace test·.
-    //    2.3 The value must not be ·absent·.
+    //    2.1 The constraint is a pair of not and a namespace name or absent
+    //    2.2 The value must not be identical to the namespace test.
+    //    2.3 The value must not be absent.
     if (wildCardType == XMLAttDef::Any_Other &&
         ((int) nameURI) != fEmptyNamespaceURI &&
         wildCard->getAttName()->getURI() != nameURI) {
@@ -8091,7 +8091,7 @@ bool TraverseSchema::isWildCardSubset(const SchemaAttDef* const baseAttWildCard,
     }
 
     // 2 All of the following must be true:
-    //     2.1 sub must be a pair of not and a namespace name or ·absent·.
+    //     2.1 sub must be a pair of not and a namespace name or absent.
     //     2.2 super must be a pair of not and the same value.
     if (childWildCardType == XMLAttDef::Any_Other && baseWildCardType == XMLAttDef::Any_Other &&
         childAttWildCard->getAttName()->getURI() == baseAttWildCard->getAttName()->getURI()) {
@@ -8099,10 +8099,10 @@ bool TraverseSchema::isWildCardSubset(const SchemaAttDef* const baseAttWildCard,
     }
 
     // 3 All of the following must be true:
-    //     3.1 sub must be a set whose members are either namespace names or ·absent·.
+    //     3.1 sub must be a set whose members are either namespace names or absent.
     //     3.2 One of the following must be true:
     //          3.2.1 super must be the same set or a superset thereof.
-    //          3.2.2 super must be a pair of not and a namespace name or ·absent· and
+    //          3.2.2 super must be a pair of not and a namespace name or absent and
     //                 that value must not be in sub's set.
     if (childWildCardType == XMLAttDef::Any_List) {
 
