@@ -39,6 +39,12 @@ src/XercesCConfigVersion.cmake
 src/xercesc/util/version.rc
 
 # build generated files
+.autotools
+.cproject
+.project
+.settings/
+build/
+doc/html/
 .libs/
 *.dir/
 x64/
