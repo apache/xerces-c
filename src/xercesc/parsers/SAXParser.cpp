@@ -312,6 +312,11 @@ XMLSize_t SAXParser::getLowWaterMark() const
     return fScanner->getLowWaterMark();
 }
 
+bool SAXParser::getDisallowDoctype() const
+{
+    return fScanner->getDisallowDTD();
+}
+
 bool SAXParser::getLoadExternalDTD() const
 {
     return fScanner->getLoadExternalDTD();
@@ -473,6 +478,11 @@ void SAXParser::setSecurityManager(SecurityManager* const securityManager)
 void SAXParser::setLowWaterMark(XMLSize_t lwm)
 {
     fScanner->setLowWaterMark(lwm);
+}
+
+void SAXParser::setDisallowDoctype(const bool newState)
+{
+    fScanner->setDisallowDTD(newState);
 }
 
 void SAXParser::setLoadExternalDTD(const bool newState)
