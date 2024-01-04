@@ -362,15 +362,18 @@ case $host in
 *-*-msdos* | *-*-mingw32* | *-*-cygwin* | *-*-windows* )
 	platform_export="__declspec(dllexport)"
 	platform_import="__declspec(dllimport)"
-        template_extern=""
+	platform_type_win32="yes"
+	template_extern=""
 	;;
 * )
 	platform_export=""
 	platform_import=""
-        template_extern="extern"
+	platform_type_win32="no"
+	template_extern="extern"
 	;;
 esac
 
+AM_CONDITIONAL(XERCES_PLATFORM_WIN32, test "x${platform_type_win32}" = "xyes")
 AC_DEFINE_UNQUOTED([XERCES_PLATFORM_EXPORT], [$platform_export], [Define as the platform's export attribute])
 AC_DEFINE_UNQUOTED([XERCES_PLATFORM_IMPORT], [$platform_import], [Define as the platform's import attribute])
 AC_DEFINE_UNQUOTED([XERCES_TEMPLATE_EXTERN], [$template_extern], [Define as the platform's template extern attribute])
