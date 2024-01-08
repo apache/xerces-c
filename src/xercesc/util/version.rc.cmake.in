@@ -22,7 +22,7 @@ BEGIN
             VALUE "FileDescription", "Shared Library for Xerces-C++ Version @xerces-c_VERSION@\0"
             VALUE "FileVersion", "@xerces-c_VERSION_MAJOR@, @xerces-c_VERSION_MINOR@, @xerces-c_VERSION_PATCH@\0"
             VALUE "InternalName", XERCES_DLL_NAME
-            VALUE "LegalCopyright", "Copyright © 1999-2018 Apache Software Foundation; subject to licensing terms\0"
+            VALUE "LegalCopyright", "Copyright Â© 1999-2018 Apache Software Foundation; subject to licensing terms\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", XERCES_DLL_NAME
             VALUE "PrivateBuild", "\0"
@@ -33,6 +33,6 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x409, 0x04e4
+        VALUE "Translation", 0x409, 0x04b0
     END
 END
