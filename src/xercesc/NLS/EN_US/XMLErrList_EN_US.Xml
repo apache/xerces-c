@@ -474,7 +474,8 @@
             <Message Id="HshTbl_BadHashFromKey" Text="hashing key produced invalid hash"/>
             <Message Id="HshTbl_NoSuchKeyExists" Text="no such key in hash table"/>
             <Message Id="Mutex_CouldNotDestroy" Text="unable to destroy mutex"/>
-            <Message Id="NetAcc_InternalError" Text="internal error in NetAccessor"/>
+            <Message Id="NetAcc_InternalError" Text="internal error in NetAccessor for URL {0}"/>
+	    <Message Id="NetAcc_CurlError" Text="libcurl error in NetAccessor for URL {0} '{1}:{2}'"/>
             <Message Id="NetAcc_LengthError" Text="NetAccessor is unable to determine length of remote file"/>
             <Message Id="NetAcc_InitFailed" Text="unable to initialize NetAccessor"/>
             <Message Id="NetAcc_TargetResolution" Text="unable to resolve host/address '{0}'"/>
