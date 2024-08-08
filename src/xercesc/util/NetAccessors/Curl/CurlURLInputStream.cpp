@@ -332,7 +332,21 @@ bool CurlURLInputStream::readMore(int *runningHandles)
             break;
 
         default:
-            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_InternalError, fURLSource.getURLText(), fMemoryManager);
+            {
+              struct CurlError
+              {
+                  XMLCh* fErrorString;
+                  MemoryManager* fMemoryManager;
+                  CurlError(CURLMsg* msg, MemoryManager* fMemoryManager) : fErrorString(XMLString::transcode(curl_easy_strerror(msg->data.result))), fMemoryManager(fMemoryManager) {}
+                  ~CurlError() { XMLString::release(&fErrorString, fMemoryManager); }
+              };
+              CurlError curlErrorStr(msg, fMemoryManager);
+
+              XMLCh curlErrorNumberStr[128];
+              XMLString::binToText(msg->data.result, curlErrorNumberStr, 127, 10, fMemoryManager);
+
+              ThrowXMLwithMemMgr3(NetAccessorException, XMLExcepts::NetAcc_CurlError, fURLSource.getURLText(), curlErrorNumberStr, curlErrorStr.fErrorString, fMemoryManager);
+            }
             break;
         }
     }
