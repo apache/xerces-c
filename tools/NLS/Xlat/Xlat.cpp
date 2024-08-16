@@ -403,7 +403,7 @@ int Xlat_main(int argC, XMLCh** argV)
     {
         //  Nest entire code in an inner block.
 
-        DOMDocument* srcDoc;
+        DOMDocument* srcDoc = NULL;
         const unsigned int bufSize = 4095;
         XMLCh *tmpFileBuf = new XMLCh [bufSize + 1];
         tmpFileBuf[0] = 0;
