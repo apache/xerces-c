@@ -31,6 +31,9 @@ enum MsgTypes
     , MsgTypes_Count
 };
 
+#if defined(_MSC_VER)
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 // ---------------------------------------------------------------------------
 //  Includes
