@@ -624,6 +624,11 @@ int Xlat_main(int argC, XMLCh** argV)
                 fwprintf(outHeader, L"#include <xercesc/util/XercesDefs.hpp>\n");
                 fwprintf(outHeader, L"#include <xercesc/dom/DOMError.hpp>\n\n");
                 fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_BEGIN\n\n");
+                fwprintf(outHeader, L"// Ignore warning about private constructor\n");
+                fwprintf(outHeader, L"#if defined __GNUC__ && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 5))\n");
+                fwprintf(outHeader, L"#  pragma GCC diagnostic push\n");
+                fwprintf(outHeader, L"#  pragma GCC diagnostic ignored \"-Wctor-dtor-privacy\"\n");
+                fwprintf(outHeader, L"#endif\n\n");
 
                 //  Now the message codes
                 fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", xmlStrToPrintable(errNameSpace) );
@@ -835,6 +840,9 @@ int Xlat_main(int argC, XMLCh** argV)
 
                 // And close out the class declaration, the namespace declaration and the header file
                 fwprintf(outHeader, L"};\n\n");
+                fwprintf(outHeader, L"#if defined __GNUC__ && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 5))\n");
+                fwprintf(outHeader, L"#  pragma GCC diagnostic pop\n");
+                fwprintf(outHeader, L"#endif\n\n");
                 fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_END\n\n");
                 fwprintf(outHeader, L"#endif\n\n");
                 fclose(outHeader);
