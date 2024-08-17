@@ -408,324 +408,325 @@ $set 3
 45  hashing key produced invalid hash
 46  no such key in hash table
 47  unable to destroy mutex
-48  internal error in NetAccessor
-49  NetAccessor is unable to determine length of remote file
-50  unable to initialize NetAccessor
-51  unable to resolve host/address '{0}'
-52  unable to create socket for URL '{0}'
-53  unable to connect socket for URL '{0}'
-54  unable to write to socket for URL '{0}'
-55  unable to read from socket for URL '{0}'
-56  specified HTTP method is not supported by NetAccessor
-57  element '{0}' is already in pool
-58  invalid pool element id
-59  zero hash modulus
-60  reader id not found
-61  invalid auto encoding value
-62  unable to decode first line in entity '{0}'
-63  XML or TEXT declaration '{0}' cannot have NEL or lsep
-64  current transcoding service does not support source offset information
-65  EBCDIC file must provide encoding declaration
-66  unable to open primary document entity '{0}'
-67  unbalanced start/end tags
-68  call to scanNext is illegal at this point
-69  index is past top of stack
-70  empty stack
-71  target buffer cannot have zero max size
-72  unsupported radix; expected 2, 8, 10, or 16
-73  target buffer is too small
-74  start index is past the end of string
-75  string representation overflows output binary result
-76  illegal string pool id
-77  char 0x{0} is not representable in '{1}' encoding
-78  invalid multi-byte sequence
-79  code point 0x{0} is invalid for '{1}' encoding
-80  leading surrogate followed by invalid trailing surrogate
-81  unable to create converter for '{0}' encoding
-82  malformed URL
-83  unsupported protocol in URL
-84  URL protocol '{0}' is unsupported
-85  missing protocol prefix
-86  expected '//' after protocol
-87  base part of URL cannot be relative
-88  port field must be 16-bit decimal number
-89  invalid byte '{1}' at position {0} of a {2}-byte sequence
-90  invalid bytes '{0}' and '{1}' of a 3-byte sequence
-91  irregular bytes '{0}' and '{1}' of a 3-byte sequence
-92  invalid bytes '{0}' and '{1}' of a 4-byte sequence
-93  exceeded byte limit at byte '{0}' in a {1}-byte sequence
-94  index is beyond vector bounds
-95  invalid element id
-96  internal subset is not allowed when reusing the grammar
-97  unknown recognizer encoding
-98  illegal character at offset {0} in regular expression '{1}'
-99  invalid reference number
-100  character expected after backslash
-101  unexpected '?'; '(?:', '(?=', '(?!', '(?<', '(?#', or '(?>' expected
-102  '(?<=' or '(?<!' expected
-103  unterminated comment
-104  ')' expected
-105  unexpected end of pattern in modifier group
-106  ':' expected
-107  unexpected end of pattern in conditional group
-108  back reference, anchor, lookahead, or lookbehind expected in conditional pattern
-109  more than three choices in conditional group
-110  character in the U+0040-U+005f range must follow '\c'
-111  '{' expected before category character
-112  property name must be closed with '}'
-113  unexpected meta character
-114  unknown property
-115  POSIX character class must be closed with ':]'
-116  unexpected end of pattern in character class
-117  unknown name for POSIX character class
-118  ']' expected
-119  '{0}' is invalid character range; use '\{1}' instead
-120  '[' expected
-121  ')', '-[', '+[', or '&[' expected
-122  range end code point '{0}' is less than start code point '{1}'
-123  invalid Unicode hex notation
-124  '\ x{' must be closed with '}'
-125  invalid Unicode code point
-126  anchor cannot be present at this point
-127  '{0}' is invalid character escape sequence
-128  invalid quantifier in '{0}'; digit expected
-129  invalid quantifier in '{0}'; invalid quantity or missing  '}'
-130  invalid quantifier in '{0}'; digit or '}' expected
-131  invalid quantifier in '{0}'; min quantity must be less than or equal max quantity
-132  invalid quantifier in '{0}'; quantity value overflow
-133  XML Schema was seen but installed validator does not support XML Schema
-134  SubstitutionGroupComparator has no grammar resolver
-135  invalid length value '{0}'
-136  invalid maxLength value '{0}'
-137  invalid minLength value '{0}'
-138  length value '{0}' must be a non-negative integer
-139  maxLength value '{0}' must be a non-negative integer
-140  minLength value '{0}' must be a non-negative integer
-141  both length and maxLength cannot be present at the same time
-142  both length and minLength cannot be present at the same time
-143  maxLength value '{0}' must be greater than minLength value '{1}'
-144  invalid facet tag '{0}'
-145  length value '{0}' must be equal to length value '{1}' in the base
-146  minLength value '{0}' must be greater than or equal to minLength value '{1}' in the base
-147  minLength value '{0}' must be less than or equal to maxLength value '{1}' in the base
-148  maxLength value '{0}' must be less than or equal to maxLength value '{1}' in the base
-149  maxLength value '{0}' must be greater than or equal to minLength value '{1}' in the base
-150  length value '{0}' must be greater than or equal to minLength value '{1}' in the base
-151  length value '{0}' must be less than or equal to maxLength value '{1}' in the base
-152  minLength value '{0}' must be less than or equal to length value '{1}' in the base
-153  maxLength value '{0}' must be greater than or equal to length value '{1}' in the base
-154  enumeration value '{0}' must be from the value space of the base
-155  whiteSpace value '{0}' must be one of 'preserve', 'replace', or 'collapse'
-156  whiteSpace value is 'preserve' or 'replace' while base type whiteSpace value is 'collapse'
-157  whiteSpace value is 'preserve' while base type whiteSpace value is 'replace'
-158  invalid maxInclusive value '{0}'
-159  invalid maxExclusive value '{0}'
-160  invalid minInclusive value '{0}'
-161  invalid minExclusive value '{0}'
-162  invalid totalDigits value '{0}'
-163  invalid fractionDigits value '{0}'
-164  totalDigits value '{0}' must be a positive integer
-165  fractionDigits value '{0}' must be a non-negative integer
-166  both maxInclusive and maxExclusive cannot be present at the same time
-167  both minInclusive and minExclusive cannot be present at the same time
-168  maxExclusive value '{0}' must be greater than minExclusive value '{1}'
-169  maxExclusive value '{0}' must be greater than minInclusive value '{1}'
-170  maxInclusive value '{0}' must be greater than minExclusive value '{1}'
-171  maxInclusive value '{0}' must be greater than minInclusive value '{1}'
-172  totalDigits value '{0}' must be greater than fractionDigits value '{1}'
-173  maxInclusive value '{0}' must be less than maxExclusive value '{1}' in the base
-174  maxInclusive value '{0}' must be less than or equal to maxInclusive value '{1}' in the base
-175  maxInclusive value '{0}' must be greater than or equal to minInclusive value '{1}' in the base
-176  maxInclusive value '{0}' must be greater than minExclusive value '{1}' in the base
-177  maxExclusive value '{0}' must be less than or equal to maxExclusive value '{1}' in the base
-178  maxExclusive value '{0}' must be less than or equal to maxInclusive value '{1}' in the base
-179  maxExclusive value '{0}' must be greater than minInclusive value '{1}' in the base
-180  maxExclusive value '{0}' must be greater than minExclusive value '{1}' in the base
-181  minExclusive value '{0}' must be less than maxExclusive value '{1}' in the base
-182  minExclusive value '{0}' must be less than or equal to maxInclusive value '{1}' in the base
-183  minExclusive value '{0}' must be greater than minInclusive value '{1}' in the base
-184  minExclusive value '{0}' must be greater than minExclusive value '{1}' in the base
-185  minInclusive value '{0}' must be less than maxExclusive value '{1}' in the base
-186  minInclusive value '{0}' must be less than or equal to maxInclusive value '{1}' in the base
-187  minInclusive value '{0}' must be greater than or equal to minInclusive value '{1}' in the base
-188  minInclusive value '{0}' must be greater than minExclusive value '{1}' in the base
-189  maxInclusive value '{0}' must be from the base type value space
-190  maxExclusive value '{0}' must be from the base type value space
-191  minInclusive value '{0}' must be from the base type value space
-192  minExclusive value '{0}' must be from the base type value space
-193  totalDigits value '{0}' must be less than or equal to totalDigits value '{1}' in the base
-194  fractionDigits value '{0}' must be less than or equal to totalDigits value '{1}' in the base
-195  fractionDigits value '{0}' must be less than or equal to fractionDigits value '{1}' in the base
-196  maxInclusive value '{0}' must be equal to fixed maxInclusive value '{1}' in the base
-197  maxExclusive value '{0}' must be equal to fixed maxExclusive value '{1}' in the base
-198  minInclusive value '{0}' must be equal to fixed minInclusive value '{1}' in the base
-199  minExclusive value '{0}' must be equal to fixed minExclusive value '{1}' in the base
-200  totalDigits value '{0}' must be equal to fixed totalDigits value '{1}' in the base
-201  fractionDigits value '{0}' must be equal to fixed fractionDigits value '{1}' in the base
-202  maxLength value '{0}' must be equal to fixed maxLength value '{1}' in the base
-203  minLength value '{0}' must be equal to fixed minLength value '{1}' in the base
-204  whiteSpace value '{0}' must be equal to fixed whiteSpace value '{1}' in the base
-205  internal error while processing fixed facet
-206  list itemType is empty
-207  union memberTypes is empty
-208  restriction union base is empty
-209  restriction union base is '{0}' instead of union
-210  value '{0}' does not match regular expression facet '{1}'
-211  value '{0}' is invalid Base64-encoded binary
-212  value '{0}' is invalid Hex-encoded binary
-213  value '{0}' has length '{1}' which exceeds maxLength facet value '{2}'
-214  value '{0}' has length '{1}' which is less than minLength facet value '{2}'
-215  value '{0}' has length '{1}' which is not equal to length facet value '{2}'
-216  value '{0}' not in enumeration
-217  value '{0}' has '{1}' total digits which exceeds totalDigits facet value '{2}'
-218  value '{0}' has '{1}' fraction digits which exceeds fractionDigits facet value '{2}'
-219  value '{0}' must be less than or equal to maxInclusive facet value '{1}'
-220  value '{0}' must be less than maxExclusive facet value '{1}'
-221  value '{0}' must be greater than or equal to minInclusive facet value '{1}'
-222  value '{0}' must be greater than or equal to minExclusive facet value '{1}'
-223  value '{0}' is not whitespace replaced
-224  value '{0}' is not whitespace collapsed
-225  value '{0}' is invalid NCName
-226  value '{0}' is invalid {1}
-227  ID value '{0}' is not unique
-228  value '{0}' is invalid ENTITY
-229  value '{0}' is invalid QName
-230  NOTATION '{0}' must be valid QName
-231  value '{0}' does not match any member types of the union
-232  value '{0}' is invalid anyURI
-233  empty string encountered
-234  string contains only whitespaces
-235  more than one decimal point encountered
-236  invalid character encountered
-237  NULL pointer encountered
-238  unable to construct URI with NULL/empty {0}
-239  {0} '{1}' can only be set for a generic URI
-240  {0} contains invalid escape sequence '{1}'
-241  {0} contains invalid character '{1}'
-242  {0} cannot be NULL
-243  '{1}' is not conformant to {0}
-244  no scheme found in URI
-245  {0} '{1}' may not be specified if host is not specified
-246  {0} '{1}' may not be specified if path is not specified
-247  port number '{0}' must be in the (0,65535) range
-248  internal error while validating '{0}'
-249  result not set
-250  internal error in CompactRanges
-251  mismatched type in MergeRanges
-252  internal error in SubtractRanges
-253  internal error in IntersectRanges
-254  argument must be RangeToken
-255  invalid category name '{0}'
-256  keyword '{0}' not found
-257  reference number must be greater than zero
-258  option '{0}' unknown
-259  unknown token type
-260  unable to get RangeToken for '{0}'
-261  not supported
-262  invalid child index
-263  replace pattern cannot match zero-length string
-264  invalid replace pattern
-265  enabling NEL option can only be done once per process
-266  out of memory
-267  operation is not allowed
-268  selector cannot select attribute
-269  '|' at the beginning of XPath expression is illegal
-270  '||' in XPath expression is illegal
-271  missing attribute name in XPath expression
-272  unexpected XPath token; expected qname, any, or namespace test
-273  prefix '{0}' used in XPath expression can not be resolved to namespace URI
-274  '::' in XPath expression is illegal
-275  expected step following 'child' token in XPath expression
-276  expected step following '//' in XPath expression
-277  expected step following '/' in XPath expression
-278  '/' not allowed after '//' in XPath expression
-279  '//' only allowed after '.' at the beginning of XPath expression
-280  '/' at the beginning of XPath expression is illegal
-281  root element selection is illegal in XPath expression
-282  empty XPath expression
-283  XPath expression cannot end with '|'
-284  invalid character '{0}' in XPath expression
-285  unsupported XPath token
-286  fractional values not supported in XPath expression
-287  invalid dateTime value '{0}'
-288  missing 'T' separator in dateTime value '{0}'
-289  invalid gDay value '{0}'
-290  invalid gMonth value '{0}'
-291  invalid gMonthDay value '{0}'
-292  invalid duration value '{0}'
-293  duration value '{0}' must start with '-' or 'P'
-294  duration value '{0}' must contain 'P'
-295  duration value '{0}' can contain '-' only as the first character
-296  duration value '{0}' contains invalid text before 'T'
-297  duration value '{0}' has no time component after 'T'
-298  duration value '{0}' must have at least one component
-299  duration value '{0}' must have at least one digit after '.'
-300  incomplete date value '{0}'
-301  invalid date value '{0}'
-302  incomplete time value '{0}'
-303  invalid time value '{0}'
-304  expected fractional seconds after '.' in time value '{0}'
-305  incomplete gYearMonth value '{0}'
-306  invalid gYearMonth value '{0}'
-307  invalid gYear value '{0}'
-308  year value '{0}' must follow 'CCYY' format
-309  invalid leading zero in gYear value '{0}'
-310  month component missing in gYearMonth value '{0}'
-311  time zone expected in '{0}'
-312  unexpected text after 'Z' in time zone value '{0}'
-313  invalid time zone value '{0}'
-314  illegal year value '{0}'
-315  month value '{0}' must be between 1 and 12
-316  day value '{0}' must be between 1 and {1}
-317  hours value '{0}' must be between 0 and 23
-318  minutes value '{0}' must be between 0 and 59
-319  seconds value '{0}' must be between 0 and 60
-320  minutes value '{0}' must be between 0 and 59
-321  derived by restriction complex type has content while base type is empty
-322  namespace of element '{0}' is not allowed by wildcard in the base
-323  occurrence range of element '{0}' is not a valid restriction of base element's range
-324  element name/namespace in restriction does not match that of corresponding element in the base
-325  element '{0}' is nillable in the restriction while it is non-nillable in the base
-326  element '{0}' is either not fixed or is fixed to a different value compared to corresponding element in the base
-327  disallowed substitutions for element '{0}' are not a superset of those for corresponding element in the base
-328  element '{0}' has type that does not derive from type of corresponding element in the base
-329  element '{0}' has fewer identity constraints compared to corresponding element '{1}' in the base
-330  element '{0}' has identity constraint that does not appear in corresponding element '{1}' in the base
-331  occurrence range of group is not a valid restriction of occurrence range of base group
-332  no complete functional mapping between particles
-333  forbidden restriction of any particle
-334  forbidden restriction of all compositor
-335  forbidden restriction of choice compositor
-336  forbidden restriction of sequence compositor
-337  occurrence range of wildcard is not a valid restriction of base wildcard's range
-338  wildcard is not a subset of corresponding wildcard in the base
-339  occurrence range of group is not a restriction of base wildcard's range
-340  no complete functional mapping between particles
+48  internal error in NetAccessor for URL {0}
+49  libcurl error in NetAccessor for URL {0} '{1}:{2}'
+50  NetAccessor is unable to determine length of remote file
+51  unable to initialize NetAccessor
+52  unable to resolve host/address '{0}'
+53  unable to create socket for URL '{0}'
+54  unable to connect socket for URL '{0}'
+55  unable to write to socket for URL '{0}'
+56  unable to read from socket for URL '{0}'
+57  specified HTTP method is not supported by NetAccessor
+58  element '{0}' is already in pool
+59  invalid pool element id
+60  zero hash modulus
+61  reader id not found
+62  invalid auto encoding value
+63  unable to decode first line in entity '{0}'
+64  XML or TEXT declaration '{0}' cannot have NEL or lsep
+65  current transcoding service does not support source offset information
+66  EBCDIC file must provide encoding declaration
+67  unable to open primary document entity '{0}'
+68  unbalanced start/end tags
+69  call to scanNext is illegal at this point
+70  index is past top of stack
+71  empty stack
+72  target buffer cannot have zero max size
+73  unsupported radix; expected 2, 8, 10, or 16
+74  target buffer is too small
+75  start index is past the end of string
+76  string representation overflows output binary result
+77  illegal string pool id
+78  char 0x{0} is not representable in '{1}' encoding
+79  invalid multi-byte sequence
+80  code point 0x{0} is invalid for '{1}' encoding
+81  leading surrogate followed by invalid trailing surrogate
+82  unable to create converter for '{0}' encoding
+83  malformed URL
+84  unsupported protocol in URL
+85  URL protocol '{0}' is unsupported
+86  missing protocol prefix
+87  expected '//' after protocol
+88  base part of URL cannot be relative
+89  port field must be 16-bit decimal number
+90  invalid byte '{1}' at position {0} of a {2}-byte sequence
+91  invalid bytes '{0}' and '{1}' of a 3-byte sequence
+92  irregular bytes '{0}' and '{1}' of a 3-byte sequence
+93  invalid bytes '{0}' and '{1}' of a 4-byte sequence
+94  exceeded byte limit at byte '{0}' in a {1}-byte sequence
+95  index is beyond vector bounds
+96  invalid element id
+97  internal subset is not allowed when reusing the grammar
+98  unknown recognizer encoding
+99  illegal character at offset {0} in regular expression '{1}'
+100  invalid reference number
+101  character expected after backslash
+102  unexpected '?'; '(?:', '(?=', '(?!', '(?<', '(?#', or '(?>' expected
+103  '(?<=' or '(?<!' expected
+104  unterminated comment
+105  ')' expected
+106  unexpected end of pattern in modifier group
+107  ':' expected
+108  unexpected end of pattern in conditional group
+109  back reference, anchor, lookahead, or lookbehind expected in conditional pattern
+110  more than three choices in conditional group
+111  character in the U+0040-U+005f range must follow '\c'
+112  '{' expected before category character
+113  property name must be closed with '}'
+114  unexpected meta character
+115  unknown property
+116  POSIX character class must be closed with ':]'
+117  unexpected end of pattern in character class
+118  unknown name for POSIX character class
+119  ']' expected
+120  '{0}' is invalid character range; use '\{1}' instead
+121  '[' expected
+122  ')', '-[', '+[', or '&[' expected
+123  range end code point '{0}' is less than start code point '{1}'
+124  invalid Unicode hex notation
+125  '\ x{' must be closed with '}'
+126  invalid Unicode code point
+127  anchor cannot be present at this point
+128  '{0}' is invalid character escape sequence
+129  invalid quantifier in '{0}'; digit expected
+130  invalid quantifier in '{0}'; invalid quantity or missing  '}'
+131  invalid quantifier in '{0}'; digit or '}' expected
+132  invalid quantifier in '{0}'; min quantity must be less than or equal max quantity
+133  invalid quantifier in '{0}'; quantity value overflow
+134  XML Schema was seen but installed validator does not support XML Schema
+135  SubstitutionGroupComparator has no grammar resolver
+136  invalid length value '{0}'
+137  invalid maxLength value '{0}'
+138  invalid minLength value '{0}'
+139  length value '{0}' must be a non-negative integer
+140  maxLength value '{0}' must be a non-negative integer
+141  minLength value '{0}' must be a non-negative integer
+142  both length and maxLength cannot be present at the same time
+143  both length and minLength cannot be present at the same time
+144  maxLength value '{0}' must be greater than minLength value '{1}'
+145  invalid facet tag '{0}'
+146  length value '{0}' must be equal to length value '{1}' in the base
+147  minLength value '{0}' must be greater than or equal to minLength value '{1}' in the base
+148  minLength value '{0}' must be less than or equal to maxLength value '{1}' in the base
+149  maxLength value '{0}' must be less than or equal to maxLength value '{1}' in the base
+150  maxLength value '{0}' must be greater than or equal to minLength value '{1}' in the base
+151  length value '{0}' must be greater than or equal to minLength value '{1}' in the base
+152  length value '{0}' must be less than or equal to maxLength value '{1}' in the base
+153  minLength value '{0}' must be less than or equal to length value '{1}' in the base
+154  maxLength value '{0}' must be greater than or equal to length value '{1}' in the base
+155  enumeration value '{0}' must be from the value space of the base
+156  whiteSpace value '{0}' must be one of 'preserve', 'replace', or 'collapse'
+157  whiteSpace value is 'preserve' or 'replace' while base type whiteSpace value is 'collapse'
+158  whiteSpace value is 'preserve' while base type whiteSpace value is 'replace'
+159  invalid maxInclusive value '{0}'
+160  invalid maxExclusive value '{0}'
+161  invalid minInclusive value '{0}'
+162  invalid minExclusive value '{0}'
+163  invalid totalDigits value '{0}'
+164  invalid fractionDigits value '{0}'
+165  totalDigits value '{0}' must be a positive integer
+166  fractionDigits value '{0}' must be a non-negative integer
+167  both maxInclusive and maxExclusive cannot be present at the same time
+168  both minInclusive and minExclusive cannot be present at the same time
+169  maxExclusive value '{0}' must be greater than minExclusive value '{1}'
+170  maxExclusive value '{0}' must be greater than minInclusive value '{1}'
+171  maxInclusive value '{0}' must be greater than minExclusive value '{1}'
+172  maxInclusive value '{0}' must be greater than minInclusive value '{1}'
+173  totalDigits value '{0}' must be greater than fractionDigits value '{1}'
+174  maxInclusive value '{0}' must be less than maxExclusive value '{1}' in the base
+175  maxInclusive value '{0}' must be less than or equal to maxInclusive value '{1}' in the base
+176  maxInclusive value '{0}' must be greater than or equal to minInclusive value '{1}' in the base
+177  maxInclusive value '{0}' must be greater than minExclusive value '{1}' in the base
+178  maxExclusive value '{0}' must be less than or equal to maxExclusive value '{1}' in the base
+179  maxExclusive value '{0}' must be less than or equal to maxInclusive value '{1}' in the base
+180  maxExclusive value '{0}' must be greater than minInclusive value '{1}' in the base
+181  maxExclusive value '{0}' must be greater than minExclusive value '{1}' in the base
+182  minExclusive value '{0}' must be less than maxExclusive value '{1}' in the base
+183  minExclusive value '{0}' must be less than or equal to maxInclusive value '{1}' in the base
+184  minExclusive value '{0}' must be greater than minInclusive value '{1}' in the base
+185  minExclusive value '{0}' must be greater than minExclusive value '{1}' in the base
+186  minInclusive value '{0}' must be less than maxExclusive value '{1}' in the base
+187  minInclusive value '{0}' must be less than or equal to maxInclusive value '{1}' in the base
+188  minInclusive value '{0}' must be greater than or equal to minInclusive value '{1}' in the base
+189  minInclusive value '{0}' must be greater than minExclusive value '{1}' in the base
+190  maxInclusive value '{0}' must be from the base type value space
+191  maxExclusive value '{0}' must be from the base type value space
+192  minInclusive value '{0}' must be from the base type value space
+193  minExclusive value '{0}' must be from the base type value space
+194  totalDigits value '{0}' must be less than or equal to totalDigits value '{1}' in the base
+195  fractionDigits value '{0}' must be less than or equal to totalDigits value '{1}' in the base
+196  fractionDigits value '{0}' must be less than or equal to fractionDigits value '{1}' in the base
+197  maxInclusive value '{0}' must be equal to fixed maxInclusive value '{1}' in the base
+198  maxExclusive value '{0}' must be equal to fixed maxExclusive value '{1}' in the base
+199  minInclusive value '{0}' must be equal to fixed minInclusive value '{1}' in the base
+200  minExclusive value '{0}' must be equal to fixed minExclusive value '{1}' in the base
+201  totalDigits value '{0}' must be equal to fixed totalDigits value '{1}' in the base
+202  fractionDigits value '{0}' must be equal to fixed fractionDigits value '{1}' in the base
+203  maxLength value '{0}' must be equal to fixed maxLength value '{1}' in the base
+204  minLength value '{0}' must be equal to fixed minLength value '{1}' in the base
+205  whiteSpace value '{0}' must be equal to fixed whiteSpace value '{1}' in the base
+206  internal error while processing fixed facet
+207  list itemType is empty
+208  union memberTypes is empty
+209  restriction union base is empty
+210  restriction union base is '{0}' instead of union
+211  value '{0}' does not match regular expression facet '{1}'
+212  value '{0}' is invalid Base64-encoded binary
+213  value '{0}' is invalid Hex-encoded binary
+214  value '{0}' has length '{1}' which exceeds maxLength facet value '{2}'
+215  value '{0}' has length '{1}' which is less than minLength facet value '{2}'
+216  value '{0}' has length '{1}' which is not equal to length facet value '{2}'
+217  value '{0}' not in enumeration
+218  value '{0}' has '{1}' total digits which exceeds totalDigits facet value '{2}'
+219  value '{0}' has '{1}' fraction digits which exceeds fractionDigits facet value '{2}'
+220  value '{0}' must be less than or equal to maxInclusive facet value '{1}'
+221  value '{0}' must be less than maxExclusive facet value '{1}'
+222  value '{0}' must be greater than or equal to minInclusive facet value '{1}'
+223  value '{0}' must be greater than or equal to minExclusive facet value '{1}'
+224  value '{0}' is not whitespace replaced
+225  value '{0}' is not whitespace collapsed
+226  value '{0}' is invalid NCName
+227  value '{0}' is invalid {1}
+228  ID value '{0}' is not unique
+229  value '{0}' is invalid ENTITY
+230  value '{0}' is invalid QName
+231  NOTATION '{0}' must be valid QName
+232  value '{0}' does not match any member types of the union
+233  value '{0}' is invalid anyURI
+234  empty string encountered
+235  string contains only whitespaces
+236  more than one decimal point encountered
+237  invalid character encountered
+238  NULL pointer encountered
+239  unable to construct URI with NULL/empty {0}
+240  {0} '{1}' can only be set for a generic URI
+241  {0} contains invalid escape sequence '{1}'
+242  {0} contains invalid character '{1}'
+243  {0} cannot be NULL
+244  '{1}' is not conformant to {0}
+245  no scheme found in URI
+246  {0} '{1}' may not be specified if host is not specified
+247  {0} '{1}' may not be specified if path is not specified
+248  port number '{0}' must be in the (0,65535) range
+249  internal error while validating '{0}'
+250  result not set
+251  internal error in CompactRanges
+252  mismatched type in MergeRanges
+253  internal error in SubtractRanges
+254  internal error in IntersectRanges
+255  argument must be RangeToken
+256  invalid category name '{0}'
+257  keyword '{0}' not found
+258  reference number must be greater than zero
+259  option '{0}' unknown
+260  unknown token type
+261  unable to get RangeToken for '{0}'
+262  not supported
+263  invalid child index
+264  replace pattern cannot match zero-length string
+265  invalid replace pattern
+266  enabling NEL option can only be done once per process
+267  out of memory
+268  operation is not allowed
+269  selector cannot select attribute
+270  '|' at the beginning of XPath expression is illegal
+271  '||' in XPath expression is illegal
+272  missing attribute name in XPath expression
+273  unexpected XPath token; expected qname, any, or namespace test
+274  prefix '{0}' used in XPath expression can not be resolved to namespace URI
+275  '::' in XPath expression is illegal
+276  expected step following 'child' token in XPath expression
+277  expected step following '//' in XPath expression
+278  expected step following '/' in XPath expression
+279  '/' not allowed after '//' in XPath expression
+280  '//' only allowed after '.' at the beginning of XPath expression
+281  '/' at the beginning of XPath expression is illegal
+282  root element selection is illegal in XPath expression
+283  empty XPath expression
+284  XPath expression cannot end with '|'
+285  invalid character '{0}' in XPath expression
+286  unsupported XPath token
+287  fractional values not supported in XPath expression
+288  invalid dateTime value '{0}'
+289  missing 'T' separator in dateTime value '{0}'
+290  invalid gDay value '{0}'
+291  invalid gMonth value '{0}'
+292  invalid gMonthDay value '{0}'
+293  invalid duration value '{0}'
+294  duration value '{0}' must start with '-' or 'P'
+295  duration value '{0}' must contain 'P'
+296  duration value '{0}' can contain '-' only as the first character
+297  duration value '{0}' contains invalid text before 'T'
+298  duration value '{0}' has no time component after 'T'
+299  duration value '{0}' must have at least one component
+300  duration value '{0}' must have at least one digit after '.'
+301  incomplete date value '{0}'
+302  invalid date value '{0}'
+303  incomplete time value '{0}'
+304  invalid time value '{0}'
+305  expected fractional seconds after '.' in time value '{0}'
+306  incomplete gYearMonth value '{0}'
+307  invalid gYearMonth value '{0}'
+308  invalid gYear value '{0}'
+309  year value '{0}' must follow 'CCYY' format
+310  invalid leading zero in gYear value '{0}'
+311  month component missing in gYearMonth value '{0}'
+312  time zone expected in '{0}'
+313  unexpected text after 'Z' in time zone value '{0}'
+314  invalid time zone value '{0}'
+315  illegal year value '{0}'
+316  month value '{0}' must be between 1 and 12
+317  day value '{0}' must be between 1 and {1}
+318  hours value '{0}' must be between 0 and 23
+319  minutes value '{0}' must be between 0 and 59
+320  seconds value '{0}' must be between 0 and 60
+321  minutes value '{0}' must be between 0 and 59
+322  derived by restriction complex type has content while base type is empty
+323  namespace of element '{0}' is not allowed by wildcard in the base
+324  occurrence range of element '{0}' is not a valid restriction of base element's range
+325  element name/namespace in restriction does not match that of corresponding element in the base
+326  element '{0}' is nillable in the restriction while it is non-nillable in the base
+327  element '{0}' is either not fixed or is fixed to a different value compared to corresponding element in the base
+328  disallowed substitutions for element '{0}' are not a superset of those for corresponding element in the base
+329  element '{0}' has type that does not derive from type of corresponding element in the base
+330  element '{0}' has fewer identity constraints compared to corresponding element '{1}' in the base
+331  element '{0}' has identity constraint that does not appear in corresponding element '{1}' in the base
+332  occurrence range of group is not a valid restriction of occurrence range of base group
+333  no complete functional mapping between particles
+334  forbidden restriction of any particle
+335  forbidden restriction of all compositor
+336  forbidden restriction of choice compositor
+337  forbidden restriction of sequence compositor
+338  occurrence range of wildcard is not a valid restriction of base wildcard's range
+339  wildcard is not a subset of corresponding wildcard in the base
+340  occurrence range of group is not a restriction of base wildcard's range
 341  no complete functional mapping between particles
-342  invalid content spec node type
-343  NodeIDMap exceeds largest available size
-344  ProtoType has NULL class name
-345  ProtoType name length '{0}' differs from expected '{1}'
-346  ProtoType name '{0}' differs from expected '{1}'
-347  InputStream read '{0}' is less than required '{1}'
-348  InputStream read '{0}' is beyond available buffer size '{1}'
-349  storing violation
-350  store buffer violation '{0}', '{1}'
-351  object tag '{0}' exceeds load pool upper boundary '{1}'
-352  load pool size '{0}' does not tally with object count '{1}'
-353  loading violation
-354  load buffer violation '{0}', '{1}'
-355  invalid class index '{0}', '{1}'
-356  invalid checkFillBuffer size '{0}'
-357  invalid checkFlushBuffer size '{0}'
-358  invalid NULL pointer encountered '{0}'
-359  createObject fails
-360  object count '{0}' exceeds upper boundary '{1}'
-361  grammar pool is empty
-362  grammar pool is not empty
-363  string pool is not empty
-364  storer level '{0}' does not match loader level '{1}'
-365  undefined prefix in QName value '{0}'
+342  no complete functional mapping between particles
+343  invalid content spec node type
+344  NodeIDMap exceeds largest available size
+345  ProtoType has NULL class name
+346  ProtoType name length '{0}' differs from expected '{1}'
+347  ProtoType name '{0}' differs from expected '{1}'
+348  InputStream read '{0}' is less than required '{1}'
+349  InputStream read '{0}' is beyond available buffer size '{1}'
+350  storing violation
+351  store buffer violation '{0}', '{1}'
+352  object tag '{0}' exceeds load pool upper boundary '{1}'
+353  load pool size '{0}' does not tally with object count '{1}'
+354  loading violation
+355  load buffer violation '{0}', '{1}'
+356  invalid class index '{0}', '{1}'
+357  invalid checkFillBuffer size '{0}'
+358  invalid checkFlushBuffer size '{0}'
+359  invalid NULL pointer encountered '{0}'
+360  createObject fails
+361  object count '{0}' exceeds upper boundary '{1}'
+362  grammar pool is empty
+363  grammar pool is not empty
+364  string pool is not empty
+365  storer level '{0}' does not match loader level '{1}'
+366  undefined prefix in QName value '{0}'
 
 
 $set 4
