@@ -271,7 +271,9 @@ void NamespaceScope::expandMap(StackElem* const toExpand)
     //  since this is a by value map and the current map index controls what
     //  is relevant.
     //
-    memcpy(newMap, toExpand->fMap, oldCap * sizeof(PrefMapElem));
+    if (toExpand->fMap) {
+        memcpy(newMap, toExpand->fMap, oldCap * sizeof(PrefMapElem));
+    }
 
     // Delete the old map and store the new stuff
     fMemoryManager->deallocate(toExpand->fMap);//delete [] toExpand->fMap;
