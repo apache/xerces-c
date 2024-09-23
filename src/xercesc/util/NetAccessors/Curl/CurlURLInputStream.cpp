@@ -64,8 +64,10 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
       , fBytesRead(0)
       , fBytesToRead(0)
       , fDataAvailable(false)
-      , fBufferHeadPtr(fBuffer)
-      , fBufferTailPtr(fBuffer)
+      , fBuffer(0)
+      , fBufferHeadPtr(0)
+      , fBufferTailPtr(0)
+      , fBufferSize(0)
       , fPayload(0)
       , fPayloadLen(0)
       , fContentType(0)
@@ -212,6 +214,12 @@ void CurlURLInputStream::cleanup()
 
     if(fHeadersList) curl_slist_free_all(fHeadersList);
     fHeadersList = NULL;
+
+    if(fBuffer) fMemoryManager->deallocate(fBuffer);
+    fBuffer = NULL;
+    fBufferHeadPtr = NULL;
+    fBufferTailPtr = NULL;
+    fBufferSize = 0;
 }
 
 
@@ -257,13 +265,29 @@ CurlURLInputStream::writeCallback(char *buffer,
 	cnt				-= consume;
 	if (cnt > 0)
 	{
-		XMLSize_t bufAvail = sizeof(fBuffer) - (fBufferHeadPtr - fBuffer);
-		consume = (cnt > bufAvail) ? bufAvail : cnt;
-		memcpy(fBufferHeadPtr, buffer, consume);
-		fBufferHeadPtr	+= consume;
-		buffer			+= consume;
-		totalConsumed	+= consume;
-		//printf("write callback rebuffering %d bytes\n", consume);
+                XMLSize_t bufAvail = fBufferSize - (fBufferHeadPtr - fBuffer);
+                if (bufAvail < cnt) {
+                    // Enlarge the buffer.
+                    XMLByte* newbuf = reinterpret_cast<XMLByte*>(fMemoryManager->allocate(fBufferSize + (cnt - bufAvail)));
+                    if (!newbuf) {
+                        // Enlarge attempt failed, signal error back to libcurl.
+                        // The dedicated error code is a recent libcurl addition so is not portable.
+                        return 0;
+                    }
+                    // Not a realloc, so we have to copy the data from old to new.
+                    memcpy(newbuf, fBuffer, fBufferHeadPtr - fBuffer);
+                    fBufferSize = fBufferSize + (cnt - bufAvail);
+                    //printf("enlarged buffer to %u bytes", fBufferSize);
+                    fBufferHeadPtr = newbuf + (fBufferHeadPtr - fBuffer);
+                    fMemoryManager->deallocate(fBuffer);
+                    fBuffer = fBufferTailPtr = newbuf;
+                }
+
+                memcpy(fBufferHeadPtr, buffer, cnt);
+                fBufferHeadPtr  += cnt;
+                buffer += cnt;
+                totalConsumed   += cnt;
+                //printf("write callback rebuffering %u bytes", cnt);
 	}
 
 	// Return the total amount we've consumed. If we don't consume all the bytes

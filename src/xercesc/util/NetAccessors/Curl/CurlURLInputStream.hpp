@@ -114,9 +114,10 @@ private :
     
     // Overflow buffer for when curl writes more data to us
     // than we've asked for.
-    XMLByte             fBuffer[CURL_MAX_WRITE_SIZE];
+    XMLByte*            fBuffer;
     XMLByte*            fBufferHeadPtr;
     XMLByte*            fBufferTailPtr;
+    XMLSize_t           fBufferSize;
 
     // Upload data
     const char*         fPayload;
