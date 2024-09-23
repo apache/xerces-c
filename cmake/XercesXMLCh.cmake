@@ -67,6 +67,7 @@ list(APPEND xmlch_types uint16_t)
 string(REPLACE ";" "|" xmlch_type_help "${xmlch_types}")
 list(GET xmlch_types 0 xerces_xmlch_type_default)
 set(xmlch-type "${xerces_xmlch_type_default}" CACHE STRING "XMLCh type (${xmlch_type_help})")
+set_property(CACHE xmlch-type PROPERTY STRINGS ${xmlch_types})
 set(xmlch_type "${xmlch-type}")
 
 list(FIND xmlch_types "${xmlch_type}" xmlch_type_found)

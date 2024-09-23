@@ -90,6 +90,7 @@ endif()
 string(REPLACE ";" "|" transcoder_help "${transcoders}")
 list(GET transcoders 0 xerces_transcoder_default)
 set(transcoder "${xerces_transcoder_default}" CACHE STRING "Transcoder (${transcoder_help})")
+set_property(CACHE transcoder PROPERTY STRINGS ${transcoders})
 set(transcoder "${transcoder}")
 
 list(FIND transcoders "${transcoder}" transcoder_found)
