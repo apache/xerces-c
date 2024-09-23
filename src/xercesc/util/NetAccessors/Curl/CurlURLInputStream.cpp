@@ -39,6 +39,8 @@
   #include <sys/time.h>
 #endif
 
+#include <algorithm>
+
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
 #include <xercesc/util/NetAccessors/Curl/CurlURLInputStream.hpp>
@@ -52,6 +54,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+#define MAX_CURL_ALLOC_SIZE 1073741824
 
 CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
       : fMulti(0)
@@ -268,7 +271,11 @@ CurlURLInputStream::writeCallback(char *buffer,
                 XMLSize_t bufAvail = fBufferSize - (fBufferHeadPtr - fBuffer);
                 if (bufAvail < cnt) {
                     // Enlarge the buffer.
-                    XMLByte* newbuf = reinterpret_cast<XMLByte*>(fMemoryManager->allocate(fBufferSize + (cnt - bufAvail)));
+                    XMLSize_t newsize = fBufferSize + (cnt - bufAvail);
+                    if (newsize > MAX_CURL_ALLOC_SIZE) {
+                        return 0;
+                    }
+                    XMLByte* newbuf = reinterpret_cast<XMLByte*>(fMemoryManager->allocate(newsize));
                     if (!newbuf) {
                         // Enlarge attempt failed, signal error back to libcurl.
                         // The dedicated error code is a recent libcurl addition so is not portable.
@@ -276,7 +283,7 @@ CurlURLInputStream::writeCallback(char *buffer,
                     }
                     // Not a realloc, so we have to copy the data from old to new.
                     memcpy(newbuf, fBuffer, fBufferHeadPtr - fBuffer);
-                    fBufferSize = fBufferSize + (cnt - bufAvail);
+                    fBufferSize = newsize;
                     //printf("enlarged buffer to %u bytes", fBufferSize);
                     fBufferHeadPtr = newbuf + (fBufferHeadPtr - fBuffer);
                     fMemoryManager->deallocate(fBuffer);
