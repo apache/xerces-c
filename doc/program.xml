@@ -143,6 +143,7 @@ int main(int argc, char* argv[])
       <li><jump href="program-others-&XercesC3Series;.html#PluggablePanicHandler">Pluggable Panic Handler</jump></li>
       <li><jump href="program-others-&XercesC3Series;.html#PluggableMemoryManager">Pluggable Memory Manager</jump></li>
       <li><jump href="program-others-&XercesC3Series;.html#SecurityManager">Managing Security Vulnerabilities</jump></li>
+      <li><jump href="program-others-&XercesC3Series;.html#EntityResolution">Entity Resolution and NetAccessors</jump></li>
     </ul>
   </s2>
 

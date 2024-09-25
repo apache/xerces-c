@@ -718,4 +718,28 @@ parser->getDomConfig()->setParameter(XMLUni::fgXercesSchema, doSchema);
 
     </s2>
 
+    <anchor name="EntityResolution"/>
+    <s2 title="Entity Resolution and NetAccessors">
+
+        <p><strong>All Xerces applications that wish to limit a wide range of security risks MUST install
+        appropriate implementations of API-specific "entity/resource resolution" implementations to
+        govern/police the resolution of external entities by the parser.</strong>
+        </p>   
+
+        <p>In the event that an entity resolver wants to delegate the job of resolving a particular resource
+        to the parser, Xerces will automatically handle local file references but will delegate any non-local
+        file URLs to a <em>NetAccessor</em>, a plugin controlled at build time supporting access to remote
+        systems. Most of the built-in implementations are limited, with the principal exception of support
+        for <a href="https://curl.haxx.se">libcurl</a> as an implementation, which supports a wide range
+        of protocols, potentially including http over TLS, which is rarely supported in other cases.</p>
+
+        <p>It is incredibly important to implement your own entity resolution code to ensure that if you
+        allow the parser to perform its own resolution, it does so only under conditions and against URLs
+        you trust. The library will <strong>NOT</strong> your application from the many potential threats
+        arising from arbitrary resource resolution.</p>
+
+        <p>Notably, entity/resource resolver implementations can be accompanied by changing the default
+        parser features to disallow "default" resolution, preventing the parser from executing its own
+        NetAccessors to perform these lookups.</p>
+    </s2>
 </s1>
