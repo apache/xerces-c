@@ -75,6 +75,10 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
       , fPayloadLen(0)
       , fContentType(0)
 {
+    if (urlSource.isRelative()) {
+        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
+    }
+
     // Allocate the curl multi handle
     fMulti = curl_multi_init();
 

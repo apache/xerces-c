@@ -96,6 +96,10 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     : BinHTTPInputStreamCommon(urlSource.getMemoryManager()),
       fSocket(0)
 {
+    if (urlSource.isRelative()) {
+        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
+    }
+
     //
     //  Convert the hostName to the platform's code page for gethostbyname and
     //  inet_addr functions.

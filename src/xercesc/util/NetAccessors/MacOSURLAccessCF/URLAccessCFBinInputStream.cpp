@@ -35,6 +35,10 @@ URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
         mDataRef(NULL)
 {
     //	Figure out what we're dealing with
+    if (urlSource.isRelative()) {
+        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);    
+    }
+
     const XMLCh* urlText = urlSource.getURLText();
     unsigned int urlLength = XMLString::stringLen(urlText);
 
