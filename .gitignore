@@ -43,6 +43,10 @@ src/xercesc/util/version.rc
 .cproject
 .project
 .settings/
+*.zip
+*.tar.gz
+*.xz
+*.bz2
 build/
 doc/html/
 .libs/
