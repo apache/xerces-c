@@ -94,7 +94,7 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setTokenType(const tokType tokType);
+    void setTokenType(const tokType type);
     virtual void setMin(const int minVal);
     virtual void setMax(const int maxVal);
 
@@ -193,9 +193,9 @@ inline XMLInt32 Token::getChar() const {
 // ---------------------------------------------------------------------------
 //  Token: setter methods
 // ---------------------------------------------------------------------------
-inline void Token::setTokenType(const Token::tokType tokType) {
+inline void Token::setTokenType(const Token::tokType type) {
     
-    fTokenType = tokType;
+    fTokenType = type;
 }
 
 inline void Token::setMax(const int) {
