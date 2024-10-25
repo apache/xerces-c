@@ -19,6 +19,9 @@
  * $Id$
  */
 
+// SPDX-FileCopyrightText: Portions Copyright 2021 Siemens 
+// Modified on 15-Jul-2021 by Siemens and/or its affiliates to fix CVE-2018-1311: Apache Xerces-C use-after-free vulnerability scanning external DTD. Copyright 2021 Siemens.
+
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
