@@ -90,6 +90,7 @@ list(APPEND mutexmgrs nothreads)
 string(REPLACE ";" "|" mutexmgr_help "${mutexmgrs}")
 list(GET mutexmgrs 0 xerces_mutexmgr_default)
 set(mutex-manager "${xerces_mutexmgr_default}" CACHE STRING "Mutex manager (${mutexmgr_help})")
+set_property(CACHE mutex-manager PROPERTY STRINGS ${mutexmgrs})
 set(mutexmgr "${mutex-manager}")
 
 list(FIND mutexmgrs "${mutexmgr}" mutexmgr_found)

@@ -42,6 +42,7 @@ endif()
 string(REPLACE ";" "|" msgloader_help "${msgloaders}")
 list(GET msgloaders 0 xerces_msgloader_default)
 set(message-loader "${xerces_msgloader_default}" CACHE STRING "Message loader (${msgloader_help})")
+set_property(CACHE message-loader PROPERTY STRINGS ${msgloaders})
 set(msgloader "${message-loader}")
 
 list(FIND msgloaders "${msgloader}" msgloader_found)

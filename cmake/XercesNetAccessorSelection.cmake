@@ -69,6 +69,7 @@ if(network)
   string(REPLACE ";" "|" netaccessor_help "${netaccessors}")
   list(GET netaccessors 0 xerces_netaccessor_default)
   set(network-accessor "${xerces_netaccessor_default}" CACHE STRING "Network accessor (${netaccessor_help})")
+  set_property(CACHE network-accessor PROPERTY STRINGS ${netaccessors})
   set(netaccessor "${network-accessor}")
 
   list(FIND netaccessors "${netaccessor}" netaccessor_found)
