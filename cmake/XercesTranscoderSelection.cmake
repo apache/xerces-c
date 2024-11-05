@@ -79,7 +79,7 @@ check_function_exists(wcstombs HAVE_WCSTOMBS)
 check_function_exists(mbstowcs HAVE_MBSTOWCS)
 
 set(iconv_available 0)
-if(HAVE_WCHAR_H AND HAVE_MBLEN AND HAVE_WCSTOMBS AND HAVE_MBSTOWCS)
+if(HAVE_WCHAR_H AND (HAVE_MBRLEN OR HAVE_MBLEN) AND HAVE_WCSTOMBS AND HAVE_MBSTOWCS)
   set(iconv_available 1)
   list(APPEND transcoders iconv)
 endif()
