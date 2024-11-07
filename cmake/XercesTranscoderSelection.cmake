@@ -30,7 +30,7 @@ endif()
 # MacOS
 
 set(macosunicodeconverter_available 0)
-if(CMAKE_HOST_APPLE)
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   check_include_file_cxx(CoreServices/CoreServices.h HAVE_CORESERVICES_CORESERVICES_H)
   find_library(CORE_SERVICES_LIBRARY CoreServices )
   if (HAVE_CORESERVICES_CORESERVICES_H AND CORE_SERVICES_LIBRARY)

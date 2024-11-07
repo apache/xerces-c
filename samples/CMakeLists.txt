@@ -150,6 +150,7 @@ add_sample_executable(XInclude
 install(
   TARGETS ${sample_programs}
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}"
   COMPONENT "runtime")
 
 # Run tests
