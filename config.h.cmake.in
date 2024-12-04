@@ -316,9 +316,6 @@
 /* Define as the platform's import attribute */
 #define XERCES_PLATFORM_IMPORT @XERCES_PLATFORM_IMPORT@
 
-/* Define if building a static library */
-#cmakedefine XERCES_STATIC_LIBRARY 1
-
 /* Define to use the POSIX file mgr */
 #cmakedefine XERCES_USE_FILEMGR_POSIX 1
 
