@@ -39,6 +39,7 @@
         portability, care has been taken to make minimal use of templates and minimal use of
         #ifdefs.</p>
 
+        <note>Please note that Xerces-C++ currently lacks active maintainers and therefore may not be able to promptly address all bugs and security risks. See the <jump href="secadv.html">Security page</jump> for important information about using Xerces-C++ securely.</note>
     </s2>
 
     <s2 title="Applications of the &XercesCProjectName; Parser">

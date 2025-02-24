@@ -18,7 +18,23 @@
 
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="Security Advisories">
+<s1 title="Security">
+
+<s2 title="Security Model">
+
+<p>Apache Xerces-C++ currently lacks active maintainers and therefore needs to tightly scope what security guarantees it provides.</p>
+
+<p>We recommend that users that process untrusted input take their own precautions to make sure their applications fail gracefully when the input takes inappropriate amounts of memory or CPU to process.</p>
+
+<p>Therefore we will no longer accept Denial of Service reports as security vulnerabilities. We will still consider reports where Xerces-C++ processes external paths (when it is correctly configured not to), or where it allows arbitrary code execution.</p>
+
+</s2>
+
+<s2 title="Reporting">
+
+<p>To report a problem where Xerces-C++ behaves in a way that violates the security model described above, please use the <jump href="https://security.apache.org/report-code/">ASF-wide reporting process</jump>.</p>
+
+</s2>
 
 <s2 title="Unaddressed Advisories">
 
@@ -28,6 +44,7 @@ expertise or resources:</p>
 
 <ul>
   <li><jump href="secadv/CVE-2018-1311.txt">CVE-2018-1311: Apache Xerces-C use-after-free vulnerability scanning external DTD</jump></li>
+  <li><jump href="secadv/CVE-2012-0880.txt">CVE-2012-0880: Apache Xerces-C hash table collisions CPU usage DoS</jump></li>
 </ul>
 </s2>
 
