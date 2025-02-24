@@ -105,9 +105,12 @@ EXTRA_DIST = CMakeLists.txt \
              faq-parse.xml \
              feedback.xml \
              html/ApacheDOMC++Binding.html \
+             html/secadv/CVE-2012-0880.txt \
              html/secadv/CVE-2015-0252.txt \
              html/secadv/CVE-2016-0729.txt \
              html/secadv/CVE-2016-4463.txt \
+             html/secadv/CVE-2017-12627.txt \
+             html/secadv/CVE-2018-1311.txt \
              install.xml \
              mailing-lists.xml \
              memparse.xml \
