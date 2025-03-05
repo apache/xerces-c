@@ -1,2 +1,37 @@
 See the doc/html/index.html for the description of the Xerces-C++
 project and other documentation.
+
+For staging release candidates, use this svn repo:
+https://dist.apache.org/repos/dist/dev/xerces/c/3/sources
+
+You can remove any earlier files before committing new ones.
+
+For the final publication, use this svn repo:
+https://dist.apache.org/repos/dist/release/xerces/c/3/sources
+
+Same, just remove anything earlier and commit the new.
+Remember to sign and add checksum files to the commit.
+
+After a release, the site also has to be updated. Unfortunately
+the tooling used requires Java 8 or earlier from Oracle due to
+a proprietary class it's using. Pointing JAVA_HOME to that
+JVM in the shell used should work.
+
+$ cd doc
+$ make createapidocs
+$ export JAVA_HOME=...
+$ make createdocs
+
+To publish:
+
+$ cd ../../
+$ svn co https://svn.apache.org/repos/asf/xerces/site/trunk/production/xerces-c xerces-site
+$ cd xerces-site
+$ cp -r ../xerces-c/doc/html/ .
+
+Review svn status for the changes, add any "new" files. I have not generally bothered
+trying to identify old files that have become orphaned, as they shouldn't be relevant
+or visible.
+
+You can review the site locally in a browser and once satisfied, apply the commit.
+
