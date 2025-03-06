@@ -36,12 +36,20 @@
 
 </s2>
 
+<s2 title="Unaddressed Issues">
+<p>The following security advisories apply to all released versions and are not
+believed to have been addressed. The project does not vouch for the accuracy of
+any advisories created by third parties but will publish any that appear credible.</p>
+<ul>
+  <li><jump href="secadv/CVE-2012-0880.txt">CVE-2012-0880: Apache Xerces-C hash table collisions CPU usage DoS</jump></li>
+</ul>
+</s2>
+
 <s2 title="Addressed in 3.2.5 and Later Releases">
 <p>The following security advisories apply to versions of
 Xerces-C older than V3.2.5:</p>
 <ul>
   <li><jump href="secadv/CVE-2018-1311.txt">CVE-2018-1311: Apache Xerces-C use-after-free vulnerability scanning external DTD</jump></li>
-  <li><jump href="secadv/CVE-2012-0880.txt">CVE-2012-0880: Apache Xerces-C hash table collisions CPU usage DoS</jump></li>
 </ul>
 </s2>
 
