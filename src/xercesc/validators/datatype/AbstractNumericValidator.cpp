@@ -85,7 +85,7 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber*         const theDat
     if ( (thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0 )
     {
         result = compareValues(theData, getMaxInclusive());
-        if (result == 1)
+        if (result != -1 && result != 0)
         {
             REPORT_VALUE_ERROR(theData
                              , getMaxInclusive()
@@ -98,7 +98,7 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber*         const theDat
     if ( (thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0 )
     {
         result = compareValues(theData, getMinInclusive());
-        if (result == -1)
+        if (result != 1 && result != 0)
         {
             REPORT_VALUE_ERROR(theData
                              , getMinInclusive()
