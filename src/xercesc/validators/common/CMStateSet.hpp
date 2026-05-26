@@ -41,15 +41,27 @@
 #if XERCES_HAVE_EMMINTRIN_H
 #   include <emmintrin.h>
 #endif
+#if XERCES_HAVE_ARM_NEON_H
+#   include <arm_neon.h>
+#endif
+
+#if defined(XERCES_HAVE_SSE2_INTRINSIC) || defined(XERCES_HAVE_NEON_INTRINSIC)
+#   define XERCES_USE_SIMD 1
+#   if defined(_MSC_VER) && !defined(__MINGW32__)
+#       include <malloc.h>     // _aligned_malloc
+#   else
+#       include <stdlib.h>     // posix_memalign
+#   endif
+#endif
 
 namespace XERCES_CPP_NAMESPACE {
 
 class CMStateSetEnumerator;
 
-// This value must be 4 in order to use the SSE2 instruction set
+// This value must be 4 in order to use the SIMD (SSE2/NEON) instruction set
 #define CMSTATE_CACHED_INT32_SIZE  4
 
-// This value must be a multiple of 128 in order to use the SSE2 instruction set
+// This value must be a multiple of 128 in order to use the SIMD (SSE2/NEON) instruction set
 #define CMSTATE_BITFIELD_CHUNK  1024
 #define CMSTATE_BITFIELD_INT32_SIZE (1024 / 32)
 
@@ -171,13 +183,20 @@ public :
     {
         if(fDynamicBuffer==0)
         {
-#ifdef XERCES_HAVE_SSE2_INTRINSIC
+#ifdef XERCES_USE_SIMD
             if(XMLPlatformUtils::fgSSE2ok)
             {
+#   if defined(XERCES_HAVE_SSE2_INTRINSIC)
                 __m128i xmm1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(fBits));
                 __m128i xmm2 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(setToOr.fBits));
                 __m128i xmm3 = _mm_or_si128(xmm1, xmm2);     //  OR  4 32-bit words
                 _mm_storeu_si128(reinterpret_cast<__m128i*>(fBits), xmm3);
+#   else // NEON
+                int32x4_t v1 = vld1q_s32(reinterpret_cast<const int32_t*>(fBits));
+                int32x4_t v2 = vld1q_s32(reinterpret_cast<const int32_t*>(setToOr.fBits));
+                int32x4_t v3 = vorrq_s32(v1, v2);
+                vst1q_s32(reinterpret_cast<int32_t*>(fBits), v3);
+#   endif
             }
             else
 #endif
@@ -211,15 +230,22 @@ public :
                     {
                         // otherwise, merge them
                         XMLInt32*& mine = fDynamicBuffer->fBitArray[index];
-#ifdef XERCES_HAVE_SSE2_INTRINSIC
+#ifdef XERCES_USE_SIMD
                         if(XMLPlatformUtils::fgSSE2ok)
                         {
                             for(XMLSize_t subIndex = 0; subIndex < CMSTATE_BITFIELD_INT32_SIZE; subIndex+=4)
                             {
+#   if defined(XERCES_HAVE_SSE2_INTRINSIC)
                                __m128i xmm1 = _mm_load_si128(reinterpret_cast<const __m128i*>(&other[subIndex]));
                                __m128i xmm2 = _mm_load_si128(reinterpret_cast<const __m128i*>(&mine[subIndex]));
                                __m128i xmm3 = _mm_or_si128(xmm1, xmm2);     //  OR  4 32-bit words
                                _mm_store_si128(reinterpret_cast<__m128i*>(&mine[subIndex]), xmm3);
+#   else // NEON
+                               int32x4_t v1 = vld1q_s32(reinterpret_cast<const int32_t*>(&other[subIndex]));
+                               int32x4_t v2 = vld1q_s32(reinterpret_cast<const int32_t*>(&mine[subIndex]));
+                               int32x4_t v3 = vorrq_s32(v1, v2);
+                               vst1q_s32(reinterpret_cast<int32_t*>(&mine[subIndex]), v3);
+#   endif
                             }
                         }
                         else
@@ -496,9 +522,23 @@ private :
     // -----------------------------------------------------------------------
     void allocateChunk(const XMLSize_t index)
     {
-#ifdef XERCES_HAVE_SSE2_INTRINSIC
+#ifdef XERCES_USE_SIMD
         if(XMLPlatformUtils::fgSSE2ok)
+#   if defined(XERCES_HAVE_SSE2_INTRINSIC)
+            // SSE2 builds: use Intel's matched _mm_malloc / _mm_free pair.
             fDynamicBuffer->fBitArray[index]=(XMLInt32*)_mm_malloc(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32), 16);
+#   elif defined(_MSC_VER) && !defined(__MINGW32__)
+            // NEON on MSVC (Win-ARM/ARM64): use the MSVC CRT aligned allocator.
+            fDynamicBuffer->fBitArray[index]=(XMLInt32*)_aligned_malloc(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32), 16);
+#   else
+            // NEON on POSIX (AArch64 Linux/macOS, MinGW): POSIX aligned allocator.
+            {
+                void* p = 0;
+                if (posix_memalign(&p, 16, CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32)) != 0)
+                    p = 0;
+                fDynamicBuffer->fBitArray[index]=(XMLInt32*)p;
+            }
+#   endif
         else
 #endif
             fDynamicBuffer->fBitArray[index]=(XMLInt32*)fDynamicBuffer->fMemoryManager->allocate(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
@@ -506,9 +546,15 @@ private :
 
     void deallocateChunk(const XMLSize_t index)
     {
-#ifdef XERCES_HAVE_SSE2_INTRINSIC
+#ifdef XERCES_USE_SIMD
         if(XMLPlatformUtils::fgSSE2ok)
+#   if defined(XERCES_HAVE_SSE2_INTRINSIC)
             _mm_free(fDynamicBuffer->fBitArray[index]);
+#   elif defined(_MSC_VER) && !defined(__MINGW32__)
+            _aligned_free(fDynamicBuffer->fBitArray[index]);
+#   else
+            ::free(fDynamicBuffer->fBitArray[index]);
+#   endif
         else
 #endif
             fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer->fBitArray[index]);

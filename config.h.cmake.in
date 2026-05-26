@@ -298,6 +298,12 @@
 /* Define to have SSE2 instruction used at runtime */
 #cmakedefine XERCES_HAVE_SSE2_INTRINSIC 1
 
+/* Define to 1 if you have arm_neon.h */
+#cmakedefine XERCES_HAVE_ARM_NEON_H 1
+
+/* Define to have NEON instruction used at runtime */
+#cmakedefine XERCES_HAVE_NEON_INTRINSIC 1
+
 /* Define to 1 if we have sys/types.h */
 #cmakedefine XERCES_HAVE_SYS_TYPES_H 1
 

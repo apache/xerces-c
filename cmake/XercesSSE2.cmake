@@ -101,3 +101,52 @@ int main() {
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_SAVE}")
   endif()
 endif()
+
+# ARM NEON support
+
+option(neon "ARM NEON support" ON)
+if(neon)
+  set(CMAKE_CXX_FLAGS_SAVE_NEON "${CMAKE_CXX_FLAGS}")
+  if((CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang") AND
+     CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm|ARM)($|v)")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfpu=neon")
+    check_cxx_source_compiles("
+#include <arm_neon.h>
+int main() {
+  int32x4_t v = vdupq_n_s32(0);
+  (void)v;
+  return 0;
+}"
+      CXX_NEEDS_mfpu_neon)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_SAVE_NEON}")
+    if(CXX_NEEDS_mfpu_neon)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfpu=neon")
+    endif()
+  endif()
+
+  check_cxx_source_compiles("
+#include <arm_neon.h>
+
+int main() {
+  return 0;
+}"
+    XERCES_HAVE_ARM_NEON_H)
+
+  check_cxx_source_compiles("
+#include <arm_neon.h>
+
+int main() {
+  alignas(16) int data1[4] = {1,2,3,4};
+  alignas(16) int data2[4] = {5,6,7,8};
+  int32x4_t a = vld1q_s32(data1);
+  int32x4_t b = vld1q_s32(data2);
+  int32x4_t c = vorrq_s32(a, b);
+  vst1q_s32(data1, c);
+  return 0;
+}"
+    XERCES_HAVE_NEON_INTRINSIC)
+
+  if(NOT XERCES_HAVE_NEON_INTRINSIC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_SAVE_NEON}")
+  endif()
+endif()

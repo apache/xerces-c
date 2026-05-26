@@ -223,7 +223,7 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     endianTest.ch = 1;
     fgXMLChBigEndian = (endianTest.ar[sizeof(XMLCh)-1] == 1);
 
-    // Determine if we can use SSE2 functions
+    // Determine if we can use SSE2 / NEON functions
 #if defined(XERCES_HAVE_CPUID_INTRINSIC)
     int CPUInfo[4]={0};
     __cpuid(CPUInfo, 1);
@@ -237,7 +237,7 @@ void XMLPlatformUtils::Initialize(const char*          const locale
         fgSSE2ok = false;
     else
         fgSSE2ok = true;
-#elif defined(XERCES_HAVE_SSE2_INTRINSIC)
+#elif defined(XERCES_HAVE_SSE2_INTRINSIC) || defined(XERCES_HAVE_NEON_INTRINSIC)
     // if we cannot find out at runtime, assume the define has it right
     fgSSE2ok = true;
 #else
