@@ -350,6 +350,13 @@ AC_ARG_ENABLE(sse2,
     [have_sse2=${enableval}],
     [have_sse2=yes])
 
+# Allow the user to disable ARM NEON support.
+#
+AC_ARG_ENABLE(neon,
+    AC_HELP_STRING([--disable-neon],[disable ARM NEON optimizations]),
+    [have_neon=${enableval}],
+    [have_neon=yes])
+
 ######################################################
 # Define some namespace-protected macros for use in the
 # publicly visible Xerces_autoconf_config.h file.
@@ -496,6 +503,65 @@ if test "$have_sse2" = "yes"; then
   #
   if test "$sse2_usable" = "no"; then
     CXXFLAGS="$no_sse2_CXXFLAGS"
+  fi
+fi
+
+if test "$have_neon" = "yes"; then
+    no_neon_CXXFLAGS="$CXXFLAGS"
+    case $host_cpu in
+      arm*)
+        save_CXXFLAGS="$CXXFLAGS"
+        CXXFLAGS="$CXXFLAGS -mfpu=neon"
+        AC_MSG_CHECKING([whether we need to add -mfpu=neon])
+        AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <arm_neon.h>]],
+                                             [[int32x4_t v = vdupq_n_s32(0); (void)v;]])],
+                            [mfpu_neon_ok=yes],
+                            [mfpu_neon_ok=no]
+                         )
+        AC_MSG_RESULT($mfpu_neon_ok)
+        if test x"$mfpu_neon_ok" = xno; then
+            CXXFLAGS="$save_CXXFLAGS"
+        fi
+        ;;
+    esac
+
+    AC_MSG_CHECKING([for arm_neon.h usability])
+    AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <arm_neon.h>]],
+                                         [[]])],
+                        [
+                          AC_MSG_RESULT([yes])
+                          AC_DEFINE_UNQUOTED([XERCES_HAVE_ARM_NEON_H], 1, [Define to 1 if you have arm_neon.h])
+                        ],
+                        [
+                          AC_MSG_RESULT([no])
+                        ]
+                     )
+
+    AC_MSG_CHECKING([whether the compiler has the NEON intrinsic])
+    AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <arm_neon.h>]],
+                                         [[
+                                           int data1[[4]] __attribute__((aligned(16))) = {1,2,3,4};
+                                           int data2[[4]] __attribute__((aligned(16))) = {5,6,7,8};
+                                           int32x4_t a = vld1q_s32(data1);
+                                           int32x4_t b = vld1q_s32(data2);
+                                           int32x4_t c = vorrq_s32(a, b);
+                                           vst1q_s32(data1, c);
+                                         ]])],
+                        [
+                          AC_MSG_RESULT([yes])
+                          neon_usable=yes
+                          AC_DEFINE_UNQUOTED([XERCES_HAVE_NEON_INTRINSIC], 1, [Define to have NEON instruction used at runtime])
+                        ],
+                        [
+                          AC_MSG_RESULT([no])
+                          neon_usable=no
+                        ]
+                     )
+
+  # Restore original CXXFLAGS if NEON is not usable.
+  #
+  if test "$neon_usable" = "no"; then
+    CXXFLAGS="$no_neon_CXXFLAGS"
   fi
 fi
 
