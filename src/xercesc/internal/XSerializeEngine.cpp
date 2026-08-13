@@ -158,27 +158,27 @@ void XSerializeEngine::write(XSerializable* const objectToWrite)
 
     XSerializedObjectId_t   objIndex = 0;
 
-	if (!objectToWrite)  // null pointer
-	{
-		*this << fgNullObjectTag;
-	}
+    if (!objectToWrite)  // null pointer
+    {
+        *this << fgNullObjectTag;
+    }
     else if (0 != (objIndex = lookupStorePool((void*) objectToWrite)))
-	{
+    {
         // writing an object reference tag
         *this << objIndex;
-	}
-	else
-	{
-		// write protoType first
-		XProtoType* protoType = objectToWrite->getProtoType();
-		write(protoType);
+    }
+    else
+    {
+        // write protoType first
+        XProtoType* protoType = objectToWrite->getProtoType();
+        write(protoType);
 
-		// put the object into StorePool
+        // put the object into StorePool
         addStorePool((void*)objectToWrite);
 
         // ask the object to serialize itself
-		objectToWrite->serialize(*this);
-	}
+        objectToWrite->serialize(*this);
+    }
 
 }
 
@@ -187,20 +187,20 @@ void XSerializeEngine::write(XProtoType* const protoType)
     ensureStoring();
     ensurePointer(protoType);
 
-	XSerializedObjectId_t objIndex = lookupStorePool((void*)protoType);
+    XSerializedObjectId_t objIndex = lookupStorePool((void*)protoType);
 
     if (objIndex)
     {
         //protoType seen in the store pool
         *this << (fgClassMask | objIndex);
-	}
-	else
-	{
-		// store protoType
-		*this << fgNewClassTag;
-		protoType->store(*this);
+    }
+    else
+    {
+        // store protoType
+        *this << fgNewClassTag;
+        protoType->store(*this);
         addStorePool((void*)protoType);
-	}
+    }
 
 }
 
@@ -329,32 +329,50 @@ XSerializable* XSerializeEngine::read(XProtoType* const protoType)
     ensureLoading();
     ensurePointer(protoType);
 
-	XSerializedObjectId_t    objectTag;
-	XSerializable*           objRet;
+    XSerializedObjectId_t    objectTag;
+    XSerializable*           objRet;
 
     if (! read(protoType, &objectTag))
-	{
+    {
         /***
          * We hava a reference to an existing object in
          * load pool, get it.
          */
         objRet = lookupLoadPool(objectTag);
-	}
-	else
-	{
-		// create the object from the prototype
-		objRet = protoType->fCreateObject(getMemoryManager());
+
+        // Check that provided type matches type in cache.
+        if (objRet && (objRet->getProtoType() != protoType))
+        {
+            XMLCh expected[256];
+            XMLCh actual[256];
+            XMLCh* tmp = XMLString::transcode((char*)protoType->fClassName, getMemoryManager());
+            XMLString::copyNString(expected, tmp, 255);
+            getMemoryManager()->deallocate(tmp);
+            tmp = XMLString::transcode((char*)objRet->getProtoType()->fClassName, getMemoryManager());
+            XMLString::copyNString(actual, tmp, 255);
+            getMemoryManager()->deallocate(tmp);
+            ThrowXMLwithMemMgr2(XSerializationException
+                              , XMLExcepts::XSer_ProtoType_Name_Dif
+                              , actual
+                              , expected
+                              , getMemoryManager());
+        }
+    }
+    else
+    {
+        // create the object from the prototype
+        objRet = protoType->fCreateObject(getMemoryManager());
         Assert((objRet != 0), XMLExcepts::XSer_CreateObject_Fail);
 
         // put it into load pool
         addLoadPool(objRet);
 
         // de-serialize it
-		objRet->serialize(*this);
+        objRet->serialize(*this);
 
-	}
+    }
 
-	return objRet;
+    return objRet;
 }
 
 bool XSerializeEngine::read(XProtoType*            const    protoType
@@ -363,29 +381,29 @@ bool XSerializeEngine::read(XProtoType*            const    protoType
     ensureLoading();
     ensurePointer(protoType);
 
-	XSerializedObjectId_t obTag;
+    XSerializedObjectId_t obTag;
 
     *this >> obTag;
 
     // object reference tag found
     if (!(obTag & fgClassMask))
-	{
-		*objectTagRet = obTag;
-		return false;
-	}
+    {
+        *objectTagRet = obTag;
+        return false;
+    }
 
-	if (obTag == fgNewClassTag)
-	{
+    if (obTag == fgNewClassTag)
+    {
         // what follows fgNewClassTag is the prototype object info
         // for the object anticipated, go and verify the info
         XProtoType::load(*this, protoType->fClassName, getMemoryManager());
 
         addLoadPool((void*)protoType);
-	}
-	else
-	{
+    }
+    else
+    {
         // what follows class tag is an XSerializable object
-	XSerializedObjectId_t classIndex = (obTag & ~fgClassMask);
+    XSerializedObjectId_t classIndex = (obTag & ~fgClassMask);
         XSerializedObjectId_t loadPoolSize = (XSerializedObjectId_t)fLoadPool->size();
 
         if ((classIndex == 0 ) || (classIndex > loadPoolSize))
@@ -404,7 +422,7 @@ bool XSerializeEngine::read(XProtoType*            const    protoType
         ensurePointer(lookupLoadPool(classIndex));
    }
 
-	return true;
+    return true;
 }
 
 void XSerializeEngine::read(XMLCh* const toRead
@@ -515,6 +533,12 @@ void XSerializeEngine::readString(XMLCh*&       toRead
         dataLen = bufferLen++;
     }
 
+    TEST_THROW_ARG2( (dataLen >= bufferLen)
+               , dataLen
+               , bufferLen
+               , XMLExcepts::XSer_LoadBuffer_Violation
+               )
+
     toRead = (XMLCh*) getMemoryManager()->allocate(bufferLen * sizeof(XMLCh));
     read(toRead, dataLen);
     toRead[dataLen] = 0;
@@ -548,6 +572,12 @@ void XSerializeEngine::readString(XMLByte*&     toRead
     {
         dataLen = bufferLen++;
     }
+
+    TEST_THROW_ARG2( (dataLen >= bufferLen)
+               , dataLen
+               , bufferLen
+               , XMLExcepts::XSer_LoadBuffer_Violation
+               )
 
     toRead = (XMLByte*) getMemoryManager()->allocate(bufferLen * sizeof(XMLByte));
     read(toRead, dataLen);
@@ -1050,23 +1080,23 @@ bool XSerializeEngine::needToStoreObject(void* const  templateObjectToWrite)
 
     XSerializedObjectId_t   objIndex = 0;
 
-	if (!templateObjectToWrite)
-	{
-		*this << fgNullObjectTag; // null pointer
+    if (!templateObjectToWrite)
+    {
+        *this << fgNullObjectTag; // null pointer
         return false;
-	}
+    }
     else if (0 != (objIndex = lookupStorePool(templateObjectToWrite)))
-	{
+    {
         *this << objIndex;         // write an object reference tag
         return false;
-	}
-	else
-	{
+    }
+    else
+    {
         *this << fgTemplateObjTag;            // write fgTemplateObjTag to denote that actual
                                               // template object follows
         addStorePool(templateObjectToWrite); // put the address into StorePool
         return true;
-	}
+    }
 
 }
 
@@ -1074,12 +1104,12 @@ bool XSerializeEngine::needToLoadObject(void**  templateObjectToRead)
 {
     ensureLoading();
 
-	XSerializedObjectId_t obTag;
+    XSerializedObjectId_t obTag;
 
     *this >> obTag;
 
-	if (obTag == fgTemplateObjTag)
-	{
+    if (obTag == fgTemplateObjTag)
+    {
         /***
          * what follows fgTemplateObjTag is the actual template object
          * We need the client application to create a template object
@@ -1087,9 +1117,9 @@ bool XSerializeEngine::needToLoadObject(void**  templateObjectToRead)
          * template object
          ***/
         return true;
-	}
-	else
-	{
+    }
+    else
+    {
         /***
          * We hava a reference to an existing template object, get it.
          */
