@@ -183,8 +183,13 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         }
 
         memset(&sa, '\0', sizeof(sockaddr_in));  // iSeries fix ??
-        memcpy((void *) &sa.sin_addr,
-            (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
+
+        if (hostEntPtr->h_length > sizeof(sa.sin_addr)) {
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                XMLExcepts::NetAcc_TargetResolution, hostName, memoryManager);
+        }
+
+        memcpy((void *) &sa.sin_addr, (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
         sa.sin_family = hostEntPtr->h_addrtype;
         sa.sin_port = htons((unsigned short)url.getPortNum());
 

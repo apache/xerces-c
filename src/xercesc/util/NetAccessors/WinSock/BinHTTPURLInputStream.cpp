@@ -399,8 +399,12 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
             }
         }
 
-        memcpy((void *) &sa.sin_addr,
-            (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
+        if (hostEntPtr->h_length > sizeof(sa.sin_addr)) {
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                XMLExcepts::NetAcc_TargetResolution, hostName, memoryManager);
+        }
+
+        memcpy((void *) &sa.sin_addr, (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
         sa.sin_family = hostEntPtr->h_addrtype;
         sa.sin_port = wrap_htons((unsigned short)url.getPortNum());
 
