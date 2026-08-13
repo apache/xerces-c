@@ -25,6 +25,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
@@ -42,6 +43,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 class RangeToken;
 class Match;
 class RegxParser;
+
+#define XERCESC_REGX_QUANTIFIER_LIMIT 1000000
 
 /**
  * The RegularExpression class represents a parsed executable regular expression.
@@ -698,6 +701,10 @@ protected:
       Token* childTok = token->getChild(0);
       int    min      = token->getMin();
       int    max      = token->getMax();
+
+      if (max > XERCESC_REGX_QUANTIFIER_LIMIT) {
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+      }
 
       if (min >= 0 && min == max) {
 
