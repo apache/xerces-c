@@ -359,6 +359,9 @@ void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
         fSorted = true;
     }
     else {
+        if (fElemCount == 0) {
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+        }
 
         if (fRanges[fElemCount-1] + 1 == val1) {
 
