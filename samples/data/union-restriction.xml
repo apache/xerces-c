@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="union-restriction.xsd">
+  <restricted><e>2024-02-29</e></restricted>
+  <furtherRestricted><e>2024</e></furtherRestricted>
+</dates>

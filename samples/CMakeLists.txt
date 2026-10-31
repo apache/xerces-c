@@ -35,6 +35,8 @@ set(EXTRA_DIST
   data/personal.xml
   data/personal.xsd
   data/personal-schema.xml
+  data/union-restriction.xml
+  data/union-restriction.xsd
   data/redirect.dtd
   data/long.xml
   )
@@ -181,6 +183,7 @@ add_xerces_sample_test(DOMCount          COMMAND DOMCount EXPECT_FAIL)
 add_xerces_sample_test(DOMCount1         COMMAND DOMCount -v=never personal.xml)
 add_xerces_sample_test(DOMCount2         COMMAND DOMCount          personal.xml)
 add_xerces_sample_test(DOMCount3         COMMAND DOMCount -n -s    personal-schema.xml)
+add_xerces_sample_test(DOMCount4         COMMAND DOMCount -n -s -f union-restriction.xml)
 add_xerces_sample_test(DOMPrint          COMMAND DOMPrint EXPECT_FAIL)
 add_xerces_sample_test(DOMPrint1         COMMAND DOMPrint -wfpp=on -wddc=off -v=never personal.xml)
 add_xerces_sample_test(DOMPrint2         COMMAND DOMPrint -wfpp=on -wddc=off          personal.xml)

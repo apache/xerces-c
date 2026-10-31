@@ -31,6 +31,8 @@ EXTRA_DIST =                        CMakeLists.txt \
                                     data/personal.xml \
                                     data/personal.xsd \
                                     data/personal-schema.xml \
+                                    data/union-restriction.xml \
+                                    data/union-restriction.xsd \
                                     data/redirect.dtd \
                                     data/long.xml \
                                     expected \
@@ -153,6 +155,7 @@ TESTS =					scripts/SAXCount \
 					scripts/DOMCount1 \
 					scripts/DOMCount2 \
 					scripts/DOMCount3 \
+					scripts/DOMCount4 \
 					scripts/DOMPrint \
 					scripts/DOMPrint1 \
 					scripts/DOMPrint2 \

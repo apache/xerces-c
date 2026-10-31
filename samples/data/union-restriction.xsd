@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  An element declared with a union type is restricted, in a derived
+  complex type, to a simple type that restricts that union. This is
+  valid XML Schema 1.0 (Type Derivation OK (Simple), clause 2.1).
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="approximateDate">
+    <xs:union memberTypes="xs:date xs:dateTime xs:gYear xs:gYearMonth"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="restrictedUnion">
+    <xs:restriction base="approximateDate">
+      <xs:pattern value="20.*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="furtherRestrictedUnion">
+    <xs:restriction base="restrictedUnion">
+      <xs:pattern value="20[0-9][0-9].*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="approximateDateType">
+    <xs:sequence>
+      <xs:element name="e" type="approximateDate"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="restrictedDateType">
+    <xs:complexContent>
+      <xs:restriction base="approximateDateType">
+        <xs:sequence>
+          <xs:element name="e" type="restrictedUnion"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="furtherRestrictedDateType">
+    <xs:complexContent>
+      <xs:restriction base="approximateDateType">
+        <xs:sequence>
+          <xs:element name="e" type="furtherRestrictedUnion"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="dates">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="restricted" type="restrictedDateType"/>
+        <xs:element name="furtherRestricted" type="furtherRestrictedDateType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

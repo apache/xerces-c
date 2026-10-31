@@ -291,8 +291,16 @@ inline bool UnionDatatypeValidator::isAtomic() const {
 
 inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck) {
 
-    if (toCheck == this) {
-        return true;
+    // A type derived from this union by restriction, directly or through
+    // further restrictions, is substitutable for it. A restriction of a
+    // union is itself a union, so stop at the first validator that is not
+    // (e.g. a list whose item type is this union).
+    for (const DatatypeValidator* dv = toCheck;
+         dv != 0 && dv->getType() == DatatypeValidator::Union;
+         dv = dv->getBaseValidator()) {
+        if (dv == this) {
+            return true;
+        }
     }
 
     if (fMemberTypeValidators) {
