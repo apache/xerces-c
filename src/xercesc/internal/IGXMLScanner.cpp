@@ -2560,7 +2560,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         fElemStack.setCurrentScope(currentScope);
 
         // Set element next state
-        if (elemDepth >= fElemStateSize) {
+        while (elemDepth >= fElemStateSize) {
             resizeElemState();
         }
 
