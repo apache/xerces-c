@@ -1483,10 +1483,10 @@ void XMLReader::doInitDecode()
             if (((fRawByteBuf[0] == 0x00) && (fRawByteBuf[1] == 0x00) && (fRawByteBuf[2] == 0xFE) && (fRawByteBuf[3] == 0xFF)) ||
                 ((fRawByteBuf[0] == 0xFF) && (fRawByteBuf[1] == 0xFE) && (fRawByteBuf[2] == 0x00) && (fRawByteBuf[3] == 0x00))  )
             {
-                for (XMLSize_t i = 0; i < fRawBytesAvail; i++)
-                    fRawByteBuf[i] = fRawByteBuf[i+4];
+                for (XMLSize_t i = 4; i < fRawBytesAvail; i++)
+                    fRawByteBuf[i - 4] = fRawByteBuf[i];
 
-                fRawBytesAvail -=4;
+                fRawBytesAvail -= 4;
             }
 
             // Look at the raw buffer as UCS4 chars
