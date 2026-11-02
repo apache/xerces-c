@@ -1015,7 +1015,7 @@ void XMLPlatformUtils::removeDotDotSlash(XMLCh* const path
     int segIndex = -1;
     int offset = 1;
 
-    while ((index = searchSlashDotDotSlash(&(path[offset]))) != -1)
+    while (offset <= pathLen && (index = searchSlashDotDotSlash(&(path[offset]))) != -1)
     {
         // Undo offset
         index += offset;
