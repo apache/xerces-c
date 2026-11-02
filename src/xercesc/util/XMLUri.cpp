@@ -28,6 +28,8 @@
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
+#include <limits.h>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -2135,7 +2137,7 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
         }
     }
 
-    // we need to check if index has exceed the lenght or not
+    // we need to check if index has exceeded the length or not
     if (index < trimmedUriSpecLen)
     {
 	    if (!processPath(trimmedUriSpec + index, trimmedUriSpecLen - index, foundScheme, bAllowSpaces))
@@ -2443,8 +2445,14 @@ bool XMLUri::processAuthority( const XMLCh* const authSpec
                   userinfo = XMLUni::fgZeroLenString;
                   break;
                 }
-
-                port = (port * 10) + (int) (portStr[i] - chDigit_0);
+                if (port > INT_MAX / 10) {
+                    return false;
+                }
+                port *= 10;
+                if (port > INT_MAX - (int) (portStr[i] - chDigit_0)) {
+                    return false;
+                }
+                port += (int) (portStr[i] - chDigit_0);
             }
         }
     }
