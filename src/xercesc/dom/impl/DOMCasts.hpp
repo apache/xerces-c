@@ -50,13 +50,33 @@
 #include "DOMNodeBase.hpp"
 #include "DOMElementImpl.hpp"
 #include "DOMTextImpl.hpp"
+#include "DOMAttrImpl.hpp"
 
 namespace XERCES_CPP_NAMESPACE {
 
 
+// Checked downcasts to the common concrete types avoid expensive cross-casts
+// between sibling base interfaces. Other implementations retain the fallback.
 static inline const DOMNodeImpl *castToNodeImpl(const DOMNode *p)
 {
-    const HasDOMNodeImpl* pE = dynamic_cast<const HasDOMNodeImpl*>(p);
+    const HasDOMNodeImpl* pE = 0;
+    if (p) {
+        switch (p->getNodeType()) {
+        case DOMNode::ELEMENT_NODE:
+            pE = dynamic_cast<const DOMElementImpl*>(p);
+            break;
+        case DOMNode::TEXT_NODE:
+            pE = dynamic_cast<const DOMTextImpl*>(p);
+            break;
+        case DOMNode::ATTRIBUTE_NODE:
+            pE = dynamic_cast<const DOMAttrImpl*>(p);
+            break;
+        default:
+            break;
+        }
+    }
+    // Preserve checked handling of other node kinds and foreign implementations.
+    if (!pE) pE = dynamic_cast<const HasDOMNodeImpl*>(p);
     if (!pE || !pE->getNodeImpl()) {
         throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     }
@@ -65,7 +85,24 @@ static inline const DOMNodeImpl *castToNodeImpl(const DOMNode *p)
 
 static inline DOMNodeImpl *castToNodeImpl(DOMNode *p)
 {
-    HasDOMNodeImpl *pE = dynamic_cast<HasDOMNodeImpl*>(p);
+    HasDOMNodeImpl* pE = 0;
+    if (p) {
+        switch (p->getNodeType()) {
+        case DOMNode::ELEMENT_NODE:
+            pE = dynamic_cast<DOMElementImpl*>(p);
+            break;
+        case DOMNode::TEXT_NODE:
+            pE = dynamic_cast<DOMTextImpl*>(p);
+            break;
+        case DOMNode::ATTRIBUTE_NODE:
+            pE = dynamic_cast<DOMAttrImpl*>(p);
+            break;
+        default:
+            break;
+        }
+    }
+    // Preserve checked handling of other node kinds and foreign implementations.
+    if (!pE) pE = dynamic_cast<HasDOMNodeImpl*>(p);
     if (!pE || !pE->getNodeImpl()) {
         throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     }
@@ -73,7 +110,21 @@ static inline DOMNodeImpl *castToNodeImpl(DOMNode *p)
 }
 
 static inline const DOMParentNode *castToParentImpl(const DOMNode *p) {
-    const HasDOMParentImpl *pE = dynamic_cast<const HasDOMParentImpl*>(p);
+    const HasDOMParentImpl* pE = 0;
+    if (p) {
+        switch (p->getNodeType()) {
+        case DOMNode::ELEMENT_NODE:
+            pE = dynamic_cast<const DOMElementImpl*>(p);
+            break;
+        case DOMNode::ATTRIBUTE_NODE:
+            pE = dynamic_cast<const DOMAttrImpl*>(p);
+            break;
+        default:
+            break;
+        }
+    }
+    // Preserve checked handling of other node kinds and foreign implementations.
+    if (!pE) pE = dynamic_cast<const HasDOMParentImpl*>(p);
     if (!pE || !pE->getParentNodeImpl()) {
         throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     }
@@ -81,7 +132,21 @@ static inline const DOMParentNode *castToParentImpl(const DOMNode *p) {
 }
 
 static inline DOMParentNode *castToParentImpl(DOMNode *p) {
-    HasDOMParentImpl *pE = dynamic_cast<HasDOMParentImpl*>(p);
+    HasDOMParentImpl* pE = 0;
+    if (p) {
+        switch (p->getNodeType()) {
+        case DOMNode::ELEMENT_NODE:
+            pE = dynamic_cast<DOMElementImpl*>(p);
+            break;
+        case DOMNode::ATTRIBUTE_NODE:
+            pE = dynamic_cast<DOMAttrImpl*>(p);
+            break;
+        default:
+            break;
+        }
+    }
+    // Preserve checked handling of other node kinds and foreign implementations.
+    if (!pE) pE = dynamic_cast<HasDOMParentImpl*>(p);
     if (!pE || !pE->getParentNodeImpl()) {
         throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     }
@@ -89,7 +154,21 @@ static inline DOMParentNode *castToParentImpl(DOMNode *p) {
 }
 
 static inline const DOMChildNode *castToChildImpl(const DOMNode *p) {
-    const HasDOMChildImpl *pE = dynamic_cast<const HasDOMChildImpl*>(p);
+    const HasDOMChildImpl* pE = 0;
+    if (p) {
+        switch (p->getNodeType()) {
+        case DOMNode::ELEMENT_NODE:
+            pE = dynamic_cast<const DOMElementImpl*>(p);
+            break;
+        case DOMNode::TEXT_NODE:
+            pE = dynamic_cast<const DOMTextImpl*>(p);
+            break;
+        default:
+            break;
+        }
+    }
+    // Preserve checked handling of other node kinds and foreign implementations.
+    if (!pE) pE = dynamic_cast<const HasDOMChildImpl*>(p);
     if (!pE || !pE->getChildNodeImpl()) {
         throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     }
@@ -97,7 +176,21 @@ static inline const DOMChildNode *castToChildImpl(const DOMNode *p) {
 }
 
 static inline DOMChildNode *castToChildImpl(DOMNode *p) {
-    HasDOMChildImpl *pE = dynamic_cast<HasDOMChildImpl*>(p);
+    HasDOMChildImpl* pE = 0;
+    if (p) {
+        switch (p->getNodeType()) {
+        case DOMNode::ELEMENT_NODE:
+            pE = dynamic_cast<DOMElementImpl*>(p);
+            break;
+        case DOMNode::TEXT_NODE:
+            pE = dynamic_cast<DOMTextImpl*>(p);
+            break;
+        default:
+            break;
+        }
+    }
+    // Preserve checked handling of other node kinds and foreign implementations.
+    if (!pE) pE = dynamic_cast<HasDOMChildImpl*>(p);
     if (!pE || !pE->getChildNodeImpl()) {
         throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     }

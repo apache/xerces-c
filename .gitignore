@@ -81,6 +81,7 @@ samples/SEnumVal
 samples/StdInParse
 samples/XInclude
 tests/Char16Test
+tests/DOMCastsTest
 tests/DOMMemTest
 tests/DOMTest
 tests/DOMTraversalTest

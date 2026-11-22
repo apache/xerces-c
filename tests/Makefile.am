@@ -52,6 +52,9 @@ testprogs +=                                    DOMTest
 DOMTest_SOURCES =                               src/DOM/DOMTest/DTest.cpp \
                                                 src/DOM/DOMTest/DTest.h
 
+testprogs +=                                    DOMCastsTest
+DOMCastsTest_SOURCES =                          src/DOM/DOMCastsTest/DOMCastsTest.cpp
+
 testprogs +=                                    DOMMemTest
 DOMMemTest_SOURCES =                            src/DOM/DOMMemTest/DOMMemTest.cpp
 
@@ -139,6 +142,7 @@ endif
 
 
 TESTS =					scripts/DOMTest \
+					scripts/DOMCastsTest \
 					scripts/DOMMemTest \
 					scripts/RangeTest \
 					scripts/DOMTraversalTest \
