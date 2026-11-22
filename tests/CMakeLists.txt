@@ -58,6 +58,10 @@ add_test_executable(DOMTest
   src/DOM/DOMTest/DTest.h
 )
 
+add_test_executable(DOMCastsTest
+  src/DOM/DOMCastsTest/DOMCastsTest.cpp
+)
+
 add_test_executable(DOMMemTest
   src/DOM/DOMMemTest/DOMMemTest.cpp
 )
@@ -169,6 +173,7 @@ endif()
 include(XercesTest)
 
 add_xerces_test(DOMTest          COMMAND DOMTest)
+add_xerces_test(DOMCastsTest     COMMAND DOMCastsTest)
 add_xerces_test(DOMMemTest       COMMAND DOMMemTest)
 add_xerces_test(RangeTest        COMMAND RangeTest)
 add_xerces_test(DOMTraversalTest COMMAND DOMTraversalTest)
